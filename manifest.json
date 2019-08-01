@@ -1,0 +1,31 @@
+{
+
+  "manifest_version": 2,
+  "name": "Jinrou Wakamete Analyzer",
+  "version": "1.0",
+
+  "description": "Realtime Log Analyzer of Jinrou Wakamete Server.",
+
+  "icons": {
+    "48": "icons/wakame-te.png"
+  },
+
+  "sidebar_action": {
+    "default_title": "Jinrou Wakamete Analyzer",
+    "default_panel": "sidebar.html",
+    "default_icon": "icons/wakame-te.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://jinrou.dip.jp/~jinrou/cgi_jinro.cgi"],
+      "js": ["wakamete-plugins.js"]
+    }
+  ],
+
+  "applications": {
+    "gecko": {
+      "id": "sugano-github@elder-alliance.org"
+    }
+  }
+}
