@@ -11,7 +11,6 @@ function html2json_villager_log_1day(arg) {
 // output : Hash
 //          {
 //            number:
-//            title:
 //            date: 
 //            messages:
 //            player:
@@ -49,16 +48,12 @@ function html2json_villager_log_1day(arg) {
       //    <br>
       //    <table>
       //  </td>
-      // ignore another than <font> and <table> (village titie and other informations).
-      // extract 
-      var base_font_list = base_tr_list.item(i).querySelectorAll("font");
-      ret.title    = base_font_list.item(0).innerText;
-      ret.date     = base_font_list.item(1).innerText;
+      // ignore another than <table>.
+      //    village_id is from input tag.
+      //    date is from messages.
       // parse sub <table> as village_log
       var village_log = html2json_village_log(base_tr_list.item(i).querySelector("table"));
-      ret.comments = village_log.comments;
-      ret.messages = village_log.messages;
-      ret.vote_log = village_log.vote;
+      ret = Object.assign(ret, village_log);
       // console.log(JSON.stringify(village_log));
     } else if (base_tr_list.item(i).innerText.match("^◆ 幽霊の間")) {
       // nop : tag
@@ -72,7 +67,7 @@ function html2json_villager_log_1day(arg) {
   }
 
   var base_input_list = base_table.querySelectorAll("input");
-  for (i = 0 ; i < base_input_list.length ; i++) {
+  for (var i = 0 ; i < base_input_list.length ; i++) {
     if (base_input_list.item(i).name == "VILLAGENO") {
       // get village number from below tag.
       //   <input type="hidden" name="VILLAGENO" value="153063">
@@ -100,6 +95,7 @@ function html2json_villager_list(arg) {
 //            ]
 //           stat:value : "（生存中）" or "（死　亡）"
   var ret = [];
+  var re = new RegExp('^\.\/', '');
 
 //  console.log(arg.innerHTML); // debug
 
@@ -118,9 +114,9 @@ function html2json_villager_list(arg) {
     var is_alive;
 
     // get info of base_td_list.item(i)
-    img_selector = base_td_list.item(i).querySelector("img");
+    var img_selector = base_td_list.item(i).querySelector("img");
     if (img_selector != null) {
-      img_src        = img_selector.getAttribute("src");
+      img_src        = img_selector.getAttribute("src").replace(re, "http://jinrou.dip.jp/~jinrou/");
 
       // get info of base_td_list.item(i+1)
       var character_info = String(base_td_list.item(i+1).innerHTML).split('<br>');
@@ -140,19 +136,25 @@ function html2json_village_log(arg) {
 // input  : HTMLCollction
 //          <tbody> ... </tbody> of <table table cellpadding="0"></table>
 // output : Hash
+//            msg_date:"date-string",
+//            list_voted:  [ "character-name", ... ],
+//            list_bitten: [ "character-name", ... ],
+//            list_dnoted: [ "character-name", ... ],
+//            list_sudden: [ "character-name", ... ],
 //            comments: [
 //              { speaker:value, type:value, comment:[value_with_each_line] },
 //              ...
 //            ],
-//            messages: [
-//              { comment:value },
-//              ...
-//            ],
-//            vote : <from html2json_vote_result()>
-//           type:value : "Normal" or "Strong" or "WithColor"
+//            vote_log : <from html2json_vote_result()>
+//   type:value : "Normal" or "Strong" or "WithColor"
   var cmts = [];
-  var msgs = [];
+  var msg_date    = "１日目の昼となりました。";
+  var msgs_voted  = [];
+  var msgs_bitten = [];
+  var msgs_dnoted = []; // Death Note
+  var msgs_sudden = [];
   var vote_result = null;
+  var re = new RegExp('^\.\/', '');
 
   // console.log(arg.innerHTML); // debug
 
@@ -160,7 +162,36 @@ function html2json_village_log(arg) {
   for (var i = 0 ; i < base_tr_list.length ; i++) {
     var base_td_list = base_tr_list.item(i).querySelectorAll("td");
     if (base_td_list.length == 1) {        // system message
-      msgs.push(base_td_list.item(0).innerText);
+      var icon_selector = base_td_list.item(0).querySelector("img");
+      if (icon_selector != null) {
+        var icon_uri   = icon_selector.getAttribute("src").replace(re, "http://jinrou.dip.jp/~jinrou/");
+        var msg_text   = base_td_list.item(0).querySelector("font").innerText;
+        if (msg_text.match("となりました。$")) {
+          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">１日目の夜となりました。</font>(19/07/15 00:39:10)</td>
+          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">3日目の夜となりました。</font>(19/07/14 23:32:09)</td>
+          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">9日目の朝となりました。</font>(19/07/06 01:43:35)</td>
+          msg_date = msg_text;
+        } else if (msg_text.match("^処刑されました・・・。$")) {
+          // <td colspan="2"><img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font></td>
+          msgs_voted.push(base_td_list.item(0).querySelector("b").innerText);
+        } else if (msg_text.match("^無残な姿で発見された・・・。$")) {
+          // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>伊吹翼</b>さんは翌日<font color="#ff0000">無残な姿で発見された・・・。</font></td>
+          msgs_bitten.push(base_td_list.item(0).querySelector("b").innerText);
+        } else if (msg_text.match("^に死体で発見された・・・。$")) {
+          // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>久川凪</b>さんは翌日<font color="#ff0000">に死体で発見された・・・。</font></td>
+          msgs_dnoted.push(base_td_list.item(0).querySelector("b").innerText);
+        } else if (msg_text.match("^突然死しました・・・。【ペナルティ】$")) {
+          // <td colspan="2"><img src="./img/dead2.gif" width="32" height="32" border="0"> <b>八神マキノ</b>さんは都合により<font color="#ff0000">突然死しました・・・。【ペナルティ】</font></td>
+          msgs_sudden.push(base_td_list.item(0).querySelector("b").innerText);
+        } else if (msg_text.match("の勝利です！$")) {
+          // <td colspan="2"><img src="./img/sc5.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ff9999">猫　又</font>」の勝利です！</font>(19/07/15 00:11:04)</td>
+          msg_date = msg_text;
+        } else {
+          // ignore. it maybe inner font tag of winner message.
+        }
+      } else {
+        // ignore messages without icon. it is not important.
+      }
     } else if (base_td_list.length == 2) { // villager comment
       var villager  = base_td_list.item(0).querySelector("b").innerText;
       var v_comment = String(base_td_list.item(1).innerHTML).replace(/^「/,"").replace(/」$/,"").split('<br>');
@@ -174,6 +205,7 @@ function html2json_village_log(arg) {
           v_comtype = "Unknown";
         }
       }
+      cmts.push({ speaker: villager , comment : v_comment , type : v_comtype});
     } else {                               // vote
       vote_table = base_td_list.item(0).querySelector("table");
       if (vote_table != null) {            // vote table
@@ -183,10 +215,15 @@ function html2json_village_log(arg) {
       }
     }
 
-    cmts.push({ speaker: villager , comment : v_comment , type : v_comtype});
   }
 
-  return { comments: cmts, messages: msgs, vote: vote_result };
+  return { comments:    cmts, 
+           msg_date:    msg_date,
+           list_voted:  msgs_voted,
+           list_bitten: msgs_bitten,
+           list_dnoted: msgs_dnoted,
+           list_sudden: msgs_sudden,
+           vote_log: vote_result };
 }
 
 function html2json_vote_result(arg) {

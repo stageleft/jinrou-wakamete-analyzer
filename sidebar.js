@@ -1,5 +1,5 @@
 // Debug : save-count raw log to Web Storage API
-var debugSetItemCount = 0;
+// var debugSetItemCount = 0;
 
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
 function recvLog(request, sender, sendResponse) {
@@ -10,11 +10,14 @@ function recvLog(request, sender, sendResponse) {
 //          {response: "OK"}
 
   // Debug : save raw log to Web Storaget API
-  window.localStorage.setItem("wakamete_village_debug_log"+String(debugSetItemCount), encodeURIComponent(request.html_log));
-  debugSetItemCount = debugSetItemCount + 1;
+  // window.localStorage.setItem("wakamete_village_debug_log"+String(debugSetItemCount), encodeURIComponent(request.html_log));
+  // debugSetItemCount = debugSetItemCount + 1;
 
   // Load from Web Storaget API
   var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
+  if ( value == null ) {
+    value = { village_number:"" };
+  }
 
  // document.getElementById("logs").innerHTML        = request.html_log;  // debug
  // document.getElementById("information").innerText = request.text_log;  // debug
@@ -24,11 +27,16 @@ function recvLog(request, sender, sendResponse) {
   var parser = new DOMParser();
   var receivedLog = parser.parseFromString(request.html_log, "text/html");
   var todayLog    = html2json_villager_log_1day(receivedLog);
+  if ( value.village_number != todayLog.number ) {
+    value = { village_number: todayLog.number, log:new Object(), input:new Object()};
+  }
+  value.log[todayLog.msg_date] = todayLog;
 
-  document.getElementById("freememo").value = JSON.stringify(todayLog); // debug
+  // document.getElementById("freememo").value = JSON.stringify(value); // debug
+
+  // Todo: integrate to All-days log
 
   // ToDo: emurate Wakamete-memo
-
 
   // save to Web Storaget API
   window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(value)));
