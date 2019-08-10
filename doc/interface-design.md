@@ -51,10 +51,31 @@
       ...
     },
     input: {			// 手入力情報
-        (T.B.D.)
-        // 参加者別、役職CO、占い結果、霊能結果
-        // 村別、配役情報、
-        // （extend）日別、死体数別推定要因
+      // 村別、配役情報、
+      villager_count: integer,
+      player_count: integer,
+      seer_count: integer,
+      medium_count: integer,
+      bodyguard_count: integer,
+      freemason_count: integer,
+      werewolf_count: integer,
+      posessed_count: integer,
+      werefox_count: integer,
+      immoralist_count: integer,
+      minifox_count: integer,
+      // 参加者別、役職CO、占い結果、霊能結果
+      each_player:{
+         "character-name": { comingout:"string",
+                             enemymark:"string",
+                             "date-string": { target: null or "string",
+                                              result: null or "string",
+                                              dead_reason: null or "string" },
+                             "date-string": { target: , result: , dead_reason: },
+                             ...
+                           },
+         "character-name": { comingout:, enemymark:, "date-string":, ... },
+         ...
+      },
     },
   }
 ```
