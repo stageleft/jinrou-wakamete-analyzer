@@ -46,8 +46,8 @@
 
 |村人リスト                 |１日目 *昼*/*夜*                             |2日目 *昼*/*投票*/*夜*                   |...|N日目 *昼*/*投票*/*夜*|...|
 |--------------------------|-------------------------------------------|----------------------------------------|---|----------------------|---|
-|icon<br>Name<br>*Comments*|[deduced Job]<br>[Monster Mark]<br>Comments|[Job-target]<br>[Job-result]<br>Comments|...|Dead Result           |   |
-|icon<br>Name<br>*Comments*|[deduced Job]<br>[Monster Mark]<br>Comments|[Job-target]<br>[Job-result]<br>Comments|...|...                   |...|
+|icon*Name*|[deduced Job]<br>[Monster Mark]<br>Comments|[Job-target]<br>[Job-result]<br>Comments|...|Dead Result           |   |
+|icon*Name*|[deduced Job]<br>[Monster Mark]<br>Comments|[Job-target]<br>[Job-result]<br>Comments|...|...                   |...|
 
 [] = 入力欄  
 イタリック = ポップアップへのリンク  
