@@ -1,14 +1,17 @@
-わかめてサーバ→スクリプトメイン
-  内容：村のログ（innerHTML）
-  形式：JSON（key: log_html）
-    log_html 形式：テーブル２重構造（外テーブル１枚＠全体、内テーブル２枚＠参加者リスト＆ログ本体）
+# わかめてサーバ→スクリプトメイン
+
+* 内容：村のログ（innerHTML）
+* 形式：JSON（key: log_html）
+    * log_html 形式：テーブル２重構造（外テーブル１枚＠全体、内テーブル２枚＠参加者リスト＆ログ本体）  
       外テーブル：仕切り（村人リスト、submitアイテム、ログ、隠し要素、戻るボタン）
 
-スクリプトメイン→Web Storage API
-  代入方法 ：window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(value)));
-  取得方法 ：value = Json.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
-  キー(key)：wakamete_village_info
-  値(value)：村全体（特定の村）のログおよび手入力情報。違う村のデータが入ったら全部クリア。形式は以下。
+# スクリプトメイン←→Web Storage API
+
+* 代入方法 ：window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(value)));
+* 取得方法 ：value = Json.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
+* キー(key)：wakamete_village_info
+* 値(value)：村全体（特定の村）のログおよび手入力情報。違う村のデータが入ったら全部クリア。形式は以下。
+```
   village: {
     // 村
     village_number: "string",
@@ -54,15 +57,9 @@
         // （extend）日別、死体数別推定要因
     },
   }
+```
 
-ログ表示画面→（スクリプトメイン）→ログ抽出スクリプト
-投票結果表示画面→（スクリプトメイン）→投票結果抽出スクリプト
-投票結果表示画面→（スクリプトメイン）→死亡者・死因抽出スクリプト
+# スクリプトメイン→各種機能→各種画面
 
-配役情報入力画面→（スクリプトメイン）→まとめスクリプト
-役職推定情報入力画面→（スクリプトメイン）→まとめスクリプト
-  まとめはいつものとおり、占い軸のグレー、CO者、完グレ、生き残り、吊り（＆突然死）、噛み（＆死体）。
-  追加として、霊能軸のグレーが欲しい。
-  （extend）２死体の「猫噛み（猫または狼）」や「呪殺（狐または非人狼）」を取り扱えるか。
-
-
+* 入力データ： JSON形式。 内容は上記 スクリプトメイン←→Web Storage API参照。
+* 出力データ： HTML形式。画面を意味する <div /> タグの中身として差し込む。
