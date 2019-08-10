@@ -1,9 +1,8 @@
-It is NOW ON DEVELOPMENT. Some Debug function is enabled and it becomes cosmetic bug.
+It is NOW ON DEVELOPMENT. Some Debug function maybe enabled and it becomes cosmetic bug.
 
 開発中です。デバッグ機能のせいで見た目バグってるんで使わないよーに。
-また、以下のテキストはほぼ
 
-# about Jinrou-Wakamete-Log-Viewer
+# about Jinrou-Wakamete-Analyzer
 
 Support tool for online "Are You a Werewolf?" game in Wakamete Server ( http://jinrou.dip.jp/~jinrou/ ).
 You get easier to correct and analyze Chat Log.
