@@ -14,7 +14,7 @@ function updateCommentLog(arg, param) {
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
-    td2.innerHTML = '「' + l.comment.join('\n') + '」'
+    td2.innerHTML = '「' + l.comment.join('<br>') + '」'
     if (l.type == 'Strong'){
       td2.setAttribute('style', 'font-size: large;');
     } else if (l.type == 'WithColor'){
