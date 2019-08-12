@@ -17,6 +17,10 @@ table tr td{
   vertical-align: middle;
 }
 
+div {
+  white-space: nowrap;
+}
+
 .dead{
   background-color: #ffcccc;
 }

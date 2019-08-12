@@ -113,6 +113,8 @@ function updateInputField(arg) {
     var job = document.getElementById('job-' + k).value; // deduced Job
     var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
 
+    // preprocess: 
+
     // process 1 : add <td> cell if not exist
     for (var i = tds_title.length ; i <= date_count ; i++) {
       var td_a = document.createElement('td');
@@ -314,6 +316,19 @@ function createInputField(arg) {
 //     it must not include any <div /> tag.
   var ret = document.createElement('table');
   var player_list = Object.keys(arg.log[base_date].players);
+
+  // update Table
+  if (arg.input != null) {
+    document.getElementById('seer').value      = String(arg.input.seer_count);
+    document.getElementById('medium').value    = String(arg.input.medium_count);
+    document.getElementById('bodyguard').value = String(arg.input.bodyguard_count);
+    document.getElementById('freemason').value = String(arg.input.freemason_count);
+    document.getElementById('werecat').value   = String(arg.input.werecat_count);
+    document.getElementById('werewolf').value  = String(arg.input.werewolf_count);
+    document.getElementById('posessed').value  = String(arg.input.posessed_count);
+    document.getElementById('werefox').value   = String(arg.input.werefox_count);
+    document.getElementById('minifox').value   = String(arg.input.minifox_count);
+  }
 
   // create Villager List
   // <table>

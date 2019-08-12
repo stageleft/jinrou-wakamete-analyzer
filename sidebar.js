@@ -44,6 +44,13 @@ function recvLog(request, sender, sendResponse) {
   }
 
   // ToDo: emurate Wakamete-memo
+  try {
+    updateSummary(value);
+  } catch(e) {
+    // exception case
+    console.log(e.name + ':' + e.message);
+    console.log(e.stack);
+  }
 
   // save to Web Storaget API
   window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(value)));
