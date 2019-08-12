@@ -1,2 +1,31 @@
-table{ font-size : 11pt; }
+table{
+  border-collapse: collapse;
+  margin: 0px;
+  padding: 0px;
+}
+table tr{
+  margin: 0px;
+  padding: 0px;
+}
+table tr td{
+  font-size : 10pt;
+  border : 1px solid #000000;
+  margin: 0px;
+  padding: 0px;
+  white-space: nowrap;
+  text-align: justify-all;
+  vertical-align: middle;
+}
+
+.dead{
+  background-color: #ffcccc;
+}
+
+p {
+  margin: 0px;
+  padding: 0px;
+}
+
 textarea{ font-size : 9pt; }
+
+input{ height : 15pt; font-size : 10.5pt; }
