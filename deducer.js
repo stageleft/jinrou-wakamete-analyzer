@@ -91,9 +91,56 @@ function updateInputField(arg) {
     }
   });
 
-  var tds_title   = document.getElementById('deducer-title').querySelectorAll('td');
+  // preprocess: calcurate seer-info and gray-info
+  var seer_co       = new Object();
+  var villager_gray  = new Object();
+  var villager_white = new Object(); // white, coming-out
+  var villager_black = new Object(); // black, panda, non-villager
+  Object.keys(arg.input.each_player).forEach(function(k){
+    var input_mrk = arg.input.each_player[k].enemymark;
+    var input_job = arg.input.each_player[k].comingout;
+
+    if (input_mrk == "村人") {
+      if (input_job == "占い") {
+        seer_co[k]        = arg.input.each_player[k];
+        villager_white[k] = arg.input.each_player[k];
+      } else if (input_job == "村人") {
+        villager_gray[k]  = arg.input.each_player[k];
+      } else {
+        villager_white[k] = arg.input.each_player[k];
+      }
+    } else {
+      villager_black[k] = arg.input.each_player[k];
+    }
+  });
+  Object.keys(seer_co).forEach(function(k){
+    Object.keys(arg.log).forEach(function(d){
+      if (d.match("^\\d+日目の朝となりました。$")) {
+        var target = arg.input.each_player[k][d].target;
+        var result = arg.input.each_player[k][d].result;
+
+        if (result == "○") {
+          if (Object.keys(villager_gray).indexOf(target) != -1) {
+            delete villager_gray[target];
+            villager_white[target] = arg.input.each_player[k];
+          }
+        } else if (result == "●") {
+          if (Object.keys(villager_gray).indexOf(target) != -1) {
+            delete villager_gray[target];
+            villager_black[target] = arg.input.each_player[k];
+          } else if (Object.keys(villager_white).indexOf(target) != -1) {
+            delete villager_white[target];
+            villager_black[target] = arg.input.each_player[k];
+          }
+        } else { // if (result == "")
+          // nop
+        }
+      }
+    });
+  });
 
   // add <td> cell to title if not exist
+  var tds_title   = document.getElementById('deducer-title').querySelectorAll('td');
   for (var i = tds_title.length ; i <= date_count ; i++) {
     var td = document.createElement('td');
     td.setAttribute('id', 'deducer-title-' + String(i));
@@ -113,7 +160,6 @@ function updateInputField(arg) {
     var job = document.getElementById('job-' + k).value; // deduced Job
     var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
 
-    // preprocess: 
 
     // process 1 : add <td> cell if not exist
     for (var i = tds_title.length ; i <= date_count ; i++) {
@@ -249,7 +295,7 @@ function updateInputField(arg) {
           }
         }
 
-        // Comments
+        // deducer: comments
         var datekey = String(i) + "日目の朝となりました。"
         var c = 0;
         arg.log[datekey].comments.forEach(function(h){
@@ -258,6 +304,16 @@ function updateInputField(arg) {
           }
         });
         count.innerText = "発言 "+String(c);
+
+        // deducer: set background color
+        if (Object.keys(villager_gray).indexOf(k) != -1) {
+          document.getElementById('villager-' + k).setAttribute('class', 'gray');
+        } else if (Object.keys(villager_white).indexOf(k) != -1) {
+          document.getElementById('villager-' + k).setAttribute('class', 'white');
+        } else if (Object.keys(villager_black).indexOf(k) != -1) {
+          document.getElementById('villager-' + k).setAttribute('class', 'black');
+        }
+
       } else {
         if (target != null) { target.remove(); };
         if (result != null) { result.remove(); };

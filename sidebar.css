@@ -24,6 +24,15 @@ div {
 .dead{
   background-color: #ffcccc;
 }
+.white{
+  background-color: #ffffff;
+}
+.gray{
+  background-color: #cccccc;
+}
+.black{
+  background-color: #888888;
+}
 
 p {
   margin: 0px;
