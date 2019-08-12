@@ -56,8 +56,8 @@ function updateInput(arg) {
     ret.each_player[k].comingout = job.value;
     ret.each_player[k].enemymark = mrk.value;
     // 参加者別×日別の情報
-    for (var i = 1; i < date_count; i++) {
-      var datestr = String(i+1) + "日目の朝となりました。"
+    for (var i = 2; i <= date_count; i++) {
+      var datestr = String(i) + "日目の朝となりました。"
       ret.each_player[k][datestr] = new Object();
       var target_obj = document.getElementById('stat-' + k + '-' + String(i) + '-target')
       ret.each_player[k][datestr].target      = (target_obj == null) ? null : target_obj.value;
@@ -75,10 +75,11 @@ function updateInputField(arg) {
 // functional output : -
 // Another output    : inner <td> element of table in <div id="deduce" />
   var player_list = Object.keys(arg.log[base_date].players);
+  var restore_data = false;
 
   if (document.getElementById("deduce").textContent == '') {
     createInputField(arg);
-    return;
+    restore_data = true;
   };
 
   document.getElementById('all_villager').value = arg.input.player_count;
@@ -115,7 +116,8 @@ function updateInputField(arg) {
   });
   Object.keys(seer_co).forEach(function(k){
     Object.keys(arg.log).forEach(function(d){
-      if (d.match("^\\d+日目の朝となりました。$")) {
+      if (d.match("^\\d+日目の朝となりました。$") &&
+          (arg.input.each_player[k][d] != null) ) {
         var target = arg.input.each_player[k][d].target;
         var result = arg.input.each_player[k][d].result;
 
@@ -160,7 +162,6 @@ function updateInputField(arg) {
     var job = document.getElementById('job-' + k).value; // deduced Job
     var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
 
-
     // process 1 : add <td> cell if not exist
     for (var i = tds_title.length ; i <= date_count ; i++) {
       var td_a = document.createElement('td');
@@ -197,6 +198,7 @@ function updateInputField(arg) {
     });
     document.getElementById('stat-' + k + '-1-count').innerText = "発言 "+String(c);
 
+
     // process 3 : add inner value into <td> cell
     for (var i = 2 ; i <= date_count ; i++) {
       var datestring = String(i) + "日目の朝となりました。";
@@ -213,7 +215,8 @@ function updateInputField(arg) {
       if (alive_status == "（生存中）") {
         if (dead_reason != null) { dead_reason.remove(); };
 
-        if ((null == arg.input.each_player[k]) ||
+        if ((restore_data == true) ||
+            (null == arg.input.each_player[k]) ||
             (job != arg.input.each_player[k].comingout)) {
           target.textContent == '';
           result.textContent == '';
@@ -292,6 +295,10 @@ function updateInputField(arg) {
 
             // deducer: result (fixed string from all player list)
             result.setAttribute('disabled', 'disabled');
+          }
+          if (restore_data == true) {
+            target.value = arg.input.each_player[k][datestring].target;
+            result.value = arg.input.each_player[k][datestring].result;
           }
         }
 
@@ -496,5 +503,15 @@ function createInputField(arg) {
   ret.insertAdjacentElement('beforeend', ret_body);
   document.getElementById("deduce").textContent = '';
   document.getElementById("deduce").insertAdjacentElement('afterbegin', ret);
+
+  // restore update setting
+  if (arg.input != null) {
+    Object.keys(arg.input.each_player).forEach(function(k){
+      // 参加者別の情報
+      document.getElementById('job-' + k).value = arg.input.each_player[k].comingout; // deduced Job
+      document.getElementById('mrk-' + k).value = arg.input.each_player[k].enemymark; // Monster Mark
+    });
+  }
+
   return;
 };

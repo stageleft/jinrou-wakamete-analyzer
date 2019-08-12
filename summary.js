@@ -168,7 +168,6 @@ function updateSummary(arg) {
     // 村COまとめ
     ret.push(calcSubSummary("【占い師 (x/y)】", arg.input.seer_count,      seer_co,        extra_letter));
     ret.push(calcSubSummary("【霊能者 (x/y)】", arg.input.medium_count,    medium_co,      extra_letter));
-    ret.push('　（占い欠け視点グレー：' + Object.keys(medium_gray_list).join('、') + '）');
     ret.push(calcSubSummary("【共有者 (x/y)】", arg.input.freemason_count, freemason_co,   extra_letter_empty));
     ret.push(calcSubSummary("【猫　又 (x/y)】", arg.input.werecat_count,   werecat_co,     extra_letter_empty));
     ret.push(calcSubSummary("【狩　人 (x/y)】", arg.input.bodyguard_count, bodyguard_co,   extra_letter_empty));
