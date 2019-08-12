@@ -396,7 +396,13 @@ function createInputField(arg) {
   var ret_head     = document.createElement('thead');
   var tr_title     = document.createElement('tr');
   tr_title.setAttribute('id', 'deducer-title');
-  tr_title.insertAdjacentElement('beforeend', document.createElement('td'));
+  td_day0title = document.createElement('td');
+  a_linktovote = document.createElement('a');
+  a_linktovote.setAttribute('id', 'vote');
+  a_linktovote.setAttribute('href', '#');
+  a_linktovote.innerText = "（参考）投票まとめ";
+  td_day0title.insertAdjacentElement('beforeend', a_linktovote);
+  tr_title.insertAdjacentElement('beforeend', td_day0title);
 
   var td_day1title = document.createElement('td');
   td_day1title.setAttribute('id', 'deducer-title-1');
@@ -427,7 +433,7 @@ function createInputField(arg) {
 
     // villager_list: add character-name in mid.
     var a_villager  = document.createElement('a');
-    a_villager.setAttribute('id', 'all-day-log' + k);
+    a_villager.setAttribute('id', 'all-day-log-' + k.trim());
     a_villager.setAttribute('href', '#');
     a_villager.innerText = k; // key: 
     td_villager.insertAdjacentElement('afterbegin', a_villager);

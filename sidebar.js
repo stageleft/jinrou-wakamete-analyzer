@@ -45,7 +45,8 @@ function recvLog(request, sender, sendResponse) {
 
   // ToDo: emurate Wakamete-memo
   try {
-    updateSummary(value);
+    updateVotes(value);      // vote-summary
+    updateSummary(value);    // deduce-summary
   } catch(e) {
     // exception case
     console.log(e.name + ':' + e.message);
@@ -58,6 +59,97 @@ function recvLog(request, sender, sendResponse) {
   sendResponse({response: "OK"});
 };
 
+// ref. https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener
+function event_click_deduce(arg) {
+  var v = document.getElementById("freememo").value;
+
+  if (arg != null) {
+    var o = arg.srcElement;
+    if ( o.tagName.toLowerCase() == "a" ) {
+      var id = o.getAttribute('id');
+
+      if (id.indexOf('log') != -1){
+        //// create comment-summary
+        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
+        updateCommentLog(value, id);
+
+        //// show comment-summary
+        // <a id="date-log-2" href="#">2日目</a>
+        // <a id="all-day-log-依田芳乃 " href="#">依田芳乃 </a>
+        document.getElementById("vote-summary"   ).setAttribute('class', 'popup-standby');
+        document.getElementById("comment-summary").setAttribute('class', 'popup-active');
+        document.getElementById("deduce-summary" ).setAttribute('class', 'popup-standby');
+      } else if(id.indexOf('vote') != -1) {
+        //// create vote-summary
+
+        //// show vote-summary
+        // <a id="vote" href="#">投票結果</a>
+        document.getElementById("vote-summary"   ).setAttribute('class', 'popup-active');
+        document.getElementById("comment-summary").setAttribute('class', 'popup-standby');
+        document.getElementById("deduce-summary" ).setAttribute('class', 'popup-standby');
+      }
+    } else {
+      //// show deduce-summary
+      document.getElementById("vote-summary"   ).setAttribute('class', 'popup-standby');
+      document.getElementById("comment-summary").setAttribute('class', 'popup-standby');
+      document.getElementById("deduce-summary" ).setAttribute('class', 'popup-active');
+    }
+  }
+  return;
+}
+function event_click_votes(arg) {
+  if (arg != null) {
+    var o = arg.srcElement;
+    while (( o.tagName.toLowerCase() != "td") && (o.tagName.toLowerCase() != "div")) {
+      o = o.parentElement;
+    }
+    if (o.tagName.toLowerCase() == "td") {
+      // copy dayX,from,to if "to" clicked.
+      // assumed HTML is style is below.
+      //     <tr><td>----</td><td>...</td><td                      >dayX</td><td>...</td></tr>
+      //     <tr><td>....</td><td>...</td><td alt="dayX:....->....">....</td><td>...</td></tr>
+      //     <tr><td>from</td><td>...</td><td alt="dayX:from-> to "> to </td><td>...</td></tr>
+      //     <tr><td>....</td><td>...</td><td alt="dayX:....->....">....</td><td>...</td></tr>
+      var v = document.getElementById("freememo").value;
+      v = v + "\n" + o.getAttribute('alt');
+      document.getElementById("freememo").value = v;
+    }
+  }
+  return;
+}
+function event_click_comments(arg) {
+  if (arg != null) {
+    var o = arg.srcElement;
+    while (( o.tagName.toLowerCase() != "tr") && (o.tagName.toLowerCase() != "div")) {
+      o = o.parentElement;
+    }
+    if ((o.tagName.toLowerCase() == "tr") && (o.childElementCount == 2)) {
+      // copy innerText if outerHTML is <tr><td>charecter</td><td>comment</td></tr>
+      var v = document.getElementById("freememo").value;
+      v = v + "\n" + o.innerText;
+      document.getElementById("freememo").value = v;
+    }
+  }
+  return;
+}
+function event_click_summary(arg) {
+  if (arg != null) {
+    var o = arg.srcElement;
+    while (o.tagName.toLowerCase() != "div") {
+      o = o.parentElement;
+    }
+    // copy result
+    var v = document.getElementById("freememo").value;
+    v = v + "\n" + o.innerText;
+    document.getElementById("freememo").value = v;
+  }
+  return;
+}
+
 // 性能チューニング：コールバック関数を追加はコードの最後の方で。
 // 余計な addEventListener() コールを最小化したい。
 browser.runtime.onMessage.addListener(recvLog);
+document.getElementById("deduce"         ).addEventListener("click", function(e){ event_click_deduce(e); }, true);
+document.getElementById("vote-summary"   ).addEventListener("click", function(e){ event_click_votes(e); }, true);
+document.getElementById("comment-summary").addEventListener("click", function(e){ event_click_comments(e); }, true);
+document.getElementById("deduce-summary" ).addEventListener("click", function(e){ event_click_summary(e); }, true);
