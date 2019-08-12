@@ -8,12 +8,15 @@ var mob_list = ["村人","人外","人狼","狂人","妖狐","子狐"];
 var seer_result = ["","○","●"];
 var medium_result = ["","○","●","△"];
 
-
 function updateInput(arg) {
 // functional input  : JSON from Web Storage API
 // Another input     : inner table of <div id="deduce" />
 // functional output : JSON
 //     'input' key of Web Storage API style
+  if (arg.log[base_date] == null) {
+    return;
+  }
+
   var ret = {};
 
   // 村全体の情報
@@ -74,6 +77,10 @@ function updateInputField(arg) {
 // Another input     : inner table of <div id="deduce" />
 // functional output : -
 // Another output    : inner <td> element of table in <div id="deduce" />
+  if (arg.log[base_date] == null) {
+    document.getElementById("deduce").textContent = '';
+    return;
+  }
   var player_list = Object.keys(arg.log[base_date].players);
   var restore_data = false;
 
