@@ -58,10 +58,10 @@
       medium_count: integer,
       bodyguard_count: integer,
       freemason_count: integer,
+      werecat_count: integer,
       werewolf_count: integer,
       posessed_count: integer,
       werefox_count: integer,
-      immoralist_count: integer,
       minifox_count: integer,
       // 参加者別、役職CO、占い結果、霊能結果
       each_player:{
