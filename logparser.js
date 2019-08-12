@@ -13,7 +13,7 @@ function html2json_villager_log_1day(arg) {
 //            number:
 //            date: 
 //            messages:
-//            player:
+//            players:
 //            comments:
 //            vote:
 //          }
@@ -21,14 +21,19 @@ function html2json_villager_log_1day(arg) {
 
   var base_table   = arg.querySelector("table").querySelector("tbody");
   var base_tr_list = base_table.querySelectorAll("tr");
-  for (var i = 0 ; i < base_tr_list.length ; i++) {
-    if (base_tr_list.item(i).innerText == "ブラウザの更新ボタンは押さないでください") {
+  if ((base_tr_list.item(0).innerText != "ブラウザの更新ボタンは押さないでください") &&
+      (base_tr_list.item(0).innerText != "過去の記録")) {
+    return null;
+  }
+  for (var i = 1 ; i < base_tr_list.length ; i++) {
+    if ((base_tr_list.item(i).innerText == "ブラウザの更新ボタンは押さないでください") ||
+        (base_tr_list.item(i).innerText == "過去の記録")) {
       // nop : caution to player
     } else if (base_tr_list.item(i).innerText.match("^◆ 村人たち")) {
       // nop : tag
     } else if (base_tr_list.item(i-1).innerText.match("^◆ 村人たち")) {
       // parse sub <table> as villager_list
-      ret.player = html2json_villager_list(base_tr_list.item(i).querySelector("table")).player;
+      ret.players = html2json_villager_list(base_tr_list.item(i).querySelector("table")).players;
     } else if (base_tr_list.item(i).innerText.match("^◆ 再表示")) {
       // nop : tag
     } else if (base_tr_list.item(i-1).innerText.match("^◆ 再表示")) {
@@ -88,13 +93,13 @@ function html2json_villager_list(arg) {
 // input  : HTMLCollction
 //          <tbody> ... </tbody> of <table class="CLSTABLE"></table>
 // output : Hash
-//            player: [
-//              { cn:value, icon:value, stat:value },
-//              { cn:value, icon:value, stat:value },
+//            player: {
+//              "character-name": { icon:value, stat:value },
+//              "character-name": { icon:value, stat:value },
 //              ...
-//            ]
+//            }
 //           stat:value : "（生存中）" or "（死　亡）"
-  var ret = [];
+  var ret = {};
   var re = new RegExp('^\.\/', '');
 
 //  console.log(arg.innerHTML); // debug
@@ -124,12 +129,11 @@ function html2json_villager_list(arg) {
       is_alive       = character_info[character_info.length - 1];
 
       // create Hash and add to Array
-      var r = { cn:character_name , icon:img_src , stat: is_alive };
-      ret.push(r);
+      ret[character_name] = { icon:img_src , stat: is_alive };
     }
   }
 
-  return { player: ret };
+  return { players: ret };
 }
 
 function html2json_village_log(arg) {
@@ -148,7 +152,7 @@ function html2json_village_log(arg) {
 //            vote_log : <from html2json_vote_result()>
 //   type:value : "Normal" or "Strong" or "WithColor"
   var cmts = [];
-  var msg_date    = "１日目の昼となりました。";
+  var msg_date    = "１日目の朝となりました。";
   var msgs_voted  = [];
   var msgs_bitten = [];
   var msgs_dnoted = []; // Death Note
@@ -164,13 +168,19 @@ function html2json_village_log(arg) {
     if (base_td_list.length == 1) {        // system message
       var icon_selector = base_td_list.item(0).querySelector("img");
       if (icon_selector != null) {
+        if (base_td_list.item(0).querySelector("font") == null) {
+          continue;
+        }
+
         var icon_uri   = icon_selector.getAttribute("src").replace(re, "http://jinrou.dip.jp/~jinrou/");
         var msg_text   = base_td_list.item(0).querySelector("font").innerText;
         if (msg_text.match("となりました。$")) {
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">１日目の夜となりました。</font>(19/07/15 00:39:10)</td>
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">3日目の夜となりました。</font>(19/07/14 23:32:09)</td>
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">9日目の朝となりました。</font>(19/07/06 01:43:35)</td>
-          msg_date = msg_text;
+          if (msg_date == "１日目の朝となりました。") {
+            msg_date = msg_text;
+          }
         } else if (msg_text.match("^処刑されました・・・。$")) {
           // <td colspan="2"><img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font></td>
           msgs_voted.push(base_td_list.item(0).querySelector("b").innerText);
@@ -193,19 +203,26 @@ function html2json_village_log(arg) {
         // ignore messages without icon. it is not important.
       }
     } else if (base_td_list.length == 2) { // villager comment
-      var villager  = base_td_list.item(0).querySelector("b").innerText;
-      var v_comment = String(base_td_list.item(1).innerHTML).replace(/^「/,"").replace(/」$/,"").split('<br>');
-      var v_comtype = "Normal";
-      if (base_td_list.item(1).querySelector("font") != null) {
-        if (base_td_list.item(1).querySelector("font").size == "+1") {
-          v_comtype = "Strong";
-        } else if (base_td_list.item(1).querySelector("font").size == "-1") {
-          v_comtype = "WithColor";
-        } else {
-          v_comtype = "Unknown";
+      try {
+        var villager  = base_td_list.item(0).querySelector("b").innerText;
+        if (villager == "ゲームマスター") {
+            villager = "初日犠牲者";
         }
+        var v_comment = String(base_td_list.item(1).innerHTML).replace(/^「/,"").replace(/」$/,"").split('<br>');
+        var v_comtype = "Normal";
+        if (base_td_list.item(1).querySelector("font") != null) {
+          if (base_td_list.item(1).querySelector("font").size == "+1") {
+            v_comtype = "Strong";
+          } else if (base_td_list.item(1).querySelector("font").size == "-1") {
+            v_comtype = "WithColor";
+          } else {
+            v_comtype = "Unknown";
+          }
+        }
+        cmts.push({ speaker: villager , comment : v_comment , type : v_comtype});
+      } catch (e) {
+        // nop : skip "◆狼の遠吠え"
       }
-      cmts.push({ speaker: villager , comment : v_comment , type : v_comtype});
     } else {                               // vote
       vote_table = base_td_list.item(0).querySelector("table");
       if (vote_table != null) {            // vote table

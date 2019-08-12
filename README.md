@@ -1,4 +1,4 @@
-It is NOW ON DEVELOPMENT. Some Debug function maybe enabled and it becomes cosmetic bug.
+It is NOW ON DEVELOPMENT. Some Debug function is enabled and it becomes cosmetic bug.
 
 開発中です。デバッグ機能のせいで見た目バグってるんで使わないよーに。
 
