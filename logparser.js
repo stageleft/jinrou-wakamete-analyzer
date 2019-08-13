@@ -203,6 +203,7 @@ function html2json_village_log(arg) {
             msgs_dnoted.push(base_td_list.item(0).querySelector("b").innerText);
           } else {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>八神マキノ</b>さんは都合により<font color="#ff0000">突然死しました・・・。【ペナルティ】</font>
+            // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>海星</b>さんは都合により<font color="#ff0000">突然死しました・・・。</font>
             msgs_sudden.push(base_td_list.item(0).querySelector("b").innerText);
           }
         } else {

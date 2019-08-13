@@ -53,7 +53,7 @@ function updateCommentLog(arg, param) {
 
       var td_daytitle = document.createElement('td');
       td_daytitle.setAttribute('colspan', '2');
-      td_daytitle.innerHTML = '◆◆◆◆◆<b>' + datearray[i-1] + '</b>◆◆◆◆'
+      td_daytitle.innerHTML = '◆◆◆◆◆<b>' + datearray[i-1] + '</b>◆◆◆◆◆'
       tr_daytitle.insertAdjacentElement('beforeend', td_daytitle);
 
       ret.insertAdjacentElement('beforeend', tr_daytitle);

@@ -127,9 +127,9 @@ function updateSummary(arg) {
                       arg.input.minifox_count  - Object.keys(minifox_mark).length;
     ret.push(calcSubSummary("【人　外 (x/y)】", enemy_count,               list.enemy_mark,   extra_letter_empty));
     // 死亡情報まとめ
-    ret.push(calcSubSummary("【吊　り (x)】",   null,                      voted,　 extra_letter_empty));
-    ret.push(calcSubSummary("【噛　み (x)】",   null,                      bitten, extra_letter_empty));
-    ret.push(calcSubSummary("【デスノ (x)】",   null,                      dnoted, extra_letter_empty));
+    ret.push(calcSubSummary("【吊　り (x)】",   null,                      voted.filter(s => s != ''),  extra_letter_empty));
+    ret.push(calcSubSummary("【噛　み (x)】",   null,                      bitten.filter(s => s != ''), extra_letter_empty));
+    ret.push(calcSubSummary("【デスノ (x)】",   null,                      dnoted.filter(s => s != ''), extra_letter_empty));
   } catch (e) {
     // nop
   }
