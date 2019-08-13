@@ -93,6 +93,11 @@ function updateInputField(arg) {
     base_date = datearray[1];
   }
 
+  if (arg.log[base_date].players.length != arg.input.each_player.length) {
+    arg.input = null;
+    is_initialize = true;
+  }
+
   if ((is_initialize == true) ||
       (document.getElementById("deduce").textContent == '')) {
     document.getElementById("deduce").textContent = '';
@@ -266,14 +271,17 @@ function updateInputField(arg) {
             // deducer: result (fixed string from all player list)
             result.setAttribute('disabled', 'disabled');
           }
-          if ((is_initialize == true) && (arg.input != null)) {
+          if (((is_initialize == true) ||
+               (td_cell_added == true)) &&
+              ((arg.input != null) &&
+               (arg.input.each_player[k][datestring] != null))) {
             target.value = arg.input.each_player[k][datestring].target;
             result.value = arg.input.each_player[k][datestring].result;
           }
         }
 
         // deducer: comments
-        var datekey = String(i) + "日目の朝となりました。"
+        var datekey = datearray[i-1];
         var c = 0;
         arg.log[datekey].comments.forEach(function(h){
           if ( k == h.speaker ) {

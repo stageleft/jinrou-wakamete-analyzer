@@ -88,9 +88,9 @@ function makeComingOutList(arg) {
   ret.villager_co   = {};
 
   // preprocess : check arg has input.
-  if (arg.log                == null) { return ret; };
-  if (arg.input              == null) { return ret; };
-  if (arg.input.each_playert == null) { return ret; };
+  if (arg.log               == null) { return ret; };
+  if (arg.input             == null) { return ret; };
+  if (arg.input.each_player == null) { return ret; };
 
   var datearray = createDateArray(arg);
   var datestr   = datearray[datearray.length - 1];
@@ -173,22 +173,26 @@ function makeGrayVillagerList(arg) {
 
   Object.keys(ret.seer_co).forEach(function(k){
     datearray.forEach(function(d){
+      if (arg.input.each_player[k][d] == null) {
+        return;
+      }
+
       var target = arg.input.each_player[k][d].target;
       var result = arg.input.each_player[k][d].result;
 
       if (result == "○") {
-        if (Object.keys(villager_gray).indexOf(target) != -1) {
+        if (Object.keys(ret.villager_gray).indexOf(target) != -1) {
           delete ret.villager_gray[target];
           ret.villager_white[target] = arg.input.each_player[k];
-        } else if (Object.keys(villager_black).indexOf(target) != -1) {
+        } else if (Object.keys(ret.villager_black).indexOf(target) != -1) {
           delete ret.villager_black[target];
           ret.villager_panda[target] = arg.input.each_player[k];
         }
       } else if (result == "●") {
-        if (Object.keys(villager_gray).indexOf(target) != -1) {
+        if (Object.keys(ret.villager_gray).indexOf(target) != -1) {
           delete ret.villager_gray[target];
           ret.villager_black[target] = arg.input.each_player[k];
-        } else if (Object.keys(villager_white).indexOf(target) != -1) {
+        } else if (Object.keys(ret.villager_white).indexOf(target) != -1) {
           delete ret.villager_white[target];
           ret.villager_panda[target] = arg.input.each_player[k];
         }
