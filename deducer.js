@@ -1,8 +1,3 @@
-var base_date = "１日目の夜となりました。";
-//var base_date = "１日目の朝となりました。"; //debug
-//var base_date = "「人　狼」の勝利です！"; //debug
-//var base_date = "「村　人」の勝利です！"; //debug
-
 var job_list = ["村人","占い","霊能","狩人","共有","猫又"];
 var mob_list = ["村人","人外","人狼","狂人","妖狐","子狐"];
 var seer_result = ["","○","●"];
@@ -13,8 +8,16 @@ function updateInput(arg) {
 // Another input     : inner table of <div id="deduce" />
 // functional output : JSON
 //     'input' key of Web Storage API style
-  if (arg.log[base_date] == null) {
+  var datearray = createDateArray(arg);
+  if ((datearray == null) || (datearray.length == 0)){
     return;
+  }
+
+  var base_date;
+  if (datearray.length == 1) {
+    base_date = datearray[0];
+  } else {
+    base_date = datearray[1];
   }
 
   var ret = {};
@@ -40,14 +43,9 @@ function updateInput(arg) {
                                               ret.werefox_count + 
                                               ret.minifox_count);
 
-  var date_count = 0;
-  Object.keys(arg.log).forEach(function(d){
-    if (d.match("朝となりました。$")) {
-      date_count = date_count + 1;
-    }
-  });
+  var datearray = createDateArray(arg);
 
-  ret.each_player = new Object();
+  ret.each_player = {};
   Object.keys(arg.log[base_date].players).forEach(function(k){
     // 参加者別の情報
     var job = document.getElementById('job-' + k); // deduced Job
@@ -55,13 +53,13 @@ function updateInput(arg) {
     if ((job == null) || (mrk == null)) {
       return null;
     }
-    ret.each_player[k] = new Object();
+    ret.each_player[k] = {};
     ret.each_player[k].comingout = job.value;
     ret.each_player[k].enemymark = mrk.value;
     // 参加者別×日別の情報
-    for (var i = 2; i <= date_count; i++) {
+    for (var i = 2; i <= datearray.length; i++) {
       var datestr = String(i) + "日目の朝となりました。"
-      ret.each_player[k][datestr] = new Object();
+      ret.each_player[k][datestr] = {};
       var target_obj = document.getElementById('stat-' + k + '-' + String(i) + '-target')
       ret.each_player[k][datestr].target      = (target_obj == null) ? null : target_obj.value;
       var result_obj = document.getElementById('stat-' + k + '-' + String(i) + '-result')
@@ -77,80 +75,42 @@ function updateInputField(arg) {
 // Another input     : inner table of <div id="deduce" />
 // functional output : -
 // Another output    : inner <td> element of table in <div id="deduce" />
-  if (arg.log[base_date] == null) {
-    document.getElementById("deduce").textContent = '';
+  var is_initialize = false;
+  if (arg.input == null) {
+    is_initialize = true;
+  }
+
+  var datearray = createDateArray(arg);
+  if ((datearray == null) || (datearray.length == 0)){
     return;
   }
-  var player_list = Object.keys(arg.log[base_date].players);
-  var restore_data = false;
 
-  if (document.getElementById("deduce").textContent == '') {
-    createInputField(arg);
-    restore_data = true;
+  var base_date;
+  if (datearray.length == 1) {
+    base_date = datearray[0];
+    is_initialize = true;
+  } else {
+    base_date = datearray[1];
+  }
+
+  if ((is_initialize == true) ||
+      (document.getElementById("deduce").textContent == '')) {
+    document.getElementById("deduce").textContent = '';
+    createInputField(arg, base_date);
   };
 
-  document.getElementById('all_villager').value = arg.input.player_count;
-  document.getElementById('job_villager').value = arg.input.villager_count;
-
-  var date_count = 0;
-  Object.keys(arg.log).forEach(function(d){
-    if (d.match("朝となりました。$")) {
-      date_count = date_count + 1;
-    }
-  });
-
   // preprocess: calcurate seer-info and gray-info
-  var seer_co       = new Object();
-  var villager_gray  = new Object();
-  var villager_white = new Object(); // white, coming-out
-  var villager_black = new Object(); // black, panda, non-villager
-  Object.keys(arg.input.each_player).forEach(function(k){
-    var input_mrk = arg.input.each_player[k].enemymark;
-    var input_job = arg.input.each_player[k].comingout;
+  var villager_cell_info = makeGrayVillagerList(arg);
 
-    if (input_mrk == "村人") {
-      if (input_job == "占い") {
-        seer_co[k]        = arg.input.each_player[k];
-        villager_white[k] = arg.input.each_player[k];
-      } else if (input_job == "村人") {
-        villager_gray[k]  = arg.input.each_player[k];
-      } else {
-        villager_white[k] = arg.input.each_player[k];
-      }
-    } else {
-      villager_black[k] = arg.input.each_player[k];
-    }
-  });
-  Object.keys(seer_co).forEach(function(k){
-    Object.keys(arg.log).forEach(function(d){
-      if (d.match("^\\d+日目の朝となりました。$") &&
-          (arg.input.each_player[k][d] != null) ) {
-        var target = arg.input.each_player[k][d].target;
-        var result = arg.input.each_player[k][d].result;
-
-        if (result == "○") {
-          if (Object.keys(villager_gray).indexOf(target) != -1) {
-            delete villager_gray[target];
-            villager_white[target] = arg.input.each_player[k];
-          }
-        } else if (result == "●") {
-          if (Object.keys(villager_gray).indexOf(target) != -1) {
-            delete villager_gray[target];
-            villager_black[target] = arg.input.each_player[k];
-          } else if (Object.keys(villager_white).indexOf(target) != -1) {
-            delete villager_white[target];
-            villager_black[target] = arg.input.each_player[k];
-          }
-        } else { // if (result == "")
-          // nop
-        }
-      }
-    });
-  });
+  // update cast field
+  if (is_initialize == false) {
+    document.getElementById('all_villager').value = arg.input.player_count;
+    document.getElementById('job_villager').value = arg.input.villager_count;
+  }
 
   // add <td> cell to title if not exist
   var tds_title   = document.getElementById('deducer-title').querySelectorAll('td');
-  for (var i = tds_title.length ; i <= date_count ; i++) {
+  for (var i = tds_title.length ; i <= datearray.length; i++) {
     var td = document.createElement('td');
     td.setAttribute('id', 'deducer-title-' + String(i));
     td.setAttribute('colspan', '3');
@@ -164,13 +124,15 @@ function updateInputField(arg) {
     document.getElementById('deducer-title').insertAdjacentElement('beforeend', td);
   }
 
+  var player_list = Object.keys(arg.log[base_date].players);
   player_list.forEach(function(k){
     var tr = document.getElementById('villager-list-'+k);
     var job = document.getElementById('job-' + k).value; // deduced Job
     var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
 
     // process 1 : add <td> cell if not exist
-    for (var i = tds_title.length ; i <= date_count ; i++) {
+    var td_cell_added = false;
+    for (var i = tds_title.length ; i <= datearray.length ; i++) {
       var td_a = document.createElement('td');
       var count = document.createElement('p');
       var dead_reason = document.createElement('p');
@@ -193,12 +155,13 @@ function updateInputField(arg) {
       result.setAttribute('disabled', 'disabled');
       td_c.insertAdjacentElement('beforeend', result);
       tr.insertAdjacentElement('beforeend', td_c);
+
+      td_cell_added = true;
     }
 
     // process 2 : add day1 comment count into <td> cell
-    var datekey = "１日目の朝となりました。";
     var c = 0;
-    arg.log[datekey].comments.forEach(function(h){
+    arg.log[datearray[0]].comments.forEach(function(h){
       if ( k == h.speaker ) {
         c = c + 1;
       }
@@ -207,8 +170,8 @@ function updateInputField(arg) {
 
 
     // process 3 : add inner value into <td> cell
-    for (var i = 2 ; i <= date_count ; i++) {
-      var datestring = String(i) + "日目の朝となりました。";
+    for (var i = 2 ; i <= datearray.length ; i++) {
+      var datestring   = datearray[i-1];
       var alive_status = arg.log[datestring].players[k].stat;
       var target      = document.getElementById('stat-' + k + '-' + String(i) + '-target');
       var result      = document.getElementById('stat-' + k + '-' + String(i) + '-result');
@@ -222,8 +185,8 @@ function updateInputField(arg) {
       if (alive_status == "（生存中）") {
         if (dead_reason != null) { dead_reason.remove(); };
 
-        if ((restore_data == true) ||
-            (null == arg.input.each_player[k]) ||
+        if ((is_initialize == true) || // just after createInputField() called.
+            (td_cell_added == true) || // just after new <td> cell added.
             (job != arg.input.each_player[k].comingout)) {
           target.textContent == '';
           result.textContent == '';
@@ -303,7 +266,7 @@ function updateInputField(arg) {
             // deducer: result (fixed string from all player list)
             result.setAttribute('disabled', 'disabled');
           }
-          if (restore_data == true) {
+          if ((is_initialize == true) && (arg.input != null)) {
             target.value = arg.input.each_player[k][datestring].target;
             result.value = arg.input.each_player[k][datestring].result;
           }
@@ -320,13 +283,13 @@ function updateInputField(arg) {
         count.innerText = "発言 "+String(c);
 
         // deducer: set background color
-        if (Object.keys(villager_gray).indexOf(k) != -1) {
+        if (Object.keys(villager_cell_info.villager_gray).indexOf(k) != -1) {
           document.getElementById('villager-' + k).setAttribute('class', 'gray');
-        } else if (Object.keys(villager_white).indexOf(k) != -1) {
-          document.getElementById('villager-' + k).setAttribute('class', 'white');
-        } else if (Object.keys(villager_black).indexOf(k) != -1) {
+        } else if ((Object.keys(villager_cell_info.villager_black).indexOf(k) != -1) ||
+                   (Object.keys(villager_cell_info.villager_panda).indexOf(k) != -1)) {
           document.getElementById('villager-' + k).setAttribute('class', 'black');
-        }
+        } else // white or job ComingOut
+          document.getElementById('villager-' + k).setAttribute('class', 'white');
 
       } else {
         if (target != null) { target.remove(); };
@@ -362,24 +325,10 @@ function updateInputField(arg) {
     }
   });
 
-  if (arg.log[String(date_count)+"日目の夜となりました。"] == null) {
-    // case if (1) daytime (2) before-play (3) after-play
-    
-  } else {
-    // case if (4) nighttime
-    // nop : have suited column.
-  }
-
-  Object.keys(arg.log[base_date].players).forEach(function(k){
-    if ((document.getElementById('job-' + k) == null) ||
-        (document.getElementById('mrk-' + k) == null)) {
-      createInputField(arg);
-    }
-  });
   return;
 }
 
-function createInputField(arg) {
+function createInputField(arg, base_date) {
 // functional input  : JSON from Web Storage API (input key must be refreshed)
 // functional output : -
 // Another output    : inner table of <div id="deduce" />
@@ -388,7 +337,8 @@ function createInputField(arg) {
   var player_list = Object.keys(arg.log[base_date].players);
 
   // update Table
-  if (arg.input != null) {
+  if ((arg.input != null) &&
+      (arg.input.werewolf_count >= 1)) {
     document.getElementById('seer').value      = String(arg.input.seer_count);
     document.getElementById('medium').value    = String(arg.input.medium_count);
     document.getElementById('bodyguard').value = String(arg.input.bodyguard_count);
@@ -411,10 +361,16 @@ function createInputField(arg) {
   var tr_title     = document.createElement('tr');
   tr_title.setAttribute('id', 'deducer-title');
   td_day0title = document.createElement('td');
+  td_day0title.innerText = '　';
+  a_linktosummary = document.createElement('a');
+  a_linktosummary.setAttribute('id', 'summary');
+  a_linktosummary.setAttribute('href', '#');
+  a_linktosummary.innerText = "状況";
+  td_day0title.insertAdjacentElement('afterbegin', a_linktosummary);
   a_linktovote = document.createElement('a');
   a_linktovote.setAttribute('id', 'vote');
   a_linktovote.setAttribute('href', '#');
-  a_linktovote.innerText = "（参考）投票まとめ";
+  a_linktovote.innerText = "投票";
   td_day0title.insertAdjacentElement('beforeend', a_linktovote);
   tr_title.insertAdjacentElement('beforeend', td_day0title);
 
@@ -512,7 +468,8 @@ function createInputField(arg) {
   document.getElementById("deduce").insertAdjacentElement('afterbegin', ret);
 
   // restore update setting
-  if (arg.input != null) {
+  if ((arg.input != null) &&
+      (arg.input.each_player != null)) {
     Object.keys(arg.input.each_player).forEach(function(k){
       // 参加者別の情報
       document.getElementById('job-' + k).value = arg.input.each_player[k].comingout; // deduced Job

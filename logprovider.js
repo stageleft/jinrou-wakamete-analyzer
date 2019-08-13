@@ -25,58 +25,45 @@ function updateCommentLog(arg, param) {
     return tr;
   }
 
-  try {
-    // 本日（最新日）の日付
-    var date_count = 0;
-    Object.keys(arg.log).forEach(function(d){
-      if (d.match("朝となりました。$")) {
-        date_count = date_count + 1;
-      }
+  // 本日（最新日）の日付
+  var datearray  = createDateArray(arg);
+  var date_count = datearray.length;
+
+  if (param.indexOf('date-log-') == 0) {
+    // create log by date
+    var datestr = datearray[Number(param.replace('date-log-','')) - 1];
+
+    var tr_daytitle = document.createElement('tr');
+
+    var td_daytitle = document.createElement('td');
+    td_daytitle.setAttribute('colspan', '2');
+    td_daytitle.innerHTML = '◆◆◆◆◆<b>' + datestr + '</b>◆◆◆◆◆'
+    tr_daytitle.insertAdjacentElement('beforeend', td_daytitle);
+
+    ret.insertAdjacentElement('beforeend', tr_daytitle);
+
+    arg.log[datestr].comments.forEach(function(l){
+      ret.insertAdjacentElement('beforeend', createLogTableRow(l));
     });
-
-    if (param.indexOf('date-log-') == 0) {
-      // create log by date
-      var datestr;
-      if (param.indexOf('date-log-1') == 0) {
-        datestr = "１日目の朝となりました。";
-      } else {
-        datestr = param.replace('date-log-','') + "日目の朝となりました。";
-      }
-
+  } else {
+    var villager_str = param.replace('all-day-log-','');
+    // create log by villager
+    for (var i = date_count ; i >= 1 ; i-- ) {
       var tr_daytitle = document.createElement('tr');
 
       var td_daytitle = document.createElement('td');
       td_daytitle.setAttribute('colspan', '2');
-      td_daytitle.innerHTML = '◆◆◆◆◆<b>' + datestr + '</b>◆◆◆◆◆'
+      td_daytitle.innerHTML = '◆◆◆◆◆<b>' + datearray[i-1] + '</b>◆◆◆◆'
       tr_daytitle.insertAdjacentElement('beforeend', td_daytitle);
 
       ret.insertAdjacentElement('beforeend', tr_daytitle);
 
-      arg.log[datestr].comments.forEach(function(l){
-        ret.insertAdjacentElement('beforeend', createLogTableRow(l));
+      arg.log[datearray[i-1]].comments.forEach(function(l){
+        if ( l.speaker.trim() == villager_str) {
+          ret.insertAdjacentElement('beforeend', createLogTableRow(l));
+        }
       });
-    } else {
-      var villager_str = param.replace('all-day-log-','');
-      // create log by villager
-      for (var i = date_count ; i > 1 ; i-- ) {
-        var tr_daytitle = document.createElement('tr');
-
-        var td_daytitle = document.createElement('td');
-        td_daytitle.setAttribute('colspan', '2');
-        td_daytitle.innerHTML = '◆◆◆◆◆<b>' + String(i) + '日目の朝となりました。</b>◆◆◆◆'
-        tr_daytitle.insertAdjacentElement('beforeend', td_daytitle);
-
-        ret.insertAdjacentElement('beforeend', tr_daytitle);
-
-        arg.log[String(i)+"日目の朝となりました。"].comments.forEach(function(l){
-          if ( l.speaker.trim() == villager_str) {
-            ret.insertAdjacentElement('beforeend', createLogTableRow(l));
-          }
-        });
-      }
     }
-  } catch (e) {
-    // nop
   }
 
   var table = document.createElement('table');

@@ -45,7 +45,6 @@ function recvLog(request, sender, sendResponse) {
 
   // ToDo: emurate Wakamete-memo
   try {
-    updateVotes(value);      // vote-summary
     updateSummary(value);    // deduce-summary
   } catch(e) {
     // exception case
@@ -81,19 +80,21 @@ function event_click_deduce(arg) {
         document.getElementById("deduce-summary" ).setAttribute('class', 'popup-standby');
       } else if(id.indexOf('vote') != -1) {
         //// create vote-summary
+        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
+        updateVotes(value);
 
         //// show vote-summary
         // <a id="vote" href="#">投票結果</a>
         document.getElementById("vote-summary"   ).setAttribute('class', 'popup-active');
         document.getElementById("comment-summary").setAttribute('class', 'popup-standby');
         document.getElementById("deduce-summary" ).setAttribute('class', 'popup-standby');
-      }
-    } else {
-      //// show deduce-summary
-      document.getElementById("vote-summary"   ).setAttribute('class', 'popup-standby');
-      document.getElementById("comment-summary").setAttribute('class', 'popup-standby');
-      document.getElementById("deduce-summary" ).setAttribute('class', 'popup-active');
-    }
+      } else if(id.indexOf('summary') != -1) {
+        //// show deduce-summary
+        document.getElementById("vote-summary"   ).setAttribute('class', 'popup-standby');
+        document.getElementById("comment-summary").setAttribute('class', 'popup-standby');
+        document.getElementById("deduce-summary" ).setAttribute('class', 'popup-active');
+      } // else nop
+    } // else nop
   }
   return;
 }
@@ -110,9 +111,11 @@ function event_click_votes(arg) {
       //     <tr><td>....</td><td>...</td><td alt="dayX:....->....">....</td><td>...</td></tr>
       //     <tr><td>from</td><td>...</td><td alt="dayX:from-> to "> to </td><td>...</td></tr>
       //     <tr><td>....</td><td>...</td><td alt="dayX:....->....">....</td><td>...</td></tr>
-      var v = document.getElementById("freememo").value;
-      v = v + "\n" + o.getAttribute('alt');
-      document.getElementById("freememo").value = v;
+      if (o.getAttribute('alt') != null) {
+        var v = document.getElementById("freememo").value;
+        v = v + "\n" + o.getAttribute('alt');
+        document.getElementById("freememo").value = v;
+      }
     }
   }
   return;

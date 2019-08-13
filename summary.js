@@ -55,107 +55,40 @@ function updateSummary(arg) {
     var villager_black = new Object();
 
     // 本日（最新日）の日付
-    var date_count = 0;
-    Object.keys(arg.log).forEach(function(d){
-      if (d.match("朝となりました。$")) {
-        date_count = date_count + 1;
-      }
-    });
-    var datestr = String(date_count)+"日目の夜となりました。";
-    if (arg.log[datestr] == null) {
-      datestr = String(date_count)+"日目の朝となりました。";
-    }
+    var datearray  = createDateArray(arg);
 
     // 参加者の、推理情報による振り分け情報
-    Object.keys(arg.input.each_player).forEach(function(k){
-      var mrk = arg.input.each_player[k].enemymark;
-      var job = arg.input.each_player[k].comingout;
+    var list = makeGrayVillagerList(arg);
 
-      if        (mrk == "人狼") {
-        werewolf_mark[k] = arg.input.each_player[k];
-      } else if (mrk == "狂人") {
-        posessed_mark[k] = arg.input.each_player[k];
-      } else if (mrk == "妖狐") {
-        werefox_mark[k]  = arg.input.each_player[k];
-      } else if (mrk == "子狐") {
-        minifox_mark[k]  = arg.input.each_player[k];
-      } else if (mrk == "人外") {
-        enemy_mark[k]    = arg.input.each_player[k];
-      } else if (job == "占い") {
-        seer_co[k]       = arg.input.each_player[k];
-      } else if (job == "霊能") {
-        medium_co[k]     = arg.input.each_player[k];
-      } else if (job == "狩人") {
-        bodyguard_co[k]  = arg.input.each_player[k];
-      } else if (job == "共有") {
-        freemason_co[k]  = arg.input.each_player[k];
-      } else if (job == "猫又") {
-        werecat_co[k]    = arg.input.each_player[k];
-      } else {
-        var alive_status = arg.log[datestr].players[k].stat;
-        if (alive_status == "（生存中）") {
-          villager_gray[k] = arg.input.each_player[k];
-        }
-      }
-
-      var alive_status = arg.log[datestr].players[k].stat;
-      if (alive_status == "（生存中）") {
-        live_villager[k] = arg.input.each_player[k];
-      }
-    });
-    var medium_gray_list = {};
-    Object.assign(medium_gray_list, villager_gray);
-
-    // 占い全視点でのグレー情報
-    Object.keys(seer_co).forEach(function(k){
-      Object.keys(arg.log).forEach(function(d){
-        if (d.match("^\\d+日目の朝となりました。$")) {
-          var target = arg.input.each_player[k][d].target;
-          var result = arg.input.each_player[k][d].result;
-
-          if (result == "○") {
-            if (Object.keys(villager_gray).indexOf(target) != -1) {
-              delete villager_gray[target];
-              villager_white[target] = arg.input.each_player[k];
-            } else if (Object.keys(villager_black).indexOf(target) != -1) {
-              delete villager_black[target];
-              villager_panda[target] = arg.input.each_player[k];
-            }
-          } else if (result == "●") {
-            if (Object.keys(villager_gray).indexOf(target) != -1) {
-              delete villager_gray[target];
-              villager_black[target] = arg.input.each_player[k];
-            } else if (Object.keys(villager_white).indexOf(target) != -1) {
-              delete villager_white[target];
-              villager_panda[target] = arg.input.each_player[k];
-            }
-          } else { // if (result == "")
-            // nop
-          }
-        }
-      });
+    // 吊り・噛み・デスノ算出
+    var voted  = [];
+    var bitten = [];
+    var dnoted = [];
+    datearray.forEach(function(d){
+      voted.push(arg.log[d].list_voted.join('＆'));
+      bitten.push(arg.log[d].list_bitten.join('＆'));
+      dnoted.push(arg.log[d].list_dnoted.join('＆'));
     });
 
+    // 占い視点グレー算出、まとめ表示
     function extra_letter(player_name, player_info) {
       var seer_gray_list = {};
-      Object.assign(seer_gray_list, live_villager);
+      Object.assign(seer_gray_list, list.villager_live);
 
       delete seer_gray_list[player_name];
 
       var ret = '：';
-      Object.keys(arg.log).forEach(function(d){
-        if (d.match("^\\d+日目の朝となりました。$")) {
-          var date_info = player_info[d];
-          if (date_info != null) {
-            var target = player_info[d].target;
-            var result = player_info[d].result;
-            if (target != null) {
-              delete seer_gray_list[target];
-              if (ret != '：'){
-                ret = ret + ' → ';
-              }
-              ret = ret + String(target) + String(result);
+      datearray.forEach(function(d){
+        var date_info = player_info[d];
+        if (date_info != null) {
+          var target = date_info.target;
+          var result = date_info.result;
+          if (target != null) {
+            delete seer_gray_list[target];
+            if (ret != '：'){
+              ret = ret + ' → ';
             }
+            ret = ret + String(target) + String(result);
           }
         }
       });
@@ -165,27 +98,38 @@ function updateSummary(arg) {
     function extra_letter_empty(player_name, player_info) {
       return '';
     }
+    function extra_letter_enemy(player_name, player_info) {
+      if (player_info.comingout == "占い") {
+        return extra_letter(player_name, player_info);
+      } else {
+        return extra_letter_empty(player_name, player_info);
+      }
+    }
     // 村COまとめ
-    ret.push(calcSubSummary("【占い師 (x/y)】", arg.input.seer_count,      seer_co,        extra_letter));
-    ret.push(calcSubSummary("【霊能者 (x/y)】", arg.input.medium_count,    medium_co,      extra_letter));
-    ret.push(calcSubSummary("【共有者 (x/y)】", arg.input.freemason_count, freemason_co,   extra_letter_empty));
-    ret.push(calcSubSummary("【猫　又 (x/y)】", arg.input.werecat_count,   werecat_co,     extra_letter_empty));
-    ret.push(calcSubSummary("【狩　人 (x/y)】", arg.input.bodyguard_count, bodyguard_co,   extra_letter_empty));
-    ret.push(calcSubSummary("【生存者 (x)】",   null,                      live_villager,  extra_letter_empty));
-    ret.push(calcSubSummary("【完グレ (x)】",   null,                      villager_gray,  extra_letter_empty));
-    ret.push(calcSubSummary("【村人○ (x)】",   null,                      villager_white, extra_letter_empty));
-    ret.push(calcSubSummary("【村人● (x)】",   null,                      villager_black, extra_letter_empty));
-    ret.push(calcSubSummary("【村○● (x)】",   null,                      villager_panda, extra_letter_empty));
+    ret.push(calcSubSummary("【占い師 (x/y)】", arg.input.seer_count,      list.seer_co,        extra_letter));
+    ret.push(calcSubSummary("【霊能者 (x/y)】", arg.input.medium_count,    list.medium_co,      extra_letter));
+    ret.push(calcSubSummary("【共有者 (x/y)】", arg.input.freemason_count, list.freemason_co,   extra_letter_empty));
+    ret.push(calcSubSummary("【猫　又 (x/y)】", arg.input.werecat_count,   list.werecat_co,     extra_letter_empty));
+    ret.push(calcSubSummary("【狩　人 (x/y)】", arg.input.bodyguard_count, list.bodyguard_co,   extra_letter_empty));
+    ret.push(calcSubSummary("【生存者 (x)】",   null,                      list.villager_live,  extra_letter_empty));
+    ret.push(calcSubSummary("【完グレ (x)】",   null,                      list.villager_gray,  extra_letter_empty));
+    ret.push(calcSubSummary("【村人○ (x)】",   null,                      list.villager_white, extra_letter_empty));
+    ret.push(calcSubSummary("【村人● (x)】",   null,                      list.villager_black, extra_letter_empty));
+    ret.push(calcSubSummary("【村○● (x)】",   null,                      list.villager_panda, extra_letter_empty));
     // 人外情報まとめ
-    ret.push(calcSubSummary("【人　狼 (x/y)】", arg.input.werewolf_count, werewolf_mark, extra_letter_empty));
-    ret.push(calcSubSummary("【狂　人 (x/y)】", arg.input.posessed_count, posessed_mark, extra_letter_empty));
-    ret.push(calcSubSummary("【妖　狐 (x/y)】", arg.input.werefox_count,  werefox_mark,  extra_letter_empty));
-    ret.push(calcSubSummary("【子　狐 (x/y)】", arg.input.minifox_count,  minifox_mark,  extra_letter_empty));
+    ret.push(calcSubSummary("【人　狼 (x/y)】", arg.input.werewolf_count, list.werewolf_mark, extra_letter_empty));
+    ret.push(calcSubSummary("【狂　人 (x/y)】", arg.input.posessed_count, list.posessed_mark, extra_letter_empty));
+    ret.push(calcSubSummary("【妖　狐 (x/y)】", arg.input.werefox_count,  list.werefox_mark,  extra_letter_empty));
+    ret.push(calcSubSummary("【子　狐 (x/y)】", arg.input.minifox_count,  list.minifox_mark,  extra_letter_empty));
     var enemy_count = arg.input.werewolf_count - Object.keys(werewolf_mark).length +
                       arg.input.posessed_count - Object.keys(posessed_mark).length +
                       arg.input.werefox_count  - Object.keys(werefox_mark).length +
                       arg.input.minifox_count  - Object.keys(minifox_mark).length;
-    ret.push(calcSubSummary("【人　外 (x/y)】", enemy_count, enemy_mark, extra_letter_empty));
+    ret.push(calcSubSummary("【人　外 (x/y)】", enemy_count,               list.enemy_mark,   extra_letter_empty));
+    // 死亡情報まとめ
+    ret.push(calcSubSummary("【吊　り (x)】",   null,                      voted,　 extra_letter_empty));
+    ret.push(calcSubSummary("【噛　み (x)】",   null,                      bitten, extra_letter_empty));
+    ret.push(calcSubSummary("【デスノ (x)】",   null,                      dnoted, extra_letter_empty));
   } catch (e) {
     // nop
   }

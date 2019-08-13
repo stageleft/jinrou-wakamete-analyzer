@@ -10,11 +10,10 @@ function html2json_villager_log_1day(arg) {
 //          <table width="770" cellspacing="5"><tbody> ... </tbody></table>
 // output : Hash
 //          {
-//            number:
-//            date: 
-//            messages:
-//            players:
-//            comments:
+//            number:   ""
+//            date:     ""
+//            players:  {}
+//            comments: {}
 //            vote:
 //          }
   var ret = {};
@@ -140,7 +139,7 @@ function html2json_village_log(arg) {
 // input  : HTMLCollction
 //          <tbody> ... </tbody> of <table table cellpadding="0"></table>
 // output : Hash
-//            msg_date:"date-string",
+//            msg_date:    "date-string",
 //            list_voted:  [ "character-name", ... ],
 //            list_bitten: [ "character-name", ... ],
 //            list_dnoted: [ "character-name", ... ],
@@ -149,7 +148,7 @@ function html2json_village_log(arg) {
 //              { speaker:value, type:value, comment:[value_with_each_line] },
 //              ...
 //            ],
-//            vote_log : <from html2json_vote_result()>
+//            vote_log : [<from html2json_vote_result()>]
 //   type:value : "Normal" or "Strong" or "WithColor"
   var cmts = [];
   var msg_date    = "１日目の朝となりました。";
@@ -157,7 +156,7 @@ function html2json_village_log(arg) {
   var msgs_bitten = [];
   var msgs_dnoted = []; // Death Note
   var msgs_sudden = [];
-  var vote_result = null;
+  var vote_result = [];
   var re = new RegExp('^\.\/', '');
 
   // console.log(arg.innerHTML); // debug
@@ -165,39 +164,52 @@ function html2json_village_log(arg) {
   var base_tr_list = arg.querySelectorAll("tr");
   for (var i = 0 ; i < base_tr_list.length ; i++) {
     var base_td_list = base_tr_list.item(i).querySelectorAll("td");
-    if (base_td_list.length == 1) {        // system message
+    if (base_td_list.length == 1) {        // system message <td colspan="2">...</td>
       var icon_selector = base_td_list.item(0).querySelector("img");
       if (icon_selector != null) {
-        if (base_td_list.item(0).querySelector("font") == null) {
-          continue;
-        }
+        if (base_td_list.item(0).querySelector("font") == null) { continue; }
 
         var icon_uri   = icon_selector.getAttribute("src").replace(re, "http://jinrou.dip.jp/~jinrou/");
         var msg_text   = base_td_list.item(0).querySelector("font").innerText;
-        if (msg_text.match("となりました。$")) {
-          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">１日目の夜となりました。</font>(19/07/15 00:39:10)</td>
-          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">3日目の夜となりました。</font>(19/07/14 23:32:09)</td>
-          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">9日目の朝となりました。</font>(19/07/06 01:43:35)</td>
+        if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/ampm.gif") {
+          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">１日目の夜となりました。</font>(19/07/15 00:39:10)
+          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">3日目の夜となりました。</font>(19/07/14 23:32:09)
+          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">9日目の朝となりました。</font>(19/07/06 01:43:35)
+          // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「引き分け」です！</font>(19/08/13 00:22:35)
           if (msg_date == "１日目の朝となりました。") {
             msg_date = msg_text;
           }
-        } else if (msg_text.match("^処刑されました・・・。$")) {
-          // <td colspan="2"><img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font></td>
-          msgs_voted.push(base_td_list.item(0).querySelector("b").innerText);
-        } else if (msg_text.match("^無残な姿で発見された・・・。$")) {
-          // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>伊吹翼</b>さんは翌日<font color="#ff0000">無残な姿で発見された・・・。</font></td>
-          msgs_bitten.push(base_td_list.item(0).querySelector("b").innerText);
-        } else if (msg_text.match("^に死体で発見された・・・。$")) {
-          // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>久川凪</b>さんは翌日<font color="#ff0000">に死体で発見された・・・。</font></td>
-          msgs_dnoted.push(base_td_list.item(0).querySelector("b").innerText);
-        } else if (msg_text.match("^突然死しました・・・。【ペナルティ】$")) {
-          // <td colspan="2"><img src="./img/dead2.gif" width="32" height="32" border="0"> <b>八神マキノ</b>さんは都合により<font color="#ff0000">突然死しました・・・。【ペナルティ】</font></td>
-          msgs_sudden.push(base_td_list.item(0).querySelector("b").innerText);
-        } else if (msg_text.match("の勝利です！$")) {
-          // <td colspan="2"><img src="./img/sc5.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ff9999">猫　又</font>」の勝利です！</font>(19/07/15 00:11:04)</td>
+        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/hum.gif") {
+          // <img src="./img/hum.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「村　人」の勝利です！</font>(19/08/12 02:05:13)
           msg_date = msg_text;
+        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/wlf.gif") {
+          // <img src="./img/wlf.gif" width="32" height="32" border="0"> <font size="+2" color="#dd0000">「<font color="#ff0000">人　狼</font>」の勝利です！</font>(19/08/04 02:57:29)
+          msg_date = msg_text;
+        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/fox.gif") {
+          // <img src="./img/fox.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ffcc33">妖　狐</font>」の勝利です！</font>(19/08/12 00:30:03)
+          msg_date = msg_text;
+        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/sc5.gif") {
+          // <img src="./img/sc5.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ff9999">猫　又</font>」の勝利です！</font>(19/07/15 00:11:04)
+          msg_date = msg_text;
+        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead1.gif") {
+          // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font>
+          msgs_voted.push(base_td_list.item(0).querySelector("b").innerText);
+        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead2.gif") {
+          if (msg_text.match("^無残な姿で発見された・・・。$")) {
+            // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>伊吹翼</b>さんは翌日<font color="#ff0000">無残な姿で発見された・・・。</font>
+            msgs_bitten.push(base_td_list.item(0).querySelector("b").innerText);
+          } else if (msg_text.match("^に死体で発見された・・・。$")) {
+            // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>久川凪</b>さんは翌日<font color="#ff0000">に死体で発見された・・・。</font>
+            msgs_dnoted.push(base_td_list.item(0).querySelector("b").innerText);
+          } else {
+            // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>八神マキノ</b>さんは都合により<font color="#ff0000">突然死しました・・・。【ペナルティ】</font>
+            msgs_sudden.push(base_td_list.item(0).querySelector("b").innerText);
+          }
         } else {
-          // ignore. it maybe inner font tag of winner message.
+          // <img src="./img/msg.gif" width="32" height="32" border="0">
+          //      <font size="+1">再投票となりました。</font>あと
+          //      <font size="+2">1</font>回の投票で結論が出なければ引き分けとなります。</td>
+          // ignore. it maybe unused message or inner font tag of winner message.
         }
       } else {
         // ignore messages without icon. it is not important.
@@ -224,9 +236,9 @@ function html2json_village_log(arg) {
         // nop : skip "◆狼の遠吠え"
       }
     } else {                               // vote
-      vote_table = base_td_list.item(0).querySelector("table");
+      var vote_table = base_td_list.item(0).querySelector("table");
       if (vote_table != null) {            // vote table
-        vote_result = html2json_vote_result(vote_table);
+        vote_result.push(html2json_vote_result(vote_table));
       } else {                             // inner tag in vote table
         // nop:
       }
