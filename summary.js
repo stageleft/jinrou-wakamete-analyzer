@@ -37,23 +37,6 @@ function updateSummary(arg) {
   var ret = [];
 
    try {
-    // 村全体の情報 -> arg.input.<job>_count
-    var seer_co       = new Object();
-    var medium_co     = new Object();
-    var bodyguard_co  = new Object();
-    var freemason_co  = new Object();
-    var werecat_co    = new Object();
-    var werewolf_mark = new Object();
-    var posessed_mark = new Object();
-    var werefox_mark  = new Object();
-    var minifox_mark  = new Object();
-    var enemy_mark    = new Object();
-    var live_villager = new Object();
-    var villager_gray  = new Object();
-    var villager_white = new Object();
-    var villager_panda = new Object();
-    var villager_black = new Object();
-
     // 本日（最新日）の日付
     var datearray  = createDateArray(arg);
 
@@ -121,10 +104,25 @@ function updateSummary(arg) {
     ret.push(calcSubSummary("【狂　人 (x/y)】", arg.input.posessed_count, list.posessed_mark, extra_letter_empty));
     ret.push(calcSubSummary("【妖　狐 (x/y)】", arg.input.werefox_count,  list.werefox_mark,  extra_letter_empty));
     ret.push(calcSubSummary("【子　狐 (x/y)】", arg.input.minifox_count,  list.minifox_mark,  extra_letter_empty));
-    var enemy_count = arg.input.werewolf_count - Object.keys(werewolf_mark).length +
-                      arg.input.posessed_count - Object.keys(posessed_mark).length +
-                      arg.input.werefox_count  - Object.keys(werefox_mark).length +
-                      arg.input.minifox_count  - Object.keys(minifox_mark).length;
+    var enemy_count = arg.input.werewolf_count - Object.keys(list.werewolf_mark).length +
+                      arg.input.posessed_count - Object.keys(list.posessed_mark).length +
+                      arg.input.werefox_count  - Object.keys(list.werefox_mark).length +
+                      arg.input.minifox_count  - Object.keys(list.minifox_mark).length;
+    for (var i = arg.input.seer_count;      i < Object.keys(list.seer_co).length;      i++) {
+      list.enemy_mark.push("偽占い師" + String(i));
+    }
+    for (var i = arg.input.medium_count;    i < Object.keys(list.medium_co).length;    i++) {
+      list.enemy_mark.push("偽霊能者" + String(i));
+    }
+    for (var i = arg.input.freemason_count; i < Object.keys(list.freemason_co).length; i++) {
+      list.enemy_mark.push("偽共有者" + String(i));
+    }
+    for (var i = arg.input.werecat_count;   i < Object.keys(list.werecat_co).length;   i++) {
+      list.enemy_mark.push("偽猫又" + String(i));
+    }
+    for (var i = arg.input.bodyguard_count; i < Object.keys(list.bodyguard_co).length; i++) {
+      list.enemy_mark.push("偽狩人" + String(i));
+    }
     ret.push(calcSubSummary("【人　外 (x/y)】", enemy_count,               list.enemy_mark,   extra_letter_empty));
     // 死亡情報まとめ
     ret.push(calcSubSummary("【吊　り (x)】",   null,                      voted.filter(s => s != ''),  extra_letter_empty));
