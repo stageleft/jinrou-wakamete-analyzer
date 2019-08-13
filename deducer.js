@@ -148,6 +148,9 @@ function updateInputField(arg) {
       tr.insertAdjacentElement('beforeend', td_a);
 
       var td_b = document.createElement('td');
+      var target_label = document.createElement('p');
+      target_label.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target-label');
+      td_b.insertAdjacentElement('beforeend', target_label);
       var target = document.createElement('select');
       target.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target');
       target.setAttribute('disabled', 'disabled');
@@ -155,6 +158,9 @@ function updateInputField(arg) {
       tr.insertAdjacentElement('beforeend', td_b);
 
       var td_c = document.createElement('td');
+      var result_label = document.createElement('p');
+      result_label.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result-label');
+      td_c.insertAdjacentElement('beforeend', result_label);
       var result = document.createElement('select');
       result.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result');
       result.setAttribute('disabled', 'disabled');
@@ -178,10 +184,12 @@ function updateInputField(arg) {
     for (var i = 2 ; i <= datearray.length ; i++) {
       var datestring   = datearray[i-1];
       var alive_status = arg.log[datestring].players[k].stat;
-      var target      = document.getElementById('stat-' + k + '-' + String(i) + '-target');
-      var result      = document.getElementById('stat-' + k + '-' + String(i) + '-result');
-      var count       = document.getElementById('stat-' + k + '-' + String(i) + '-count');
-      var dead_reason = document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason');
+      var target_label = document.getElementById('stat-' + k + '-' + String(i) + '-target-label');
+      var target       = document.getElementById('stat-' + k + '-' + String(i) + '-target');
+      var result_label = document.getElementById('stat-' + k + '-' + String(i) + '-result-label');
+      var result       = document.getElementById('stat-' + k + '-' + String(i) + '-result');
+      var count        = document.getElementById('stat-' + k + '-' + String(i) + '-count');
+      var dead_reason  = document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason');
 
       // case 1.
       //   Job-target
@@ -193,10 +201,13 @@ function updateInputField(arg) {
         if ((is_initialize == true) || // just after createInputField() called.
             (td_cell_added == true) || // just after new <td> cell added.
             (job != arg.input.each_player[k].comingout)) {
+          target_label.textContent == '';
           target.textContent == '';
+          result_label.textContent == '';
           result.textContent == '';
           if (job == "占い") {
             // deducer: target (alive player list)
+            target_label.innerText = '占い先';
             target.removeAttribute('disabled');
             player_list.forEach(function(v){
               if ((i <= 2) ||
@@ -209,6 +220,7 @@ function updateInputField(arg) {
             });
 
             // deducer: result
+            result_label.innerText = '結果';
             result.removeAttribute('disabled');
             seer_result.forEach(function(v){
               var o = document.createElement('option');
@@ -221,6 +233,7 @@ function updateInputField(arg) {
             target.setAttribute('disabled', 'disabled');
             result.setAttribute('disabled', 'disabled');
             if (i >= 3) {
+              target_label.innerText = '吊り先';
               voted_player = arg.log[datestring].list_voted[0];
               var o = document.createElement('option');
               o.setAttribute("value", voted_player);
@@ -229,6 +242,7 @@ function updateInputField(arg) {
               target.value = voted_player;
 
               // deducer: result
+              result_label.innerText = '結果';
               result.removeAttribute('disabled');
               medium_result.forEach(function(v){
                 var o = document.createElement('option');
@@ -240,6 +254,7 @@ function updateInputField(arg) {
           } else if (job == "狩人") {
             // deducer: target (all player list)
             if (i >= 3) {
+              target_label.innerText = '護衛先';
               target.removeAttribute('disabled');
               player_list.forEach(function(v){
                 var o = document.createElement('option');
@@ -251,6 +266,7 @@ function updateInputField(arg) {
 
             // deducer: result (fixed string from bitten player list)
             if (i >= 3) {
+              result_label.innerText = '噛み先';
               result.setAttribute('disabled', 'disabled');
               var bitten_players;
               if (arg.log[datestring].list_bitten.length == 0) {
