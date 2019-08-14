@@ -93,7 +93,8 @@ function updateInputField(arg) {
     base_date = datearray[1];
   }
 
-  if (arg.log[base_date].players.length != arg.input.each_player.length) {
+  if ((is_initialize == false) &&
+      (Object.keys(arg.log[base_date].players).length != arg.input.each_player.length)) {
     arg.input = null;
     is_initialize = true;
   }
