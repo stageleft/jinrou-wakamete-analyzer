@@ -94,7 +94,7 @@ function updateInputField(arg) {
   }
 
   if ((is_initialize == false) &&
-      (Object.keys(arg.log[base_date].players).length != arg.input.each_player.length)) {
+      (Object.keys(arg.log[base_date].players).length != Object.keys(arg.input.each_player).length)) {
     arg.input = null;
     is_initialize = true;
   }
