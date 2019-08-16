@@ -1,8 +1,19 @@
 var is_debug_log_gettable = true;
 var debug_counter = 0;
 
+var debug_mutex_lock = false;
+
+
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
 function recvLog(request, sender, sendResponse) {
+
+  if (debug_mutex_lock == true) {
+    return recvLog_proc(request, sender, sendResponse);
+  } else {
+    debug_mutex_lock = true;
+  };
+
+
   if (debug_counter == 0) {
     var tmp = window.localStorage.getItem("wakamete_village_debug_log-0");
     if (tmp == null) {
@@ -25,6 +36,8 @@ function recvLog(request, sender, sendResponse) {
                                 encodeURIComponent(JSON.stringify(request)));
   }
   debug_counter = debug_counter + 1;
+
+  debug_mutex_lock = false;
 
   return recvLog_proc(request, sender, sendResponse);
 };
