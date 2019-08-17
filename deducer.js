@@ -8,16 +8,11 @@ function updateInput(arg) {
 // Another input     : inner table of <div id="deduce" />
 // functional output : JSON
 //     'input' key of Web Storage API style
-  var datearray = createDateArray(arg);
+  var datearray;
+  var base_date;
+  [datearray, base_date] = createDateArray(arg);
   if ((datearray == null) || (datearray.length == 0)){
     return;
-  }
-
-  var base_date;
-  if (datearray.length == 1) {
-    base_date = datearray[0];
-  } else {
-    base_date = datearray[1];
   }
 
   var ret = {};
@@ -42,8 +37,6 @@ function updateInput(arg) {
                                               ret.posessed_count + 
                                               ret.werefox_count + 
                                               ret.minifox_count);
-
-  var datearray = createDateArray(arg);
 
   ret.each_player = {};
   Object.keys(arg.log[base_date].players).forEach(function(k){
@@ -80,17 +73,14 @@ function updateInputField(arg) {
     is_initialize = true;
   }
 
-  var datearray = createDateArray(arg);
+  var datearray;
+  var base_date;
+  [datearray, base_date] = createDateArray(arg);
   if ((datearray == null) || (datearray.length == 0)){
     return;
   }
-
-  var base_date;
-  if (datearray.length == 1) {
-    base_date = datearray[0];
+  if ( base_date == "１日目の朝になりました。" ){
     is_initialize = true;
-  } else {
-    base_date = datearray[1];
   }
 
   if ((is_initialize == false) &&

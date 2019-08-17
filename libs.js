@@ -1,4 +1,4 @@
-// usage : datearray = createDateArray(arg);
+// usage : [datearray, base_date] = createDateArray(arg);
 //         datearray.length : dates
 //         datearray[0]  : date-string of day1
 //         datearray[N-1]: date-string of dayN
@@ -6,6 +6,7 @@ function createDateArray(arg) {
 // input  : JSON from Web Storage API
 // output : Array ["date-string(day1)", "date-string(day2)", ..., "date-string(current day)"]
   var ret = [];
+  var base_date;
 
   // preprocess : check arg has log.
   if (arg.log == null) { return ret; }
@@ -49,7 +50,14 @@ function createDateArray(arg) {
     ret.push("「引き分け」です！");
   }
 
-  return ret;
+  // calc base_date
+  if (arg.log["１日目の夜となりました。"] != null) {
+    base_date = "１日目の夜となりました。";
+  } else {
+    base_date = datearray[0];
+  }
+
+  return [ret, base_date];
 }
 
 function makeComingOutList(arg) {
@@ -92,7 +100,9 @@ function makeComingOutList(arg) {
   if (arg.input             == null) { return ret; };
   if (arg.input.each_player == null) { return ret; };
 
-  var datearray = createDateArray(arg);
+  var datearray;
+  var base_date;
+  [datearray, base_date] = createDateArray(arg);
   var datestr   = datearray[datearray.length - 1];
 
   Object.keys(arg.input.each_player).forEach(function(k){
@@ -168,7 +178,9 @@ function makeGrayVillagerList(arg) {
   if (arg.log   == null) { return ret; };
   if (arg.input == null) { return ret; };
 
-  var datearray = createDateArray(arg);
+  var datearray;
+  var base_date;
+  [datearray, base_date] = createDateArray(arg);
   var datestr   = datearray[datearray.length - 1];
 
   Object.keys(ret.seer_co).forEach(function(k){
@@ -210,11 +222,14 @@ function updateInput(arg) {
 // Another input     : inner table of <div id="deduce" />
 // functional output : JSON
 //     'input' key of Web Storage API style
+  var ret = {};
+
+  var datearray;
+  var base_date;
+  [datearray, base_date] = createDateArray(arg);
   if (arg.log[base_date] == null) {
     return;
   }
-
-  var ret = {};
 
   // 村全体の情報
   ret.player_count     = Object.keys(arg.log[base_date].players).length;
@@ -236,8 +251,6 @@ function updateInput(arg) {
                                               ret.posessed_count + 
                                               ret.werefox_count + 
                                               ret.minifox_count);
-
-  var datearray = createDateArray(arg);
 
   ret.each_player = {};
   Object.keys(arg.log[base_date].players).forEach(function(k){
