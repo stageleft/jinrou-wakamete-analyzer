@@ -237,9 +237,12 @@ function html2json_village_log(arg) {
         // nop : skip "◆狼の遠吠え"
       }
     } else {                               // vote
+      var vote_title = base_td_list.item(0).querySelector("font");
       var vote_table = base_td_list.item(0).querySelector("table");
       if (vote_table != null) {            // vote table
-        vote_result.push(html2json_vote_result(vote_table));
+        var r = {title: vote_title.innerText};
+        Object.assign(r, html2json_vote_result(vote_table));
+        vote_result.push(r);
       } else {                             // inner tag in vote table
         // nop:
       }
@@ -281,5 +284,5 @@ function html2json_vote_result(arg) {
     ret.push({ from_villager: from_person , to_villager : to_person });
   }
 
-  return ret;
+  return {vote: ret};
 }

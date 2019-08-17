@@ -26,7 +26,7 @@ function updateVotes(arg) {
       ret.insertAdjacentElement('beforeend', tr);
 
       var l = arg.log[datestr].vote_log[0];
-      l.forEach(function(f){
+      l.vote.forEach(function(f){
         var tr = document.createElement('tr');
         tr.setAttribute('id', 'vote-from-' + f.from_villager.trim());
 
@@ -40,7 +40,7 @@ function updateVotes(arg) {
 
     // set 2nd..Nth td (vote to-person)
     arg.log[datestr].vote_log.forEach(function(l, j){
-      var vote_title = datestr + '（' + String(j + 1) + '回目）';
+      var vote_title = arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）';
       var tr = ret.querySelector('#vote-day');
       var td = document.createElement('td');
       td.innerText = vote_title;
@@ -49,7 +49,7 @@ function updateVotes(arg) {
 
       // 票数計算
       var vote_count = {}; // { "to-person":getting-vote-count, "to":count, ...}
-      l.forEach(function(f){
+      l.vote.forEach(function(f){
         var to_person = f.to_villager.trim();
         if (vote_count[to_person] == null) {
           vote_count[to_person] = 1;
@@ -59,7 +59,7 @@ function updateVotes(arg) {
       });
 
       // 表示に反映
-      l.forEach(function(f){
+      l.vote.forEach(function(f){
         var from_person = f.from_villager.trim();
         var to_person = f.to_villager.trim();
         var tr = ret.querySelector('#vote-from-' + from_person);

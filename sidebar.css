@@ -34,7 +34,7 @@ table tr{
 }
 table tr td{
   font-size : 10pt;
-  border : 1px solid #000000;
+  border : 1px solid #cccccc;
   margin: 0px;
   padding: 0px;
   white-space: nowrap;
