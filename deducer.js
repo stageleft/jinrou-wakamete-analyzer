@@ -317,7 +317,7 @@ function updateInputField(arg) {
         // case 3.
         //   Empty.
         if ((i <= 2) ||
-            (arg.log[String(i-1) + "日目の朝となりました。"].players[k].stat == "（生存中）")) {
+            (arg.log[datearray[i-2]].players[k].stat == "（生存中）")) {
           // deducer: nop with target : disabled with no value
 
           // deducer: result (dead reason)
@@ -334,8 +334,8 @@ function updateInputField(arg) {
           // deducer: set background color if Dead
           document.getElementById('villager-' + k).setAttribute('class', 'dead');
         } else {
-          if (dead_reason != null) { dead_reason.remove(); };
           // deducer: nop : target and result is disabled with no value
+          dead_reason.innerText = "";
         }
       }
     }
