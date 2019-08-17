@@ -26,7 +26,9 @@ function updateCommentLog(arg, param) {
   }
 
   // 本日（最新日）の日付
-  var datearray  = createDateArray(arg);
+  var datearray;
+  var base_date; // unused
+  [datearray, base_date] = createDateArray(arg);
   var date_count = datearray.length;
 
   if (param.indexOf('date-log-') == 0) {

@@ -6,7 +6,9 @@ function updateVotes(arg) {
 //     <tr                    ><td>....</td><td>...</td><td alt="dayX(1):....->..">.......</td><td>...</td></tr>
   var ret = document.createElement('tbody');
 
-  datearray = createDateArray(arg);
+  var datearray;
+  var base_date; // unused
+  [datearray, base_date] = createDateArray(arg);
   for (var i = 0; i < datearray.length; i++) {
     var datestr = datearray[i];
     if ((arg.log[datestr] == null) ||
