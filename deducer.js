@@ -69,7 +69,8 @@ function updateInputField(arg) {
 // functional output : -
 // Another output    : inner <td> element of table in <div id="deduce" />
   var is_initialize = false;
-  if (arg.input == null) {
+  if ((arg.input == null) ||
+      (arg.input.each_player == null)) {
     is_initialize = true;
   }
 
