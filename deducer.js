@@ -294,21 +294,23 @@ function updateInputField(arg) {
               // deducer: result (fixed string from all player list)
               result.setAttribute('disabled', 'disabled');
             }
-            if ((is_initialize == true) &&
-                 (arg.input.each_player[k][datestring] != null)) {
+
+            if (job == arg.input.each_player[k].comingout) {
               target.value = arg.input.each_player[k][datestring].target;
               result.value = arg.input.each_player[k][datestring].result;
             }
           }
 
           // deducer: set background color
-          if (Object.keys(villager_cell_info.villager_gray).indexOf(k) != -1) {
-            document.getElementById('villager-' + k).setAttribute('class', 'gray');
-          } else if ((Object.keys(villager_cell_info.villager_black).indexOf(k) != -1) ||
-                     (Object.keys(villager_cell_info.villager_panda).indexOf(k) != -1)) {
-            document.getElementById('villager-' + k).setAttribute('class', 'black');
-          } else { // white or job ComingOut
-            document.getElementById('villager-' + k).setAttribute('class', 'white');
+          if (document.getElementById('villager-' + k).getAttribute('class') != 'dead') {
+            if (Object.keys(villager_cell_info.villager_gray).indexOf(k) != -1) {
+              document.getElementById('villager-' + k).setAttribute('class', 'gray');
+            } else if ((Object.keys(villager_cell_info.villager_black).indexOf(k) != -1) ||
+                       (Object.keys(villager_cell_info.villager_panda).indexOf(k) != -1)) {
+              document.getElementById('villager-' + k).setAttribute('class', 'black');
+            } else { // white or job ComingOut
+              document.getElementById('villager-' + k).setAttribute('class', 'white');
+            }
           }
         }
       }
