@@ -92,7 +92,7 @@ function updateInputField(arg) {
     is_initialize = true;
   } else {
     var tds_title = document.getElementById('deducer-title').querySelectorAll('td');
-    if (tds_title.length != datearray.length) {
+    if ((tds_title.length - 1) != datearray.length) {
       // refresh Input Field if change datearray
       is_initialize = true;
     }
@@ -142,6 +142,8 @@ function updateInputField(arg) {
 
         if (arg.log[datearray[i-2]].players[k].stat == "（生存中）") {
           // if dead in this day
+          var datestring   = datearray[i-1];
+
           // deducer: set background color if Dead
           document.getElementById('villager-' + k).setAttribute('class', 'dead');
 
@@ -149,20 +151,19 @@ function updateInputField(arg) {
 
           // deducer: result (dead reason)
           if (arg.log[datestring].list_voted.indexOf(k) >= 0) {
-            dead_reason.innerText = "吊り";
+            dead_reason = "吊り";
           } else if (arg.log[datestring].list_bitten.indexOf(k) >= 0) {
-            dead_reason.innerText = "噛み";
+            dead_reason = "噛み";
           } else if (arg.log[datestring].list_dnoted.indexOf(k) >= 0) {
-            dead_reason.innerText = "死体";
+            dead_reason = "死体";
           } else {
-            dead_reason.innerText = "突然死";
+            dead_reason = "突然死";
           }
           document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText       = "";
           document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = dead_reason;
         } else {
           // if dead in previous days
           // deducer: nop : target and result is disabled with no value
-          dead_reason.innerText = "";
           document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText       = "";
           document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = "";
         }
