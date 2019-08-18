@@ -78,11 +78,10 @@ function updateVotes(arg) {
         // ｽｺﾞｲｶﾀｲｱｲｽさん	0 票	投票先 → 結城蜜柑さん
         var td = document.createElement('td');
         if (vote_count[from_person] == null) {
-          td.setAttribute('alt', from_person + "さん\t0 票\t投票先 → " + to_person + "さん");
-        } else {
-          td.setAttribute('alt', from_person + "さん\t" + vote_count[from_person] +" 票\t投票先 → " + to_person + "さん");
+          vote_count[from_person] = 0;
         }
-        td.innerText = f.to_villager + "（" + vote_count[to_person] + "票）";
+        td.setAttribute('alt', from_person + "さん\t" + vote_count[from_person] +" 票\t投票先 → " + to_person + "さん");
+        td.innerText = "(" + vote_count[from_person] + "票)→" + f.to_villager + "(" + vote_count[to_person] + "票)";
         tr.insertAdjacentElement('beforeend', td);
 
         body.insertAdjacentElement('beforeend', tr);
