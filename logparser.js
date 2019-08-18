@@ -124,7 +124,7 @@ function html2json_villager_list(arg) {
 
       // get info of base_td_list.item(i+1)
       var character_info = String(base_td_list.item(i+1).innerHTML).split('<br>');
-      character_name = character_info[0];
+      character_name = character_info[0].trim();
       is_alive       = character_info[character_info.length - 1];
 
       // create Hash and add to Array

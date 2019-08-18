@@ -27,13 +27,14 @@ function updateVotes(arg) {
 
       ret.insertAdjacentElement('beforeend', tr);
 
-      var l = arg.log[datestr].vote_log[0];
-      l.vote.forEach(function(f){
+      Object.keys(arg.log[base_date].players).forEach(function(f){
+        if (f == "初日犠牲者") return;
+
         var tr = document.createElement('tr');
-        tr.setAttribute('id', 'vote-from-' + f.from_villager.trim());
+        tr.setAttribute('id', 'vote-from-' + f);
 
         var td = document.createElement('td');
-        td.innerText = f.from_villager;
+        td.innerText = f;
         tr.insertAdjacentElement('beforeend', td);
 
         ret.insertAdjacentElement('beforeend', tr);

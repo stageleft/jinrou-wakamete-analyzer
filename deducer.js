@@ -5,6 +5,7 @@ var medium_result = ["","○","●","△"];
 
 function updateInput(arg) {
 // functional input  : JSON from Web Storage API
+//     'log' key of Web Storage API style
 // Another input     : inner table of <div id="deduce" />
 // functional output : JSON
 //     'input' key of Web Storage API style
@@ -65,15 +66,16 @@ function updateInput(arg) {
 
 function updateInputField(arg) {
 // functional input  : JSON from Web Storage API
-// Another input     : inner table of <div id="deduce" />
+//     'log' key of Web Storage API style
 // functional output : -
-// Another output    : inner <td> element of table in <div id="deduce" />
-  var is_initialize = false;
-  if ((arg.input == null) ||
-      (arg.input.each_player == null)) {
-    is_initialize = true;
-  }
+// Internal state    : inner table of <div id="deduce" />
+// External state    : JSON from Web Storage API : update in previous updateInput()
+//     'input' key of Web Storage API style
+  var is_initialize = false; // if initialize Input Field
+  var no_input_key  = false; // if initialize 'input' key of Web Storage API style
 
+  ////// sanity check (set initialize mode if insane).
+  // check 'log' key as input.
   var datearray;
   var base_date;
   [datearray, base_date] = createDateArray(arg);
@@ -84,211 +86,41 @@ function updateInputField(arg) {
     is_initialize = true;
   }
 
-  if ((is_initialize == false) &&
-      (Object.keys(arg.log[base_date].players).length != Object.keys(arg.input.each_player).length)) {
-    arg.input = null;
+  // check <div id="deduce" /> as internal state
+  if ((document.getElementById("deduce").textContent == '') ||
+      (document.getElementById('deducer-title') == null )) {
     is_initialize = true;
+  } else {
+    var tds_title = document.getElementById('deducer-title').querySelectorAll('td');
+    if (tds_title.length != datearray.length) {
+      // refresh Input Field if change datearray
+      is_initialize = true;
+    }
   }
 
-  if ((is_initialize == true) ||
-      (document.getElementById("deduce").textContent == '')) {
-    document.getElementById("deduce").textContent = '';
-    createInputField(arg, base_date);
+  // check 'input' key as external state
+  if ((arg.input == null) ||
+      (arg.input.each_player == null)) {
+    is_initialize = true;
+    no_input_key  = true;
+  } else if (Object.keys(arg.log[base_date].players).length != Object.keys(arg.input.each_player).length) {
+    // refresh Input Field and saved date of Input Field if change player count
+    is_initialize = true;
+    no_input_key  = true;
+  }
+
+  if (is_initialize == true) {
+    refreshInputField(arg);
   };
 
-  // preprocess: calcurate seer-info and gray-info
-  var villager_cell_info = makeGrayVillagerList(arg);
-
-  // update cast field
-  if (is_initialize == false) {
-    document.getElementById('all_villager').value = arg.input.player_count;
-    document.getElementById('job_villager').value = arg.input.villager_count;
-  }
-
-  // add <td> cell to title if not exist
-  var tds_title   = document.getElementById('deducer-title').querySelectorAll('td');
-  for (var i = tds_title.length ; i <= datearray.length; i++) {
-    var td = document.createElement('td');
-    td.setAttribute('id', 'deducer-title-' + String(i));
-    td.setAttribute('colspan', '3');
-
-    var a  = document.createElement('a');
-    a.setAttribute('id', 'date-log-' + String(i));
-    a.setAttribute('href', '#');
-    a.innerText = String(i) + "日目";
-    td.insertAdjacentElement('afterbegin', a);
-
-    document.getElementById('deducer-title').insertAdjacentElement('beforeend', td);
-  }
-
+  //// process 1 : add info from 'log'
   var player_list = Object.keys(arg.log[base_date].players);
   player_list.forEach(function(k){
-    var tr = document.getElementById('villager-list-'+k);
-    var job = document.getElementById('job-' + k).value; // deduced Job
-    var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
 
-    // process 1 : add <td> cell if not exist
-    var td_cell_added = false;
-    for (var i = tds_title.length ; i <= datearray.length ; i++) {
-      var td_a = document.createElement('td');
-      var count = document.createElement('p');
-      var dead_reason = document.createElement('p');
-      count.setAttribute('id', 'stat-' + k + '-' + String(i) + '-count');
-      dead_reason.setAttribute('id', 'stat-' + k + '-' + String(i) + '-dead_reason');
-      td_a.insertAdjacentElement('beforeend', count);
-      td_a.insertAdjacentElement('beforeend', dead_reason);
-      tr.insertAdjacentElement('beforeend', td_a);
-
-      var td_b = document.createElement('td');
-      var target_label = document.createElement('p');
-      target_label.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target-label');
-      td_b.insertAdjacentElement('beforeend', target_label);
-      var target = document.createElement('select');
-      target.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target');
-      target.setAttribute('disabled', 'disabled');
-      td_b.insertAdjacentElement('beforeend', target);
-      tr.insertAdjacentElement('beforeend', td_b);
-
-      var td_c = document.createElement('td');
-      var result_label = document.createElement('p');
-      result_label.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result-label');
-      td_c.insertAdjacentElement('beforeend', result_label);
-      var result = document.createElement('select');
-      result.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result');
-      result.setAttribute('disabled', 'disabled');
-      td_c.insertAdjacentElement('beforeend', result);
-      tr.insertAdjacentElement('beforeend', td_c);
-
-      td_cell_added = true;
-    }
-
-    // process 2 : add day1 comment count into <td> cell
-    var c = 0;
-    arg.log[datearray[0]].comments.forEach(function(h){
-      if ( k == h.speaker ) {
-        c = c + 1;
-      }
-    });
-    document.getElementById('stat-' + k + '-1-count').innerText = "発言 "+String(c);
-
-
-    // process 3 : add inner value into <td> cell
-    for (var i = 2 ; i <= datearray.length ; i++) {
-      var datestring   = datearray[i-1];
-      var alive_status = arg.log[datestring].players[k].stat;
-      var target_label = document.getElementById('stat-' + k + '-' + String(i) + '-target-label');
-      var target       = document.getElementById('stat-' + k + '-' + String(i) + '-target');
-      var result_label = document.getElementById('stat-' + k + '-' + String(i) + '-result-label');
-      var result       = document.getElementById('stat-' + k + '-' + String(i) + '-result');
-      var count        = document.getElementById('stat-' + k + '-' + String(i) + '-count');
-      var dead_reason  = document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason');
-
-      // case 1.
-      //   Job-target
-      //   Job-result
-      //   Comments
-      if (alive_status == "（生存中）") {
-        if (dead_reason != null) { dead_reason.remove(); };
-
-        if ((is_initialize == true) || // just after createInputField() called.
-            (td_cell_added == true) || // just after new <td> cell added.
-            (job != arg.input.each_player[k].comingout)) {
-          target_label.textContent == '';
-          target.textContent == '';
-          result_label.textContent == '';
-          result.textContent == '';
-          if (job == "占い") {
-            // deducer: target (alive player list)
-            target_label.innerText = '占い先';
-            target.removeAttribute('disabled');
-            player_list.forEach(function(v){
-              if ((i <= 2) ||
-                  (arg.log[String(i-1) + "日目の朝となりました。"].players[v].stat == "（生存中）")) {
-                var o = document.createElement('option');
-                o.setAttribute("value", v);
-                o.innerText = v;
-                target.insertAdjacentElement('beforeend', o);
-              }
-            });
-
-            // deducer: result
-            result_label.innerText = '結果';
-            result.removeAttribute('disabled');
-            seer_result.forEach(function(v){
-              var o = document.createElement('option');
-              o.setAttribute("value", v);
-              o.innerText = v;
-              result.insertAdjacentElement('beforeend', o);
-            });
-          } else if (job == "霊能") {
-            // deducer: target (fixed string from voted player list)
-            target.setAttribute('disabled', 'disabled');
-            result.setAttribute('disabled', 'disabled');
-            if (i >= 3) {
-              target_label.innerText = '吊り先';
-              voted_player = arg.log[datestring].list_voted[0];
-              var o = document.createElement('option');
-              o.setAttribute("value", voted_player);
-              o.innerText = voted_player;
-              target.insertAdjacentElement('beforeend', o);
-              target.value = voted_player;
-
-              // deducer: result
-              result_label.innerText = '結果';
-              result.removeAttribute('disabled');
-              medium_result.forEach(function(v){
-                var o = document.createElement('option');
-                o.setAttribute("value", v);
-                o.innerText = v;
-                result.insertAdjacentElement('beforeend', o);
-              });
-            }
-          } else if (job == "狩人") {
-            // deducer: target (all player list)
-            if (i >= 3) {
-              target_label.innerText = '護衛先';
-              target.removeAttribute('disabled');
-              player_list.forEach(function(v){
-                var o = document.createElement('option');
-                o.setAttribute("value", v);
-                o.innerText = v;
-                target.insertAdjacentElement('beforeend', o);
-              });
-            }
-
-            // deducer: result (fixed string from bitten player list)
-            if (i >= 3) {
-              result_label.innerText = '噛み先';
-              result.setAttribute('disabled', 'disabled');
-              var bitten_players;
-              if (arg.log[datestring].list_bitten.length == 0) {
-                bitten_players = "（なし）";
-              } else {
-                bitten_players = arg.log[datestring].list_bitten.join("\n");
-              }
-              var o = document.createElement('option');
-              o.setAttribute("value", bitten_players);
-              o.innerText = bitten_players;
-              result.insertAdjacentElement('beforeend', o);
-              result.value = bitten_players;
-            }
-          } else { // if (job == "村人" || job == "共有" || job == "猫又")
-            // deducer: target (alive player list)
-            target.setAttribute('disabled', 'disabled');
-
-            // deducer: result (fixed string from all player list)
-            result.setAttribute('disabled', 'disabled');
-          }
-          if (((is_initialize == true) ||
-               (td_cell_added == true)) &&
-              ((arg.input != null) &&
-               (arg.input.each_player[k][datestring] != null))) {
-            target.value = arg.input.each_player[k][datestring].target;
-            result.value = arg.input.each_player[k][datestring].result;
-          }
-        }
-
-        // deducer: comments
+    for (var i = 1 ; i <= datearray.length ; i++) {
+      if ((i <= 2) ||
+          (arg.log[datearray[i-1]].players[k].stat == "（生存中）")) {
+        // if alive : set comment count
         var datekey = datearray[i-1];
         var c = 0;
         arg.log[datekey].comments.forEach(function(h){
@@ -296,29 +128,24 @@ function updateInputField(arg) {
             c = c + 1;
           }
         });
-        count.innerText = "発言 "+String(c);
-
-        // deducer: set background color
-        if (Object.keys(villager_cell_info.villager_gray).indexOf(k) != -1) {
-          document.getElementById('villager-' + k).setAttribute('class', 'gray');
-        } else if ((Object.keys(villager_cell_info.villager_black).indexOf(k) != -1) ||
-                   (Object.keys(villager_cell_info.villager_panda).indexOf(k) != -1)) {
-          document.getElementById('villager-' + k).setAttribute('class', 'black');
-        } else // white or job ComingOut
-          document.getElementById('villager-' + k).setAttribute('class', 'white');
-
+        document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText = "発言 "+String(c);
+        if (i > 2) {
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = "";
+        }
       } else {
+        // if dead
+        var target = document.getElementById('stat-' + k + '-' + String(i) + '-target');
         if (target != null) { target.remove(); };
-        if (result != null) { result.remove(); };
-        if (count  != null) { count.remove(); };
 
-        // case 2.
-        //   Dead Reason.
-        // case 3.
-        //   Empty.
-        if ((i <= 2) ||
-            (arg.log[datearray[i-2]].players[k].stat == "（生存中）")) {
-          // deducer: nop with target : disabled with no value
+        var result = document.getElementById('stat-' + k + '-' + String(i) + '-result');
+        if (result != null) { result.remove(); };
+
+        if (arg.log[datearray[i-2]].players[k].stat == "（生存中）") {
+          // if dead in this day
+          // deducer: set background color if Dead
+          document.getElementById('villager-' + k).setAttribute('class', 'dead');
+
+          var dead_reason;
 
           // deducer: result (dead reason)
           if (arg.log[datestring].list_voted.indexOf(k) >= 0) {
@@ -330,26 +157,175 @@ function updateInputField(arg) {
           } else {
             dead_reason.innerText = "突然死";
           }
-
-          // deducer: set background color if Dead
-          document.getElementById('villager-' + k).setAttribute('class', 'dead');
+          document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText       = "";
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = dead_reason;
         } else {
+          // if dead in previous days
           // deducer: nop : target and result is disabled with no value
           dead_reason.innerText = "";
+          document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText       = "";
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = "";
         }
       }
     }
   });
 
+  // process 2 : add info from 'input' and <td> cell
+  if (no_input_key == false) {
+    // preprocess: calcurate seer-info and gray-info
+    var villager_cell_info = makeGrayVillagerList(arg);
+
+    // update cast field
+    document.getElementById('all_villager').value = arg.input.player_count;
+    document.getElementById('job_villager').value = arg.input.villager_count;
+
+    // restore update setting
+    Object.keys(arg.input.each_player).forEach(function(k){
+      // 参加者別の情報
+      document.getElementById('job-' + k).value = arg.input.each_player[k].comingout; // deduced Job
+      document.getElementById('mrk-' + k).value = arg.input.each_player[k].enemymark; // Monster Mark
+    });
+
+    player_list.forEach(function(k){
+      var tr = document.getElementById('villager-list-'+k);
+      var job = document.getElementById('job-' + k).value; // deduced Job
+      var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
+
+      for (var i = 2 ; i <= datearray.length ; i++) {
+        var datestring   = datearray[i-1];
+        var alive_status = arg.log[datestring].players[k].stat;
+        var target_label = document.getElementById('stat-' + k + '-' + String(i) + '-target-label');
+        var target       = document.getElementById('stat-' + k + '-' + String(i) + '-target');
+        var result_label = document.getElementById('stat-' + k + '-' + String(i) + '-result-label');
+        var result       = document.getElementById('stat-' + k + '-' + String(i) + '-result');
+
+        // case 1.
+        //   Job-target
+        //   Job-result
+        if (alive_status == "（生存中）") {
+          if ((is_initialize == true) || // just after refreshInputField() called.
+              (job != arg.input.each_player[k].comingout)) {
+            target_label.textContent == '';
+            target.textContent == '';
+            result_label.textContent == '';
+            result.textContent == '';
+            if (job == "占い") {
+              // deducer: target (alive player list)
+              target_label.innerText = '占い先';
+              target.removeAttribute('disabled');
+              player_list.forEach(function(v){
+                if ((i <= 2) ||
+                    (arg.log[String(i-1) + "日目の朝となりました。"].players[v].stat == "（生存中）")) {
+                  var o = document.createElement('option');
+                  o.setAttribute("value", v);
+                  o.innerText = v;
+                  target.insertAdjacentElement('beforeend', o);
+                }
+              });
+
+              // deducer: result
+              result_label.innerText = '結果';
+              result.removeAttribute('disabled');
+              seer_result.forEach(function(v){
+                var o = document.createElement('option');
+                o.setAttribute("value", v);
+                o.innerText = v;
+                result.insertAdjacentElement('beforeend', o);
+              });
+            } else if (job == "霊能") {
+              // deducer: target (fixed string from voted player list)
+              target.setAttribute('disabled', 'disabled');
+              result.setAttribute('disabled', 'disabled');
+              if (i >= 3) {
+                target_label.innerText = '吊り先';
+                voted_player = arg.log[datestring].list_voted[0];
+                var o = document.createElement('option');
+                o.setAttribute("value", voted_player);
+                o.innerText = voted_player;
+                target.insertAdjacentElement('beforeend', o);
+                target.value = voted_player;
+
+                // deducer: result
+                result_label.innerText = '結果';
+                result.removeAttribute('disabled');
+                medium_result.forEach(function(v){
+                  var o = document.createElement('option');
+                  o.setAttribute("value", v);
+                  o.innerText = v;
+                  result.insertAdjacentElement('beforeend', o);
+                });
+              }
+            } else if (job == "狩人") {
+              // deducer: target (all player list)
+              if (i >= 3) {
+                target_label.innerText = '護衛先';
+                target.removeAttribute('disabled');
+                player_list.forEach(function(v){
+                  var o = document.createElement('option');
+                  o.setAttribute("value", v);
+                  o.innerText = v;
+                  target.insertAdjacentElement('beforeend', o);
+                });
+              }
+
+              // deducer: result (fixed string from bitten player list)
+              if (i >= 3) {
+                result_label.innerText = '噛み先';
+                result.setAttribute('disabled', 'disabled');
+                var bitten_players;
+                if (arg.log[datestring].list_bitten.length == 0) {
+                  bitten_players = "（なし）";
+                } else {
+                  bitten_players = arg.log[datestring].list_bitten.join("\n");
+                }
+                var o = document.createElement('option');
+                o.setAttribute("value", bitten_players);
+                o.innerText = bitten_players;
+                result.insertAdjacentElement('beforeend', o);
+                result.value = bitten_players;
+              }
+            } else { // if (job == "村人" || job == "共有" || job == "猫又")
+              // deducer: target (alive player list)
+              target.setAttribute('disabled', 'disabled');
+
+              // deducer: result (fixed string from all player list)
+              result.setAttribute('disabled', 'disabled');
+            }
+            if ((is_initialize == true) &&
+                 (arg.input.each_player[k][datestring] != null)) {
+              target.value = arg.input.each_player[k][datestring].target;
+              result.value = arg.input.each_player[k][datestring].result;
+            }
+          }
+
+          // deducer: set background color
+          if (Object.keys(villager_cell_info.villager_gray).indexOf(k) != -1) {
+            document.getElementById('villager-' + k).setAttribute('class', 'gray');
+          } else if ((Object.keys(villager_cell_info.villager_black).indexOf(k) != -1) ||
+                     (Object.keys(villager_cell_info.villager_panda).indexOf(k) != -1)) {
+            document.getElementById('villager-' + k).setAttribute('class', 'black');
+          } else { // white or job ComingOut
+            document.getElementById('villager-' + k).setAttribute('class', 'white');
+          }
+        }
+      }
+    });
+  }
   return;
 }
 
-function createInputField(arg, base_date) {
+function refreshInputField(arg) {
+// 表そのものを初期化する場合の処理（変更を含む）。
+// 保証するものは、タグ、IDまで。中身の保持はコール元で実施する。
 // functional input  : JSON from Web Storage API (input key must be refreshed)
 // functional output : -
 // Another output    : inner table of <div id="deduce" />
 //     it must not include any <div /> tag.
   var ret = document.createElement('table');
+
+  var datearray;
+  var base_date;
+  [datearray, base_date] = createDateArray(arg);
   var player_list = Object.keys(arg.log[base_date].players);
 
   // update Table
@@ -369,44 +345,76 @@ function createInputField(arg, base_date) {
   // create Villager List
   // <table>
   //  <thead>
-  //    <tr>
-  //      <td>villagers</td><td>day x (link to log)</td>
+  //    <tr id="deducer-title">
+  //      <td><a id="summary">状況</a>　<a id="vote">投票</a></td>
+  //      <td id="deducer-title-1" colspan=3><a id="date-log-1">１日目</a></td>
+  //      <td id="deducer-title-2" colspan=3><a id="date-log-2">2日目</a></td>
+  //      <td>...</td>
+  //      <td id="deducer-title-X" colspan=3><a id="date-log-X">X日目</a></td>
   //    </tr>
   //  </thead>
   var ret_head     = document.createElement('thead');
   var tr_title     = document.createElement('tr');
   tr_title.setAttribute('id', 'deducer-title');
+
   td_day0title = document.createElement('td');
   td_day0title.innerText = '　';
+
   a_linktosummary = document.createElement('a');
   a_linktosummary.setAttribute('id', 'summary');
   a_linktosummary.setAttribute('href', '#');
   a_linktosummary.innerText = "状況";
   td_day0title.insertAdjacentElement('afterbegin', a_linktosummary);
+
   a_linktovote = document.createElement('a');
   a_linktovote.setAttribute('id', 'vote');
   a_linktovote.setAttribute('href', '#');
   a_linktovote.innerText = "投票";
   td_day0title.insertAdjacentElement('beforeend', a_linktovote);
+
   tr_title.insertAdjacentElement('beforeend', td_day0title);
 
-  var td_day1title = document.createElement('td');
-  td_day1title.setAttribute('id', 'deducer-title-1');
-  td_day1title.setAttribute('colspan', '3');
+  for (var i = 1 ; i <= datearray.length; i++) {
+    var td = document.createElement('td');
+    td.setAttribute('id', 'deducer-title-' + String(i));
+    td.setAttribute('colspan', '3');
 
-  var a_day1title  = document.createElement('a');
-  a_day1title.setAttribute('id', 'date-log-1');
-  a_day1title.setAttribute('href', '#');
-  a_day1title.innerText = "１日目";
-  td_day1title.insertAdjacentElement('afterbegin', a_day1title);
+    var a  = document.createElement('a');
+    a.setAttribute('id', 'date-log-' + String(i));
+    a.setAttribute('href', '#');
+    a.innerText = String(i) + "日目";
+    td.insertAdjacentElement('afterbegin', a);
 
-  tr_title.insertAdjacentElement('beforeend', td_day1title);
+    tr_title.insertAdjacentElement('beforeend', td);
+  }
 
   ret_head.insertAdjacentElement('beforeend', tr_title);
+
   //  <tbody>
-  //    <tr>
-  //      <td>[icon]villager_name</td><td>[input][input]comment_count</td>
+  //    <tr id='villager-list-villagerA'>
+  //      <td id='villager-villagerA'><img src=[icon] /><a id="all-day-log-villagerA">villagerA</a></td>
+  //
+  //      <td id='stat-villagerA-1-count'>comment_count_date1</td><td>ＣＯ<br><input id='job-villagerA'/></td><td>推理<br><input id='mrk-villagerA'/></td>
+  //
+  //      <td>
+  //        <p id='stat-villagerA-2-count'>comment_count_date2</p>
+  //        <p id='stat-villagerA-2-dead_reason'>dead_reason_date2</p>
+  //      </td>
+  //      <td>
+  //        <p id='stat-villagerA-2-target-label'>job target</p>
+  //        <input id='stat-villagerA-2-target'/>
+  //      </td>
+  //      <td>
+  //        <p id='stat-villagerA-2-result-label'>job target</p>
+  //        <input id='stat-villagerA-2-result'/>
+  //      </td>
+  //
+  //      ...
+  //      <td>...</td><td>...</td><td>...</td>
   //    </tr>
+  //    <tr id='villager-list-villagerB'>...</tr>
+  //    ...
+  //    <tr id='villager-list-villagerX'>...</tr>
   //  </tbody>
   var ret_body  = document.createElement('thead');
   player_list.forEach(function(k){
@@ -419,7 +427,7 @@ function createInputField(arg, base_date) {
 
     // villager_list: add character-name in mid.
     var a_villager  = document.createElement('a');
-    a_villager.setAttribute('id', 'all-day-log-' + k.trim());
+    a_villager.setAttribute('id', 'all-day-log-' + k);
     a_villager.setAttribute('href', '#');
     a_villager.innerText = k; // key: 
     td_villager.insertAdjacentElement('afterbegin', a_villager);
@@ -441,7 +449,6 @@ function createInputField(arg, base_date) {
     var td_a = document.createElement('td');
     var comment_count_day1 = document.createElement('p');
     comment_count_day1.setAttribute('id', 'stat-' + k + '-1-count');
-    comment_count_day1.innerText = '0';
     td_a.insertAdjacentElement('beforeend', comment_count_day1);
     tr.insertAdjacentElement('beforeend', td_a);
 
@@ -475,6 +482,38 @@ function createInputField(arg, base_date) {
     td_c.insertAdjacentElement('beforeend', monster_mark);
     tr.insertAdjacentElement('beforeend', td_c);
 
+    //// process 3 : add <td> cell for day 2..N
+    for (var i = 2 ; i <= datearray.length ; i++) {
+      var td_a = document.createElement('td');
+      var count = document.createElement('p');
+      var dead_reason = document.createElement('p');
+      count.setAttribute('id', 'stat-' + k + '-' + String(i) + '-count');
+      dead_reason.setAttribute('id', 'stat-' + k + '-' + String(i) + '-dead_reason');
+      td_a.insertAdjacentElement('beforeend', count);
+      td_a.insertAdjacentElement('beforeend', dead_reason);
+      tr.insertAdjacentElement('beforeend', td_a);
+
+      var td_b = document.createElement('td');
+      var target_label = document.createElement('p');
+      target_label.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target-label');
+      td_b.insertAdjacentElement('beforeend', target_label);
+      var target = document.createElement('select');
+      target.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target');
+      target.setAttribute('disabled', 'disabled');
+      td_b.insertAdjacentElement('beforeend', target);
+      tr.insertAdjacentElement('beforeend', td_b);
+
+      var td_c = document.createElement('td');
+      var result_label = document.createElement('p');
+      result_label.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result-label');
+      td_c.insertAdjacentElement('beforeend', result_label);
+      var result = document.createElement('select');
+      result.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result');
+      result.setAttribute('disabled', 'disabled');
+      td_c.insertAdjacentElement('beforeend', result);
+      tr.insertAdjacentElement('beforeend', td_c);
+    }
+
     ret_body.insertAdjacentElement('beforeend', tr);
   });
 
@@ -482,16 +521,6 @@ function createInputField(arg, base_date) {
   ret.insertAdjacentElement('beforeend', ret_body);
   document.getElementById("deduce").textContent = '';
   document.getElementById("deduce").insertAdjacentElement('afterbegin', ret);
-
-  // restore update setting
-  if ((arg.input != null) &&
-      (arg.input.each_player != null)) {
-    Object.keys(arg.input.each_player).forEach(function(k){
-      // 参加者別の情報
-      document.getElementById('job-' + k).value = arg.input.each_player[k].comingout; // deduced Job
-      document.getElementById('mrk-' + k).value = arg.input.each_player[k].enemymark; // Monster Mark
-    });
-  }
 
   return;
 };
