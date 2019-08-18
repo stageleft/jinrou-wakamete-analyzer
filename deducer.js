@@ -295,7 +295,8 @@ function updateInputField(arg) {
               result.setAttribute('disabled', 'disabled');
             }
 
-            if (job == arg.input.each_player[k].comingout) {
+            if ((job == arg.input.each_player[k].comingout) &&
+                (arg.input.each_player[k][datestring] != null)) {
               target.value = arg.input.each_player[k][datestring].target;
               result.value = arg.input.each_player[k][datestring].result;
             }
