@@ -180,12 +180,14 @@ function updateInputField(arg) {
     document.getElementById('all_villager').value = arg.input.player_count;
     document.getElementById('job_villager').value = arg.input.villager_count;
 
-    // restore update setting
-    Object.keys(arg.input.each_player).forEach(function(k){
-      // 参加者別の情報
-      document.getElementById('job-' + k).value = arg.input.each_player[k].comingout; // deduced Job
-      document.getElementById('mrk-' + k).value = arg.input.each_player[k].enemymark; // Monster Mark
-    });
+    // restore update setting if restore
+    if (is_initialize == true) {
+      Object.keys(arg.input.each_player).forEach(function(k){
+        // 参加者別の情報
+        document.getElementById('job-' + k).value = arg.input.each_player[k].comingout; // deduced Job
+        document.getElementById('mrk-' + k).value = arg.input.each_player[k].enemymark; // Monster Mark
+      });
+    }
 
     player_list.forEach(function(k){
       var tr = document.getElementById('villager-list-'+k);
