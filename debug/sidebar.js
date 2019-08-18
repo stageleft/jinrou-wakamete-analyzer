@@ -12,31 +12,33 @@ function recvLog(request, sender, sendResponse) {
   } else {
     debug_mutex_lock = true;
   };
-
-
-  if (debug_counter == 0) {
-    var tmp = window.localStorage.getItem("wakamete_village_debug_log-0");
-    if (tmp == null) {
-      is_debug_log_gettable = false;
+  try {
+    if (debug_counter == 0) {
+      var tmp = window.localStorage.getItem("wakamete_village_debug_log-0");
+      if (tmp == null) {
+        is_debug_log_gettable = false;
+      }
     }
-  }
 
-  if (is_debug_log_gettable == true) {
-    // with log : log get mode
-    var tmp = window.localStorage.getItem("wakamete_village_debug_log-"+String(debug_counter));
-    if (tmp == null) {
-      debug_counter = debug_counter - 1;
-      sendResponse({response: "OK"});
-      return;
+    if (is_debug_log_gettable == true) {
+      // with log : log get mode
+      var tmp = window.localStorage.getItem("wakamete_village_debug_log-"+String(debug_counter));
+      if (tmp == null) {
+        debug_counter = debug_counter - 1;
+        sendResponse({response: "OK"});
+        return;
+      }
+      request = JSON.parse(decodeURIComponent(tmp));
+    } else {
+      // no log : log set mode
+      window.localStorage.setItem("wakamete_village_debug_log-"+String(debug_counter),
+                                  encodeURIComponent(JSON.stringify(request)));
     }
-    request = JSON.parse(decodeURIComponent(tmp));
-  } else {
-    // no log : log set mode
-    window.localStorage.setItem("wakamete_village_debug_log-"+String(debug_counter),
-                                encodeURIComponent(JSON.stringify(request)));
-  }
-  debug_counter = debug_counter + 1;
+    debug_counter = debug_counter + 1;
 
+  } catch (e) {
+    // nop
+  }
   debug_mutex_lock = false;
 
   return recvLog_proc(request, sender, sendResponse);
