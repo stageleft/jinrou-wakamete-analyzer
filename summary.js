@@ -68,7 +68,9 @@ function updateSummary(arg) {
       voted.push([arg.log[d].list_voted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
     }
 
-    dnoted.push([arg.log[d].list_dnoted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+    if (arg.log[d].list_dnoted.length != 0) {
+      dnoted.push([arg.log[d].list_dnoted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+    }
   });
 
   // 占い視点グレー算出、まとめ表示
