@@ -42,6 +42,14 @@ function recvLog_proc(request, sender, sendResponse) {
   // ToDo: update input: field
   try {
     updateInputField(value);
+  } catch(e) {
+    // exception case
+    //   (1) 事件前日
+    //   (2) illegal case
+    console.log(e.name + ':' + e.message);
+    console.log(e.stack);
+  }
+  try {
     value.input = updateInput(value);
   } catch(e) {
     // exception case

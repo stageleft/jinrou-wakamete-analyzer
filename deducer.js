@@ -174,13 +174,7 @@ function updateInputField(arg) {
   // process 2 : add info from 'input' and <td> cell
   if (no_input_key == false) {
     // preprocess: calcurate seer-info and gray-info
-    try {
-      var villager_cell_info = makeGrayVillagerList(arg);
-    } catch (e) {
-      // case if arg.input is illegal. treat as no_input_key == true.
-      arg.input = null;
-      return;
-    }
+    var villager_cell_info = makeGrayVillagerList(arg);
 
     // update cast field
     document.getElementById('all_villager').value = arg.input.player_count;

@@ -54,7 +54,7 @@ function createDateArray(arg) {
   if (arg.log["１日目の夜となりました。"] != null) {
     base_date = "１日目の夜となりました。";
   } else {
-    base_date = ret[0];
+    base_date = ret[ret.length - 1];
   }
 
   return [ret, base_date];
