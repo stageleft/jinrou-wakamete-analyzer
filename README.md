@@ -1,7 +1,3 @@
-It is NOW ON DEVELOPMENT. Some Debug function is enabled and it becomes cosmetic bug.
-
-開発中です。デバッグ機能のせいで見た目バグってるんで使わないよーに。
-
 # about Jinrou-Wakamete-Analyzer
 
 Support tool for online "Are You a Werewolf?" game in Wakamete Server ( http://jinrou.dip.jp/~jinrou/ ).
@@ -28,8 +24,6 @@ Note: 「パッケージ化してインストールする」での手順につ�
  https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/Distribution を読んで考えます。。。
 
 # How to Use （どうやって使うの？）
-
-現行デバッグバージョンの説明であり、リリース時には変更される可能性があります。
 
 1. インストールされた直後の状態から、サイドバーの「Go To 「汝は人狼なりや？」続わかめてエディション」をクリックし、同サイトのフレームなし版にアクセスする。
 
