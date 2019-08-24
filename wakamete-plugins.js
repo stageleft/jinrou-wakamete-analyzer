@@ -16,4 +16,28 @@ function onLogLoad(event) {
   send_object.then(handleResponse, handleError);
 }
 
-setInterval(onLogLoad, 100);
+function onRefreshView(event) {
+  console.log ('Ignore refresh.');
+  var command = document.getElementsByName('COMMAND')[0];
+  var target  = document.getElementsByName('CMBPLAYER')[0];
+  var text    = document.getElementsByName('TXTMSG')[0];
+  var form    = document.querySelector('form');
+
+  if (text.value.length >= 1) {
+    // console.log ('Ignore refresh. TXTMSG has any messsage.');
+  } else if ((command.value != 'MSG') && (command.value != 'MSG0')) {
+    // console.log ('Ignore refresh. Any COMMAND is selected.');
+  } else if (target.value != ''){
+    // console.log ('Ignore refresh. Any CMBPLAYER is selected.');
+  } else {
+    // console.log ('Try Refresh.');
+    // form.action="cgi_jinro.cgi";
+    // form.method="POST";
+    form.submit();
+  }
+
+  setTimeout(onRefreshView, 10000);
+}
+setTimeout(onRefreshView, 10000);
+
+setInterval(onLogLoad, 1000);

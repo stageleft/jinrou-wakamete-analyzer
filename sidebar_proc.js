@@ -1,4 +1,6 @@
 var recvLog_lock = false;
+var comment_id   = null;
+
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
 function recvLog_proc(request, sender, sendResponse) {
 // input  : JSON
@@ -21,6 +23,7 @@ function recvLog_proc(request, sender, sendResponse) {
   }
 
   // Parse and Update wakamete village log
+  var is_same_village = true;
   try {
      var parser = new DOMParser();
      var receivedLog = parser.parseFromString(request.html_log, "text/html");
@@ -28,8 +31,9 @@ function recvLog_proc(request, sender, sendResponse) {
      if (todayLog != null) {
        if ( value.village_number != todayLog.number ) {
          value = { village_number: todayLog.number, log:new Object(), input:new Object()};
+         is_same_village = false;
        }
-       value.log[todayLog.msg_date] = todayLog;
+       Object.assign(value.log, { [todayLog.msg_date]:todayLog });
      }
   } catch(e) {
     // exception case
@@ -38,9 +42,11 @@ function recvLog_proc(request, sender, sendResponse) {
     console.log(e.name + ':' + e.message);
     console.log(e.stack);
   }
-
-  // ToDo: update input: field
+  // update input table
   try {
+    if (is_same_village == false) {
+      refreshInputField(value);
+    }
     updateInputField(value);
   } catch(e) {
     // exception case
@@ -48,6 +54,8 @@ function recvLog_proc(request, sender, sendResponse) {
     //   (2) illegal case
     console.log(e.name + ':' + e.message);
     console.log(e.stack);
+    // refresh input field for recovery.
+    refreshInputField(value);
   }
   try {
     value.input = updateInput(value);
@@ -59,9 +67,17 @@ function recvLog_proc(request, sender, sendResponse) {
     console.log(e.stack);
   }
 
-  // ToDo: emurate Wakamete-memo
+  // update
   try {
-    updateSummary(value);    // deduce-summary
+    if ('popup-active' == document.getElementById("vote-summary").getAttribute('class')) {
+      updateVotes(value);
+    } else if ('popup-active' == document.getElementById("comment-summary").getAttribute('class')) {
+      if (comment_id != null) {
+        updateCommentLog(value, comment_id);
+      }
+    } else {
+      updateSummary(value);    // deduce-summary
+    };
   } catch(e) {
     // exception case
     console.log(e.name + ':' + e.message);
@@ -88,6 +104,7 @@ function event_click_deduce(arg) {
         //// create comment-summary
         var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
         updateCommentLog(value, id);
+        comment_id = id;
 
         //// show comment-summary
         // <a id="date-log-2" href="#">2日目</a>
