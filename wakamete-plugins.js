@@ -25,7 +25,7 @@ function onRefreshView(event) {
 
   if (text.value.length >= 1) {
     // console.log ('Ignore refresh. TXTMSG has any messsage.');
-  } else if ((command.value != 'MSG') && (command.value != 'MSG0')) {
+  } else if ((command.value != 'MSG') && (command.value != 'MUMBLE')) {
     // console.log ('Ignore refresh. Any COMMAND is selected.');
   } else if (target.value != ''){
     // console.log ('Ignore refresh. Any CMBPLAYER is selected.');
