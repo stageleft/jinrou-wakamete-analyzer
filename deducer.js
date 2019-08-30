@@ -175,33 +175,34 @@ function updateInputField(arg) {
       }
     }
 
-    // deducer: set display-none if Checkbox state says it
-    var job = document.getElementById('job-' + k).value; // deduced Job
-    var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
-    if (mrk == "村人") {
-      if ((job == "占い") || (job == "霊能")) {
-        document.getElementById('villager-list-' + k).style.visibility = 'visible';
-      } else if (job == "村人") {
-        if (document.getElementById('is_villager').checked) {
+    if (document.getElementById('villager-list-' + k).style.visibility == 'visible') {
+      // deducer: set display-none if Checkbox state says it
+      var job = document.getElementById('job-' + k).value; // deduced Job
+      var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
+      if (mrk == "村人") {
+        if ((job == "占い") || (job == "霊能")) {
+          document.getElementById('villager-list-' + k).style.visibility = 'visible';
+        } else if (job == "村人") {
+          if (document.getElementById('is_villager').checked) {
+            document.getElementById('villager-list-' + k).style.visibility = 'visible';
+          } else {
+            document.getElementById('villager-list-' + k).style.visibility = 'collapse';
+          }
+        } else {
+          if (document.getElementById('is_talented').checked) {
+            document.getElementById('villager-list-' + k).style.visibility = 'visible';
+          } else {
+            document.getElementById('villager-list-' + k).style.visibility = 'collapse';
+          }
+        }
+      } else {
+        if (document.getElementById('is_enemy').checked) {
           document.getElementById('villager-list-' + k).style.visibility = 'visible';
         } else {
           document.getElementById('villager-list-' + k).style.visibility = 'collapse';
         }
-      } else {
-        if (document.getElementById('is_talented').checked) {
-          document.getElementById('villager-list-' + k).style.visibility = 'visible';
-        } else {
-          document.getElementById('villager-list-' + k).style.visibility = 'collapse';
-        }
-      }
-    } else {
-      if (document.getElementById('is_enemy').checked) {
-        document.getElementById('villager-list-' + k).style.visibility = 'visible';
-      } else {
-        document.getElementById('villager-list-' + k).style.visibility = 'collapse';
       }
     }
-
   });
 
   // process 2 : add info from 'input' and <td> cell
