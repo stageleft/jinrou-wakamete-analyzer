@@ -236,10 +236,9 @@ function updateInputField(arg) {
                 result.insertAdjacentElement('beforeend', o);
               });
             } else if (job == "霊能") {
-              // deducer: target (fixed string from voted player list)
-              target.setAttribute('disabled', 'disabled');
-              result.setAttribute('disabled', 'disabled');
               if (i >= 3) {
+                // deducer: target (fixed string from voted player list)
+                target.setAttribute('disabled', 'disabled');
                 target_label.innerText = '吊り先';
                 voted_player = arg.log[datestring].list_voted[0];
                 var o = document.createElement('option');
@@ -257,37 +256,14 @@ function updateInputField(arg) {
                   o.innerText = v;
                   result.insertAdjacentElement('beforeend', o);
                 });
-              }
-            } else if (job == "狩人") {
-              // deducer: target (all player list)
-              if (i >= 3) {
-                target_label.innerText = '護衛先';
-                target.removeAttribute('disabled');
-                player_list.forEach(function(v){
-                  var o = document.createElement('option');
-                  o.setAttribute("value", v);
-                  o.innerText = v;
-                  target.insertAdjacentElement('beforeend', o);
-                });
-              }
-
-              // deducer: result (fixed string from bitten player list)
-              if (i >= 3) {
-                result_label.innerText = '噛み先';
+              } else {
+                // deducer: target (fixed string from voted player list)
+                target.setAttribute('disabled', 'disabled');
+                // deducer: result
                 result.setAttribute('disabled', 'disabled');
-                var bitten_players;
-                if (arg.log[datestring].list_bitten.length == 0) {
-                  bitten_players = "（なし）";
-                } else {
-                  bitten_players = arg.log[datestring].list_bitten.join("\n");
-                }
-                var o = document.createElement('option');
-                o.setAttribute("value", bitten_players);
-                o.innerText = bitten_players;
-                result.insertAdjacentElement('beforeend', o);
-                result.value = bitten_players;
+
               }
-            } else { // if (job == "村人" || job == "共有" || job == "猫又")
+            } else { // if (job == "村人" || job == "狩人" || job == "共有" || job == "猫又")
               // deducer: target (alive player list)
               target.setAttribute('disabled', 'disabled');
 
