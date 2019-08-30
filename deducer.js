@@ -179,10 +179,6 @@ function updateInputField(arg) {
     var job = document.getElementById('job-' + k).value; // deduced Job
     var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
     if (mrk == "村人") {
-
-var job_list = ["村人","","","狩人","共有","猫又"];
-
-
       if ((job == "占い") || (job == "霊能")) {
         document.getElementById('villager-list-' + k).style.visibility = 'visible';
       } else if (job == "村人") {
