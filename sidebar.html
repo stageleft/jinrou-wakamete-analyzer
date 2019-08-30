@@ -30,8 +30,16 @@
       </tr>
     </tbody></table>
   </div>
+  <div id="control"        style="width:100%;height:18px;overflow:hidden;">
+    <a href="#" id="summary">状況</a>　
+    <a href="#" id="vote">投票</a>　
+    <input type="checkbox" id="is_dead"     checked="checked">死者表示
+    <input type="checkbox" id="is_talented" checked="checked">猫狩表示
+    <input type="checkbox" id="is_villager" checked="checked">素村表示
+    <input type="checkbox" id="is_enemy"    checked="checked">人外表示
+  </div>
   <div id="deduce"          style="width:100%;height:30%;overflow:scroll;"></div>
-  <div id="summary-field"  style="width:100%;height:40%;overflow:scroll;">
+  <div id="summary-field"  style="width:100%;height:40%;overflow:auto;">
     <div id="vote-summary"    class="popup-standby"></div>
     <div id="comment-summary" class="popup-standby"></div>
     <div id="deduce-summary"  class="popup-active" ></div>

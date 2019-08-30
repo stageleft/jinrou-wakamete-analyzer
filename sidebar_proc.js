@@ -186,6 +186,7 @@ function event_click_summary(arg) {
 // 性能チューニング：コールバック関数を追加はコードの最後の方で。
 // 余計な addEventListener() コールを最小化したい。
 document.getElementById("deduce"         ).addEventListener("click", function(e){ event_click_deduce(e); }, true);
+document.getElementById("control"        ).addEventListener("click", function(e){ event_click_deduce(e); }, true);
 document.getElementById("vote-summary"   ).addEventListener("click", function(e){ event_click_votes(e); }, true);
 document.getElementById("comment-summary").addEventListener("click", function(e){ event_click_comments(e); }, true);
 document.getElementById("deduce-summary" ).addEventListener("click", function(e){ event_click_summary(e); }, true);

@@ -144,8 +144,13 @@ function updateInputField(arg) {
           // if dead in this day
           var datestring   = datearray[i-1];
 
-          // deducer: set background color if Dead
-          document.getElementById('villager-' + k).setAttribute('class', 'dead');
+          // deducer: set background color or set display-none if Dead
+          if (document.getElementById('is_dead').checked) {
+            document.getElementById('villager-' + k).setAttribute('class', 'dead');
+            document.getElementById('villager-list-' + k).style.visibility = 'visible';
+          } else {
+            document.getElementById('villager-list-' + k).style.visibility = 'collapse';
+          }
 
           var dead_reason;
 
@@ -169,6 +174,38 @@ function updateInputField(arg) {
         }
       }
     }
+
+    // deducer: set display-none if Checkbox state says it
+    var job = document.getElementById('job-' + k).value; // deduced Job
+    var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
+    if (mrk == "村人") {
+
+var job_list = ["村人","","","狩人","共有","猫又"];
+
+
+      if ((job == "占い") || (job == "霊能")) {
+        document.getElementById('villager-list-' + k).style.visibility = 'visible';
+      } else if (job == "村人") {
+        if (document.getElementById('is_villager').checked) {
+          document.getElementById('villager-list-' + k).style.visibility = 'visible';
+        } else {
+          document.getElementById('villager-list-' + k).style.visibility = 'collapse';
+        }
+      } else {
+        if (document.getElementById('is_talented').checked) {
+          document.getElementById('villager-list-' + k).style.visibility = 'visible';
+        } else {
+          document.getElementById('villager-list-' + k).style.visibility = 'collapse';
+        }
+      }
+    } else {
+      if (document.getElementById('is_enemy').checked) {
+        document.getElementById('villager-list-' + k).style.visibility = 'visible';
+      } else {
+        document.getElementById('villager-list-' + k).style.visibility = 'collapse';
+      }
+    }
+
   });
 
   // process 2 : add info from 'input' and <td> cell
@@ -328,7 +365,7 @@ function refreshInputField(arg) {
   // <table>
   //  <thead>
   //    <tr id="deducer-title">
-  //      <td><a id="summary">状況</a>　<a id="vote">投票</a></td>
+  //      <td></td>
   //      <td id="deducer-title-1" colspan=3><a id="date-log-1">１日目</a></td>
   //      <td id="deducer-title-2" colspan=3><a id="date-log-2">2日目</a></td>
   //      <td>...</td>
@@ -340,19 +377,7 @@ function refreshInputField(arg) {
   tr_title.setAttribute('id', 'deducer-title');
 
   td_day0title = document.createElement('td');
-  td_day0title.innerText = '　';
-
-  a_linktosummary = document.createElement('a');
-  a_linktosummary.setAttribute('id', 'summary');
-  a_linktosummary.setAttribute('href', '#');
-  a_linktosummary.innerText = "状況";
-  td_day0title.insertAdjacentElement('afterbegin', a_linktosummary);
-
-  a_linktovote = document.createElement('a');
-  a_linktovote.setAttribute('id', 'vote');
-  a_linktovote.setAttribute('href', '#');
-  a_linktovote.innerText = "投票";
-  td_day0title.insertAdjacentElement('beforeend', a_linktovote);
+  td_day0title.innerText = '';
 
   tr_title.insertAdjacentElement('beforeend', td_day0title);
 
