@@ -116,6 +116,7 @@ function updateInputField(arg) {
   //// process 1 : add info from 'log'
   var player_list = Object.keys(arg.log[base_date].players);
   player_list.forEach(function(k){
+    document.getElementById('villager-list-' + k).style.visibility = 'visible';
 
     for (var i = 1 ; i <= datearray.length ; i++) {
       if ((i <= 2) ||
@@ -175,7 +176,7 @@ function updateInputField(arg) {
       }
     }
 
-    if (document.getElementById('villager-list-' + k).style.visibility == 'visible') {
+    if (document.getElementById('villager-list-' + k).style.visibility != 'collapse') {
       // deducer: set display-none if Checkbox state says it
       var job = document.getElementById('job-' + k).value; // deduced Job
       var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
