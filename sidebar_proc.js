@@ -188,6 +188,10 @@ function event_click_summary(arg) {
   }
   return;
 }
+function checkbox_change(arg) {
+  document.getElementById("deduce").scrollTop  = 0;
+  document.getElementById("deduce").scrollLeft = 0;
+}
 
 // 性能チューニング：コールバック関数を追加はコードの最後の方で。
 // 余計な addEventListener() コールを最小化したい。
@@ -196,3 +200,9 @@ document.getElementById("control"        ).addEventListener("click", function(e)
 document.getElementById("vote-summary"   ).addEventListener("click", function(e){ event_click_votes(e); }, true);
 document.getElementById("comment-summary").addEventListener("click", function(e){ event_click_comments(e); }, true);
 document.getElementById("deduce-summary" ).addEventListener("click", function(e){ event_click_summary(e); }, true);
+
+document.getElementById("is_dead"        ).addEventListener("change", function(e){ checkbox_change(e); }, true);
+document.getElementById("is_talented"    ).addEventListener("change", function(e){ checkbox_change(e); }, true);
+document.getElementById("is_villager"    ).addEventListener("change", function(e){ checkbox_change(e); }, true);
+document.getElementById("is_enemy"       ).addEventListener("change", function(e){ checkbox_change(e); }, true);
+
