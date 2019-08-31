@@ -254,8 +254,7 @@ function updateInputField(arg) {
               target.style.visibility = 'visible';
               player_list.forEach(function(v){
                 if ((i <= 2) ||
-                    ((arg.log[String(i-1) + "日目の朝となりました。"] != null) &&
-                     (arg.log[String(i-1) + "日目の朝となりました。"].players[v].stat == "（生存中）"))) {
+                    ((arg.log[datearray[i-2]].players[v].stat == "（生存中）"))) {
                   var o = document.createElement('option');
                   o.setAttribute("value", v);
                   o.innerText = v;
