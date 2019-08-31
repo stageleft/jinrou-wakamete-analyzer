@@ -10,11 +10,21 @@ function updateCommentLog(arg, param) {
     var tr = document.createElement('tr');
 
     var td1 = document.createElement('td');
-    td1.innerHTML = '◆<b>' + l.speaker + '</b>さん'
+    var td1span1 = document.createElement('span');
+    var td1b     = document.createElement('b');
+    var td1span2 = document.createElement('span');
+
+    td1span1.innerText = '◆'
+    td1b.innerText     = l.speaker
+    td1span2.innerText = 'さん'
+
+    td1.insertAdjacentElement('beforeend', td1span1);
+    td1.insertAdjacentElement('beforeend', td1b);
+    td1.insertAdjacentElement('beforeend', td1span2);
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
-    td2.innerHTML = '「' + l.comment.join('<br>') + '」'
+    td2.innerText = '「' + l.comment.join('\n') + '」'
     if (l.type == 'Strong'){
       td2.setAttribute('style', 'font-size: large;');
     } else if (l.type == 'WithColor'){
@@ -39,7 +49,19 @@ function updateCommentLog(arg, param) {
 
     var td_daytitle = document.createElement('td');
     td_daytitle.setAttribute('colspan', '2');
-    td_daytitle.innerHTML = '◆◆◆◆◆<b>' + datestr + '</b>◆◆◆◆◆'
+
+    var td_daytitlespan1 = document.createElement('span');
+    var td_daytitleb     = document.createElement('b');
+    var td_daytitlespan2 = document.createElement('span');
+
+    td_daytitlespan1.innerText = '◆◆◆◆◆'
+    td_daytitleb.innerText     = datestr
+    td_daytitlespan2.innerText = '◆◆◆◆◆'
+
+    td_daytitle.insertAdjacentElement('beforeend', td_daytitlespan1);
+    td_daytitle.insertAdjacentElement('beforeend', td_daytitleb);
+    td_daytitle.insertAdjacentElement('beforeend', td_daytitlespan2);
+
     tr_daytitle.insertAdjacentElement('beforeend', td_daytitle);
 
     ret.insertAdjacentElement('beforeend', tr_daytitle);
@@ -55,7 +77,19 @@ function updateCommentLog(arg, param) {
 
       var td_daytitle = document.createElement('td');
       td_daytitle.setAttribute('colspan', '2');
-      td_daytitle.innerHTML = '◆◆◆◆◆<b>' + datearray[i-1] + '</b>◆◆◆◆◆'
+
+      var td_daytitlespan1 = document.createElement('span');
+      var td_daytitleb     = document.createElement('b');
+      var td_daytitlespan2 = document.createElement('span');
+
+      td_daytitlespan1.innerText = '◆◆◆◆◆'
+      td_daytitleb.innerText     = datearray[i-1]
+      td_daytitlespan2.innerText = '◆◆◆◆◆'
+
+      td_daytitle.insertAdjacentElement('beforeend', td_daytitlespan1);
+      td_daytitle.insertAdjacentElement('beforeend', td_daytitleb);
+      td_daytitle.insertAdjacentElement('beforeend', td_daytitlespan2);
+
       tr_daytitle.insertAdjacentElement('beforeend', td_daytitle);
 
       ret.insertAdjacentElement('beforeend', tr_daytitle);
