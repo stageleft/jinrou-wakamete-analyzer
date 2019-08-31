@@ -221,7 +221,8 @@ function html2json_village_log(arg) {
         if (villager == "ゲームマスター") {
             villager = "初日犠牲者";
         }
-        var v_comment = String(base_td_list.item(1).innerText).replace(/^「/,"").replace(/」$/,"").split('\n');
+        // ref. https://qiita.com/miiitaka/items/793555b4ccb0259a4cb8
+        var v_comment = String(base_td_list.item(1).innerHTML).replace(/<br>/g,"\n").replace(/^「/,"").replace(/」$/,"").replace(/<("[^"]*"|'[^']*'|[^'">])*>/g,'').split('\n');
         var v_comtype = "Normal";
         if (base_td_list.item(1).querySelector("font") != null) {
           if (base_td_list.item(1).querySelector("font").size == "+1") {
