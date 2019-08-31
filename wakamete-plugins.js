@@ -25,7 +25,11 @@ function onRefreshView(event) {
 
   if (text.value.length >= 1) {
     // console.log ('Ignore refresh. TXTMSG has any messsage.');
-  } else if ((command.value != 'MSG') && (command.value != 'MUMBLE')) {
+  } else if ((command.value != 'MSG') &&     // 発　言（昼）
+              // TODO: 共有者の場合
+             (command.value != 'MSGWLF') &&  // 念　話（夜）
+             (command.value != 'MSGFOX') &&  // 遠吠え（夜）
+             (command.value != 'MUMBLE')) {  // 独り言（夜）
     // console.log ('Ignore refresh. Any COMMAND is selected.');
   } else if (target.value != ''){
     // console.log ('Ignore refresh. Any CMBPLAYER is selected.');
