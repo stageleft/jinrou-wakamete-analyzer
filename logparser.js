@@ -221,7 +221,7 @@ function html2json_village_log(arg) {
         if (villager == "ゲームマスター") {
             villager = "初日犠牲者";
         }
-        var v_comment = String(base_td_list.item(1).innerHTML).replace(/^「/,"").replace(/」$/,"").split('<br>');
+        var v_comment = String(base_td_list.item(1).innerText).replace(/^「/,"").replace(/」$/,"").split('\n');
         var v_comtype = "Normal";
         if (base_td_list.item(1).querySelector("font") != null) {
           if (base_td_list.item(1).querySelector("font").size == "+1") {
