@@ -251,9 +251,11 @@ function updateInputField(arg) {
               // deducer: target (alive player list)
               target_label.innerText = '占い先';
               target.removeAttribute('disabled');
+              target.style.visibility = 'visible';
               player_list.forEach(function(v){
                 if ((i <= 2) ||
-                    (arg.log[String(i-1) + "日目の朝となりました。"].players[v].stat == "（生存中）")) {
+                    ((arg.log[String(i-1) + "日目の朝となりました。"] != null) &&
+                     (arg.log[String(i-1) + "日目の朝となりました。"].players[v].stat == "（生存中）"))) {
                   var o = document.createElement('option');
                   o.setAttribute("value", v);
                   o.innerText = v;
@@ -264,6 +266,7 @@ function updateInputField(arg) {
               // deducer: result
               result_label.innerText = '結果';
               result.removeAttribute('disabled');
+              result.style.visibility = 'visible';
               seer_result.forEach(function(v){
                 var o = document.createElement('option');
                 o.setAttribute("value", v);
@@ -274,6 +277,7 @@ function updateInputField(arg) {
               if (i >= 3) {
                 // deducer: target (fixed string from voted player list)
                 target.setAttribute('disabled', 'disabled');
+                target.style.visibility = 'visible';
                 target_label.innerText = '吊り先';
                 voted_player = arg.log[datestring].list_voted[0];
                 var o = document.createElement('option');
@@ -285,6 +289,7 @@ function updateInputField(arg) {
                 // deducer: result
                 result_label.innerText = '結果';
                 result.removeAttribute('disabled');
+                result.style.visibility = 'visible';
                 medium_result.forEach(function(v){
                   var o = document.createElement('option');
                   o.setAttribute("value", v);
@@ -294,16 +299,20 @@ function updateInputField(arg) {
               } else {
                 // deducer: target (fixed string from voted player list)
                 target.setAttribute('disabled', 'disabled');
+                target.style.visibility = 'collapse';
                 // deducer: result
                 result.setAttribute('disabled', 'disabled');
+                result.style.visibility = 'collapse';
 
               }
             } else { // if (job == "村人" || job == "狩人" || job == "共有" || job == "猫又")
               // deducer: target (alive player list)
               target.setAttribute('disabled', 'disabled');
+              target.style.visibility = 'collapse';
 
               // deducer: result (fixed string from all player list)
               result.setAttribute('disabled', 'disabled');
+              result.style.visibility = 'collapse';
             }
 
             if ((job == arg.input.each_player[k].comingout) &&
@@ -505,6 +514,7 @@ function refreshInputField(arg) {
       var target = document.createElement('select');
       target.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target');
       target.setAttribute('disabled', 'disabled');
+      target.style.visibility = 'collapse';
       td_b.insertAdjacentElement('beforeend', target);
       tr.insertAdjacentElement('beforeend', td_b);
 
@@ -515,6 +525,7 @@ function refreshInputField(arg) {
       var result = document.createElement('select');
       result.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result');
       result.setAttribute('disabled', 'disabled');
+      result.style.visibility = 'collapse';
       td_c.insertAdjacentElement('beforeend', result);
       tr.insertAdjacentElement('beforeend', td_c);
     }
