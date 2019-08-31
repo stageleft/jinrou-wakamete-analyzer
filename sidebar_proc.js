@@ -112,6 +112,8 @@ function event_click_deduce(arg) {
         document.getElementById("vote-summary"   ).setAttribute('class', 'popup-standby');
         document.getElementById("comment-summary").setAttribute('class', 'popup-active');
         document.getElementById("deduce-summary" ).setAttribute('class', 'popup-standby');
+        document.getElementById("summary-field").scrollTop  = 0;
+        document.getElementById("summary-field").scrollLeft = 0;
       } else if(id.indexOf('vote') != -1) {
         //// create vote-summary
         var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
@@ -122,11 +124,15 @@ function event_click_deduce(arg) {
         document.getElementById("vote-summary"   ).setAttribute('class', 'popup-active');
         document.getElementById("comment-summary").setAttribute('class', 'popup-standby');
         document.getElementById("deduce-summary" ).setAttribute('class', 'popup-standby');
+        document.getElementById("summary-field").scrollTop  = 0;
+        document.getElementById("summary-field").scrollLeft = 0;
       } else if(id.indexOf('summary') != -1) {
         //// show deduce-summary
         document.getElementById("vote-summary"   ).setAttribute('class', 'popup-standby');
         document.getElementById("comment-summary").setAttribute('class', 'popup-standby');
         document.getElementById("deduce-summary" ).setAttribute('class', 'popup-active');
+        document.getElementById("summary-field").scrollTop  = 0;
+        document.getElementById("summary-field").scrollLeft = 0;
       } // else nop
     } // else nop
   }
