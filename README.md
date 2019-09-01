@@ -28,7 +28,7 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
 1. 満足の行くカスタマイズができた場合、ご自身でカスタマイズしたパッケージをインストールできる。
     1. https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/Distribution を熟読する。
     1. manifest.json はご自身の情報に合わせて書き換える。 version と、 applications.gecko.id の書き換えは必須である。
-    1. ファイル一式を zip 圧縮し、拡張子 xpi `*.xpi` ファイルとして保存する。
+    1. ファイル一式を zip 圧縮し、`*.xpi` ファイルとして保存する。
     1. https://addons.mozilla.org/ja/firefox/ にアクセスし、右上の「開発者センター」にアクセスする。あとは適宜。
 
 # How to Use （どうやって使うの？）
