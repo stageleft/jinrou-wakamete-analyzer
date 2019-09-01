@@ -14,27 +14,37 @@ Japanese only, because Wakamete Server can support only Japanese.
 
 # How to Install （どうやってインストールするの？）
 
-1. https://github.com/stageleft/jinrou-wakamete-analyzer/releases に登録されている jinrou-wakamete-analyzer.xpi をダウンロードしてください。
-1. https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/WebExtensions/Packaging_and_installation の、
-「ディスクから読み込む」セクションに従ってインストールしてください。  
-インストール完了後は、 about:debugging のページを閉じてしまってかまいません。  
-なお、起動のたびにインストールする必要がありますので、 about:debugging をブックマークしておくことをお勧めします。
+## Install （普通にインストールする場合）
 
-Note: 「パッケージ化してインストールする」での手順については、今後の検討課題とさせてください。   
- https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/Distribution を読んで考えます。。。
+https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からインストールしてください。
+
+## Install for your Development（自分でカスタマイズしたい場合）
+
+1. 本ページ右上（右中？）の、「Clone or download」から、Download ZIP にてファイルをダウンロードする。
+1. https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/WebExtensions/Packaging_and_installation の、
+「ディスクから読み込む」セクションに従ってインストールする。  
+   インストール完了後は、 about:debugging のページを閉じてよい。  
+   なお、起動のたびにインストールする必要があるため、 about:debugging をブックマークするとよい。
+1. 満足の行くカスタマイズができた場合、ご自身でカスタマイズしたパッケージをインストールできる。
+    1. https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/Distribution を熟読する。
+    1. manifest.json はご自身の情報に合わせて書き換える。 version と、 applications.gecko.id の書き換えは必須である。
+    1. ファイル一式を zip 圧縮し、拡張子 xpi `*.xpi` ファイルとして保存する。
+    1. https://addons.mozilla.org/ja/firefox/ にアクセスし、右上の「開発者センター」にアクセスする。あとは適宜。
 
 # How to Use （どうやって使うの？）
 
-1. インストールされた直後の状態から、サイドバーの「Go To 「汝は人狼なりや？」続わかめてエディション」をクリックし、同サイトのフレームなし版にアクセスする。
+1. サイドバーを表示し、「Go To 「汝は人狼なりや？」続わかめてエディション」をクリックし、同サイトのフレームなし版にアクセスする。
 
 ![インストール直後の状態](https://github.com/stageleft/jinrou-wakamete-analyzer/blob/master/doc/usage-1.png "インストール直後の状態")
 
 1. 村民登録を行い、ゲームの開始を待つ。
-  （ログが日付ごとに分割されないために正しい表示とはならないものの、「ログイン → 旅人」あるいは、「過去ログ → 最近の記録」を見ても、ツールの雰囲気がおおよそわかる状態にはなる。以下、特段の説明がない場合は「過去ログ → 最近の記録」のスクリーンショットを用いる）   
   このとき、ツールの仕様の都合上、以下の注意点がある。
 
     1. 複数のウィンドウを開いてはいけない。
     1. 複数の画面で村を見てはいけない。
+
+「観戦」、「ログイン → 旅人」あるいは、「過去ログ → 最近の記録」からログインした場合は、正しい表示とならない。
+１日目昼から観戦している場合には、ツールの雰囲気がおおよそわかる状態にはなるので、村が立てば練習することは可能。
 
 1. 村が始まったところで、サイドバーの上部に配役を入力する。  
    配役が入力されると、CO状況のまとめテキストがサイドバー下部に表示される。  
@@ -54,11 +64,15 @@ Note: 「パッケージ化してインストールする」での手順につ�
 ※実際に村を走らせないと入力フィールドが出てこないので、画像なし。  
 ※1日目昼においては、CO状況の入力で不正となる仕様がある。
 
-1. 村の進行に合わせてログは自動で取り込まれるが、サイドバー下部の各種情報の自動更新は周期が遅いので、必要に応じて同じ操作を繰り返すなどして更新することが望ましい。  
+1. 村の進行に合わせてログは自動で取り込まれるが、サイドバー下部の各種情報の自動更新は周期が遅いので、必要に応じて手動で更新することが望ましい。  
+    1. 自動更新中に文字を入力すると、入力した内容が壊れることがある。  
+       自動更新を止めるためには、自動更新タイミングの前に、自ら更新する、発言を入力する、といった操作を行う。
 
 # Modification （改造してよい？）
 
 Mozilla Public License Version 2.0 に従った範囲で、自由に改造して、どうぞ。
+
+具体的な使い方は、インストール方法の「Install for your Development（自分でカスタマイズしたい場合）」を参照願います。
 
 # Special Thanks
 
