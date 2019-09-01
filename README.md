@@ -18,7 +18,7 @@ Japanese only, because Wakamete Server can support only Japanese.
 
 https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からインストールしてください。
 
-## Install for your Development（自分でカスタマイズしたい場合）
+## Temporarily install for your Development（自分でカスタマイズしたい場合）
 
 1. 本ページ右上（右中？）の、「Clone or download」から、Download ZIP にてファイルをダウンロードする。
 1. https://developer.mozilla.org/ja/docs/Mozilla/Add-ons/WebExtensions/Packaging_and_installation の、
@@ -62,9 +62,9 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
 
 1. サイドバー中央上部の推理表には、進行に応じてCO状況、人外の推理状況、占い・霊能・狩人護衛状況、を選択入力できる。  
    また、あらかじめ選択入力をしておいた状態にて、サイドバー上部、配役入力部分の直下の「死者表示」「猫狩表示」「素村表示」「人外表示」各々のチェックボックスをクリックし、チェックをつけ外しすることで、表示する参加者の絞り込みを行うことができる。  
-   本機能は、占い結果・霊能結果の入力容易化に用いるとよい。
+   本機能は、占い結果・霊能結果の入力容易化に用いるとよい。  
 ※実際に村を走らせないと入力フィールドが出てこないので、画像なし。  
-※「猫狩表示」のチェックボックスは結果は、共有CO者にも適用される。
+※「猫狩表示」のチェックボックスは結果は、共有CO者にも適用される。  
 ※1日目昼においては、CO状況の入力で不正となる仕様がある。
 
 1. 村の進行に合わせてログは自動で取り込まれるが、サイドバー下部の各種情報の自動更新は周期が遅い（※）ので、必要に応じて手動で更新することが望ましい。  
@@ -78,7 +78,7 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
 
 Mozilla Public License Version 2.0 に従った範囲で、自由に改造して、どうぞ。
 
-具体的な使い方は、インストール方法の「Install for your Development（自分でカスタマイズしたい場合）」を参照願います。
+具体的な使い方は、インストール方法の「Temporarily install for your Development（自分でカスタマイズしたい場合）」を参照願います。
 
 # Special Thanks
 
