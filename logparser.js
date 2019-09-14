@@ -153,6 +153,7 @@ function html2json_village_log(arg) {
   var cmts = [];
   var msg_date    = "１日目の朝となりました。";
   var msgs_voted  = [];
+  var msgs_cursed = []; // Voted to WereCat
   var msgs_bitten = [];
   var msgs_dnoted = []; // Death Note
   var msgs_sudden = [];
@@ -192,8 +193,13 @@ function html2json_village_log(arg) {
           // <img src="./img/sc5.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ff9999">猫　又</font>」の勝利です！</font>(19/07/15 00:11:04)
           msg_date = msg_text;
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead1.gif") {
-          // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font>
-          msgs_voted.push(base_td_list.item(0).querySelector("b").innerText);
+          if (msg_text.match("^処刑されました・・・。$")) {
+            // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font>
+            msgs_voted.push(base_td_list.item(0).querySelector("b").innerText);
+          } else {
+            // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>タマトイズ</b>さんは猫又の呪いで<font color="#ff0000">死亡しました・・・。</font>
+            msgs_cursed.push(base_td_list.item(0).querySelector("b").innerText);
+          }
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead2.gif") {
           if (msg_text.match("^無残な姿で発見された・・・。$")) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>伊吹翼</b>さんは翌日<font color="#ff0000">無残な姿で発見された・・・。</font>
@@ -254,6 +260,7 @@ function html2json_village_log(arg) {
   return { comments:    cmts, 
            msg_date:    msg_date,
            list_voted:  msgs_voted,
+           list_cursed: msgs_cursed,
            list_bitten: msgs_bitten,
            list_dnoted: msgs_dnoted,
            list_sudden: msgs_sudden,

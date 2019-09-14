@@ -158,6 +158,8 @@ function updateInputField(arg) {
           // deducer: result (dead reason)
           if (arg.log[datestring].list_voted.indexOf(k) >= 0) {
             dead_reason = "吊り";
+          } else if (arg.log[datestring].list_cursed.indexOf(k) >= 0) {
+            dead_reason = "呪い";
           } else if (arg.log[datestring].list_bitten.indexOf(k) >= 0) {
             dead_reason = "噛み";
           } else if (arg.log[datestring].list_dnoted.indexOf(k) >= 0) {
