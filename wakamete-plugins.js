@@ -25,11 +25,11 @@ function onRefreshView(event) {
 
   if (text.value.length >= 1) {
     // console.log ('Ignore refresh. TXTMSG has any messsage.');
-  } else if ((command.value != 'MSG') &&     // ”­@Œ¾i’‹j
-              // TODO: ‹¤—LÒ‚Ìê‡
-             (command.value != 'MSGWLF') &&  // ”O@˜bi–éj
-             (command.value != 'MSGFOX') &&  // ‰“–i‚¦i–éj
-             (command.value != 'MUMBLE')) {  // “Æ‚èŒ¾i–éj
+  } else if ((command.value != 'MSG') &&     // ç™ºã€€è¨€ï¼ˆæ˜¼ï¼‰
+             (command.value != 'MSGFRE') &&  // ä¼šã€€è©±ï¼ˆå¤œï¼‰
+             (command.value != 'MSGWLF') &&  // é å ãˆï¼ˆå¤œï¼‰
+             (command.value != 'MSGFOX') &&  // å¿µã€€è©±ï¼ˆå¤œï¼‰
+             (command.value != 'MUMBLE')) {  // ç‹¬ã‚Šè¨€ï¼ˆå¤œï¼‰
     // console.log ('Ignore refresh. Any COMMAND is selected.');
   } else if (target.value != ''){
     // console.log ('Ignore refresh. Any CMBPLAYER is selected.');
