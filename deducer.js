@@ -389,7 +389,19 @@ function refreshInputField(arg) {
 
   tr_title.insertAdjacentElement('beforeend', td_day0title);
 
-  for (var i = 1 ; i <= datearray.length; i++) {
+  var td_title = document.createElement('td');
+  td_title.setAttribute('id', 'deducer-title-1');
+  td_title.setAttribute('colspan', '3');
+
+  var a  = document.createElement('a');
+  a.setAttribute('id', 'date-log-1');
+  a.setAttribute('href', '#');
+  a.innerText = "1日目";
+  td_title.insertAdjacentElement('afterbegin', a);
+
+  tr_title.insertAdjacentElement('beforeend', td_title);
+
+  for (var i = datearray.length ; i >= 2 ; i--) {
     var td = document.createElement('td');
     td.setAttribute('id', 'deducer-title-' + String(i));
     td.setAttribute('colspan', '3');
