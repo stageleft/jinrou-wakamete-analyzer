@@ -39,8 +39,6 @@ function onRefreshView(event) {
     // form.method="POST";
     form.submit();
   }
-
-  setTimeout(onRefreshView, 10000);
 }
 setTimeout(onRefreshView, 10000);
 
