@@ -67,6 +67,9 @@ function updateSummary(arg) {
     } else {
       voted.push([arg.log[d].list_voted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
     }
+    if (arg.log[d].list_cursed.length != 0) {
+      voted.push([arg.log[d].list_cursed.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+    }
 
     if (arg.log[d].list_dnoted.length != 0) {
       dnoted.push([arg.log[d].list_dnoted.join('＆'), { comingout:"村人", enemymark:"村人" }]);

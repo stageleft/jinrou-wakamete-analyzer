@@ -141,6 +141,7 @@ function html2json_village_log(arg) {
 // output : Hash
 //            msg_date:    "date-string",
 //            list_voted:  [ "character-name", ... ],
+//            list_cursed: [ "character-name", ... ],
 //            list_bitten: [ "character-name", ... ],
 //            list_dnoted: [ "character-name", ... ],
 //            list_sudden: [ "character-name", ... ],
