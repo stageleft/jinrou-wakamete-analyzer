@@ -119,8 +119,7 @@ function updateInputField(arg) {
     document.getElementById('villager-list-' + k).style.visibility = 'visible';
 
     for (var i = 1 ; i <= datearray.length ; i++) {
-      if ((i <= 2) ||
-          (arg.log[datearray[i-1]].players[k].stat == "（生存中）")) {
+      if (arg.log[datearray[i-1]].players[k].stat == "（生存中）") {
         // if alive : set comment count
         var datekey = datearray[i-1];
         var c = 0;
@@ -141,7 +140,8 @@ function updateInputField(arg) {
         var result = document.getElementById('stat-' + k + '-' + String(i) + '-result');
         if (result != null) { result.remove(); };
 
-        if (arg.log[datearray[i-2]].players[k].stat == "（生存中）") {
+        if ((i <= 2) ||
+            (arg.log[datearray[i-2]].players[k].stat == "（生存中）")) {
           // if dead in this day
           var datestring   = datearray[i-1];
 
