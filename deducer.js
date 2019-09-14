@@ -498,7 +498,7 @@ function refreshInputField(arg) {
     tr.insertAdjacentElement('beforeend', td_c);
 
     //// process 3 : add <td> cell for day 2..N
-    for (var i = 2 ; i <= datearray.length ; i++) {
+    for (var i = datearray.length ; i >= 2 ; i--) {
       var td_a = document.createElement('td');
       var count = document.createElement('p');
       var dead_reason = document.createElement('p');
