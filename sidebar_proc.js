@@ -192,6 +192,20 @@ function checkbox_change(arg) {
   document.getElementById("deduce").scrollTop  = 0;
   document.getElementById("deduce").scrollLeft = 0;
 }
+function output_memo_template(arg) {
+  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
+  var id = arg.srcElement.getAttribute('id');
+  var v = document.getElementById("freememo").value;
+  if (id.indexOf('template-seer') != -1) {
+    document.getElementById("freememo").value = v + "\n" + template_seer(value);
+  } else if (id.indexOf('template-medium') != -1) {
+    document.getElementById("freememo").value = v + "\n" + template_medium(value);
+  } else if (id.indexOf('template-bodyguard') != -1) {
+    document.getElementById("freememo").value = v + "\n" + template_bodyguard(value);
+  } else if (id.indexOf('template-freemason') != -1) {
+    document.getElementById("freememo").value = v + "\n" + template_freemason(value);
+  }
+}
 
 // 性能チューニング：コールバック関数を追加はコードの最後の方で。
 // 余計な addEventListener() コールを最小化したい。
@@ -206,3 +220,4 @@ document.getElementById("is_talented"    ).addEventListener("change", function(e
 document.getElementById("is_villager"    ).addEventListener("change", function(e){ checkbox_change(e); }, true);
 document.getElementById("is_enemy"       ).addEventListener("change", function(e){ checkbox_change(e); }, true);
 
+document.getElementById("villagers-template").addEventListener("click", function(e){ output_memo_template(e); }, true);
