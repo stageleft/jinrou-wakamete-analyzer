@@ -83,8 +83,8 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
    また、あらかじめ選択入力をしておいた状態にて、サイドバー上部、配役入力部分の直下の「死者表示」「猫狩表示」「素村表示」「人外表示」各々のチェックボックスをクリックし、チェックをつけ外しすることで、表示する参加者の絞り込みを行うことができる。  
    本機能は、占い結果・霊能結果の入力容易化に用いるとよい。  
 ![サイドバーの状態「推理表から死亡者を除外」](./doc/usage-5.png "サイドバーの状態「推理表から死亡者を除外」")  
-※日数は逆順で表示される（名前と近い側が最新情報）。  
-※「猫狩表示」のチェックボックスは結果は、共有CO者にも適用される。  
+※日数は１日目を除き、逆順で表示される（名前と近い側が最新情報）。  
+※「猫狩表示」のチェックボックスは、共有CO者にも適用される。  
 ※1日目昼においては、CO状況の入力で不正となる仕様がある。
 
 1. サイドバー下部、メモエリアの下のテンプレリンクには、進行に応じて、占いCO・霊能CO・狩人CO・共有の簡単なテンプレートを提供している。  
@@ -102,7 +102,7 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
 
 # Bugs that cannot be fixed （ざんねんな仕様）
 
-* 最終日吊られが突然死で表示される。 https://github.com/stageleft/jinrou-wakamete-analyzer/issues/16
+* 推理表に表示された死亡理由にて、最終日吊られが突然死で表示される。 https://github.com/stageleft/jinrou-wakamete-analyzer/issues/16
 * 直前の昼に吊られた人を、推理表で占いの対象にできる。 https://github.com/stageleft/jinrou-wakamete-analyzer/issues/46
 
 # Modification （改造してよい？）
