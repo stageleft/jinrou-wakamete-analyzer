@@ -119,8 +119,7 @@ function updateInputField(arg) {
     document.getElementById('villager-list-' + k).style.visibility = 'visible';
 
     for (var i = 1 ; i <= datearray.length ; i++) {
-      if ((i <= 2) ||
-          (arg.log[datearray[i-1]].players[k].stat == "（生存中）")) {
+      if (arg.log[datearray[i-1]].players[k].stat == "（生存中）") {
         // if alive : set comment count
         var datekey = datearray[i-1];
         var c = 0;
@@ -141,7 +140,8 @@ function updateInputField(arg) {
         var result = document.getElementById('stat-' + k + '-' + String(i) + '-result');
         if (result != null) { result.remove(); };
 
-        if (arg.log[datearray[i-2]].players[k].stat == "（生存中）") {
+        if ((i <= 2) ||
+            (arg.log[datearray[i-2]].players[k].stat == "（生存中）")) {
           // if dead in this day
           var datestring   = datearray[i-1];
 
@@ -158,6 +158,8 @@ function updateInputField(arg) {
           // deducer: result (dead reason)
           if (arg.log[datestring].list_voted.indexOf(k) >= 0) {
             dead_reason = "吊り";
+          } else if (arg.log[datestring].list_cursed.indexOf(k) >= 0) {
+            dead_reason = "呪い";
           } else if (arg.log[datestring].list_bitten.indexOf(k) >= 0) {
             dead_reason = "噛み";
           } else if (arg.log[datestring].list_dnoted.indexOf(k) >= 0) {
@@ -387,7 +389,19 @@ function refreshInputField(arg) {
 
   tr_title.insertAdjacentElement('beforeend', td_day0title);
 
-  for (var i = 1 ; i <= datearray.length; i++) {
+  var td_title = document.createElement('td');
+  td_title.setAttribute('id', 'deducer-title-1');
+  td_title.setAttribute('colspan', '3');
+
+  var a  = document.createElement('a');
+  a.setAttribute('id', 'date-log-1');
+  a.setAttribute('href', '#');
+  a.innerText = "1日目";
+  td_title.insertAdjacentElement('afterbegin', a);
+
+  tr_title.insertAdjacentElement('beforeend', td_title);
+
+  for (var i = datearray.length ; i >= 2 ; i--) {
     var td = document.createElement('td');
     td.setAttribute('id', 'deducer-title-' + String(i));
     td.setAttribute('colspan', '3');
@@ -496,7 +510,7 @@ function refreshInputField(arg) {
     tr.insertAdjacentElement('beforeend', td_c);
 
     //// process 3 : add <td> cell for day 2..N
-    for (var i = 2 ; i <= datearray.length ; i++) {
+    for (var i = datearray.length ; i >= 2 ; i--) {
       var td_a = document.createElement('td');
       var count = document.createElement('p');
       var dead_reason = document.createElement('p');
