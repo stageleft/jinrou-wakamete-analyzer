@@ -70,8 +70,22 @@ function template_freemason(arg) {
 
   player_list.forEach(function(k){
     if (arg.log[today].players[k].stat == "（生存中）") {
-      ret.push("指定：" + k + " COありますか？");
+      if (arg.input.each_player[k].comingout == "村人") {
+        ret.push("指定：" + k + " COありますか？");
+      } else if (arg.input.each_player[k].comingout == "占い") {
+        ret.push("指定：" + k + " LWCO|妖狐COありますか？");
+        ret.push("占い指示：" + k + "は  占いでお願いします。予告は不要|投票|口頭でお願いします。");
+      } else if (arg.input.each_player[k].comingout == "霊能") {
+        ret.push("指定：" + k + " LWCO|妖狐COありますか？");
+      } else if (arg.input.each_player[k].comingout == "狩人") {
+        ret.push("指定：" + k + " LWCO|妖狐COありますか？");
+        ret.push("護衛指示：" + k + "は  護衛でお願いします。");
+      } else if (arg.input.each_player[k].comingout == "猫又") {
+        ret.push("指定：" + k + " LWCO|妖狐COありますか？");
+      }
     }
   });
+  ret.push("占い指示：潜伏占いは  占いでお願いします。予告は不要|投票|口頭でお願いします。");
+  ret.push("護衛指示：潜伏狩人は  護衛でお願いします。");
   return(ret.join("\n"));
 }
