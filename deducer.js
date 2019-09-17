@@ -263,6 +263,7 @@ function updateInputField(arg) {
                   target.insertAdjacentElement('beforeend', o);
                 }
               });
+              // target.value == player_list[1st element with stat=='（生存中）']
 
               // deducer: result
               result_label.innerText = '結果';
@@ -274,12 +275,13 @@ function updateInputField(arg) {
                 o.innerText = v;
                 result.insertAdjacentElement('beforeend', o);
               });
+              result.value = seer_result[0];
             } else if (job == "霊能") {
               if (i >= 3) {
                 // deducer: target (fixed string from voted player list)
+                target_label.innerText = '吊り先';
                 target.setAttribute('disabled', 'disabled');
                 target.style.visibility = 'visible';
-                target_label.innerText = '吊り先';
                 voted_player = arg.log[datestring].list_voted[0];
                 var o = document.createElement('option');
                 o.setAttribute("value", voted_player);
@@ -297,23 +299,31 @@ function updateInputField(arg) {
                   o.innerText = v;
                   result.insertAdjacentElement('beforeend', o);
                 });
+                result.value = medium_result[0];
               } else {
                 // deducer: target (fixed string from voted player list)
+                target_label.innerText = '';
                 target.setAttribute('disabled', 'disabled');
                 target.style.visibility = 'collapse';
+                target.value = '';
                 // deducer: result
+                result_label.innerText = '';
                 result.setAttribute('disabled', 'disabled');
                 result.style.visibility = 'collapse';
-
+                result.value = '';
               }
             } else { // if (job == "村人" || job == "狩人" || job == "共有" || job == "猫又")
               // deducer: target (alive player list)
+              target_label.innerText = '';
               target.setAttribute('disabled', 'disabled');
               target.style.visibility = 'collapse';
+              target.value = '';
 
               // deducer: result (fixed string from all player list)
+              result_label.innerText = '';
               result.setAttribute('disabled', 'disabled');
               result.style.visibility = 'collapse';
+              result.value = '';
             }
 
             if ((job == arg.input.each_player[k].comingout) &&
