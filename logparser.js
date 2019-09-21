@@ -265,7 +265,7 @@ function html2json_village_log(arg) {
            list_bitten: msgs_bitten,
            list_dnoted: msgs_dnoted,
            list_sudden: msgs_sudden,
-           vote_log: vote_result };
+           vote_log: vote_result.reverse() };
 }
 
 function html2json_vote_result(arg) {
