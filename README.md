@@ -36,6 +36,15 @@ Japanese only, because Wakamete Server can support only Japanese.
 
 https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からインストールしてください。
 
+## Update （インストールしたものを最新化する場合）
+
+1. アドオンマネージャー（ about:addons ）にアクセスし、インストールされている Jinrou Wakamete Analyzer のバージョンを確認してください。  
+   右上のメニュー（横線３本アイコン）→アドオン、あるいは、Ctrl+Shift+Aでもアクセスできます。
+1. https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ にアクセスし、「詳しい情報」メニューから最新バージョンを確認してください。  
+   バージョンが同じであれば、最新化されていますのでここで終わりです。
+1. アドオンマネージャー、先程バージョンを確認した画面にて、設定アイコン（右上の歯車）から「今すぐ更新を確認」をクリックします。
+1. 同じ画面にて、インストールされている Jinrou Wakamete Analyzer のバージョンが最新と一致していれば完了です。
+
 ## Temporarily install for your Development（自分でカスタマイズしたい場合）
 
 1. 本ページ右上（右中？）の、「Clone or download」から、Download ZIP にてファイルをダウンロードする。
