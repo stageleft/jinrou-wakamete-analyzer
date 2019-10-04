@@ -50,6 +50,11 @@ function updateVotes(arg) {
 
     // set 2nd..Nth td (vote to-person)
     arg.log[datestr].vote_log.forEach(function(l, j){
+      if ((datestr != datearray[datearray.length - 1]) && 
+          (arg.log[datestr].vote_log[j].title.match(/^.*日目/)[0] == datestr.match(/^.*日目/)[0])){
+        return;
+      }
+
       var vote_title = arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）';
       var tr = head.querySelector('#vote-day');
       var td = document.createElement('td');
