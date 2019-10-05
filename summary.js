@@ -67,7 +67,7 @@ function updateSummary(arg) {
     } else {
       if (arg.log[d].list_cursed.length != 0) {
         var v = arg.log[d].list_voted;
-        v.assign(arg.log[d].list_cursed);
+        v.concat(arg.log[d].list_cursed);
         voted.push([v.join('＆'), { comingout:"村人", enemymark:"村人" }]);
       } else {
         voted.push([arg.log[d].list_voted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
