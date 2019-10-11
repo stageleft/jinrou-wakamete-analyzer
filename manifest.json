@@ -7,13 +7,14 @@
   "description": "Realtime Log Analyzer of Jinrou Wakamete Server.",
 
   "icons": {
-    "48": "icons/wakame-te.png"
+    "48": "icons/wakame-te.svg",
+    "96": "icons/wakame-te.svg"
   },
 
   "sidebar_action": {
     "default_title": "Jinrou Wakamete Analyzer",
     "default_panel": "sidebar.html",
-    "default_icon": "icons/wakame-te.png"
+    "default_icon": "icons/wakame-te.svg"
   },
 
   "content_scripts": [
