@@ -94,7 +94,7 @@ function updateSummary(arg) {
         var result = date_info.result;
         if (target != null) {
           delete seer_gray_list[target];
-          if (ret != '：'){
+          if (ret != separator){
             ret = ret + ' → ';
           }
           ret = ret + String(target) + String(result);
