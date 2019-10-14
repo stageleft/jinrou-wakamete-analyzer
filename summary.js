@@ -80,13 +80,13 @@ function updateSummary(arg) {
   });
 
   // 占い視点グレー算出、まとめ表示
-  function extra_letter(player_name, player_info) {
+  function extra_letter_base(player_name, player_info, separator) {
     var seer_gray_list = {};
     Object.assign(seer_gray_list, list.villager_live);
 
     delete seer_gray_list[player_name];
 
-    var ret = '：';
+    var ret = separator;
     datearray.forEach(function(d){
       var date_info = player_info[d];
       if (date_info != null) {
@@ -104,20 +104,26 @@ function updateSummary(arg) {
     ret = ret + '\n　（視点グレー：' + Object.keys(seer_gray_list).join('、') + '）';
     return ret;
   }
+  function extra_letter_seer(player_name, player_info) {
+    return extra_letter_base(player_name, player_info, '[占]');
+  }
+  function extra_letter_medium(player_name, player_info) {
+    return extra_letter_base(player_name, player_info, '[霊]');
+  }
   function extra_letter_empty(player_name, player_info) {
     return '';
   }
   function extra_letter_enemy(player_name, player_info) {
     if (player_info.comingout == "占い") {
-      var s = extra_letter(player_name, player_info);
+      var s = extra_letter_seer(player_name, player_info);
       return s.substr(0, s.indexOf('\n'));
     } else {
       return extra_letter_empty(player_name, player_info);
     }
   }
   // 村COまとめ
-  ret.push(calcSubSummary("【占い師 (x/y)】", arg.input.seer_count,      Object.entries(list.seer_co),        extra_letter));
-  ret.push(calcSubSummary("【霊能者 (x/y)】", arg.input.medium_count,    Object.entries(list.medium_co),      extra_letter));
+  ret.push(calcSubSummary("【占い師 (x/y)】", arg.input.seer_count,      Object.entries(list.seer_co),        extra_letter_seer));
+  ret.push(calcSubSummary("【霊能者 (x/y)】", arg.input.medium_count,    Object.entries(list.medium_co),      extra_letter_medium));
   ret.push(calcSubSummary("【共有者 (x/y)】", arg.input.freemason_count, Object.entries(list.freemason_co),   extra_letter_empty));
   ret.push(calcSubSummary("【猫　又 (x/y)】", arg.input.werecat_count,   Object.entries(list.werecat_co),     extra_letter_empty));
   ret.push(calcSubSummary("【狩　人 (x/y)】", arg.input.bodyguard_count, Object.entries(list.bodyguard_co),   extra_letter_empty));
@@ -151,7 +157,7 @@ function updateSummary(arg) {
   for (var i = arg.input.bodyguard_count; i < Object.keys(list.bodyguard_co).length; i++) {
     list.enemy_mark[String("偽狩人" + String(i))]   = { comingout:"村人", enemymark:"人外" };
   }
-  ret.push(calcSubSummary("【人　外 (x/y)】", enemy_count,               Object.entries(list.enemy_mark),   extra_letter_empty));
+  ret.push(calcSubSummary("【人　外 (x/y)】", enemy_count,               Object.entries(list.enemy_mark),   extra_letter_enemy));
   // 死亡情報まとめ
   ret.push(calcSubSummary("【吊　り (x)】", null, voted,  extra_letter_empty));
   ret.push(calcSubSummary("【噛　み (x)】", null, bitten, extra_letter_empty));
