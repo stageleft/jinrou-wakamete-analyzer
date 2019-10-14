@@ -117,6 +117,9 @@ function updateSummary(arg) {
     if (player_info.comingout == "占い") {
       var s = extra_letter_seer(player_name, player_info);
       return s.substr(0, s.indexOf('\n'));
+    } else if (player_info.comingout == "霊能"){
+      var s = extra_letter_medium(player_name, player_info);
+      return s.substr(0, s.indexOf('\n'));
     } else {
       return extra_letter_empty(player_name, player_info);
     }
