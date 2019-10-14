@@ -4,7 +4,7 @@
 //         datearray[N-1]: date-string of dayN
 function createDateArray(arg) {
 // input  : JSON from Web Storage API
-// output : Array ["date-string(day1)", "date-string(day2)", ..., "date-string(current day)"]
+// output : [Array ["date-string(day1)", "date-string(day2)", ..., "date-string(current day)"], "date-string(night1)"]
   var ret = [];
   var base_date;
 
@@ -58,6 +58,24 @@ function createDateArray(arg) {
   }
 
   return [ret, base_date];
+}
+
+function logTag_d2n(key_day) {
+// input  : String "n日目の朝となりました。"(n>=2) or other
+// output : String "(n-1)日目の夜となりました。" or input
+  var d = parseInt(key_day);
+
+  // day 2..N -> night 1..(N-1)
+  if (d >= 2) {
+    if (key_day == "2日目の朝となりました。") {
+      return ("１日目の夜となりました。");
+    } else if (key_day.match("朝となりました。$")) {
+      return (String(d-1) + "日目の夜となりました。");
+    }
+  }
+
+  // other than day 2..N
+  return key_day;
 }
 
 function makeComingOutList(arg) {
