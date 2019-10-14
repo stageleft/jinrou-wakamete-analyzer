@@ -61,12 +61,12 @@ function createDateArray(arg) {
 }
 
 function logTag_d2n(key_day) {
-// input  : String "n日目の朝となりました。" or other
+// input  : String "n日目の朝となりました。"(n>=2) or other
 // output : String "(n-1)日目の夜となりました。" or input
   var d = parseInt(key_day);
 
   // day 2..N -> night 1..(N-1)
-  if (d != NaN) {
+  if (d >= 2) {
     if (key_day == "2日目の朝となりました。") {
       return ("１日目の夜となりました。");
     } else if (key_day.match("朝となりました。$")) {
