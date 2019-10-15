@@ -18,19 +18,29 @@ function calcSubSummary(index_str, max_count, menber_list, extra_letter) {
   } else {
     summary = [index_str];
   }
-  var list    = [];
+  var seer_list   = [];
+  var medium_list = [];
+  var other_list  = [];
 
   // add names
   menber_list.forEach(function(m){
-//    list.push(m + String(extra_letter(m, menber_list[m])));
-    list.push(m[0] + String(extra_letter(m[0], m[1])));
+    if (player_info.comingout == "占い") {
+      seer_list.push(  m[0] + String(extra_letter_seer(m[0], m[1])));
+    } else if (player_info.comingout == "霊能"){
+      medium_list.push(m[0] + String(extra_letter_medium(m[0], m[1])));
+    } else {
+      other_list.push( m[0]);
+    }
   });
 
-  if (String(extra_letter("", {})) == '') {
-    return summary + '　' + list.join('、');
-  } else {
-    return summary + '\n　' + list.join('\n　');
+  var summary = other_list.join('、');
+  if (seer_list.length >= 1) {
+    summary = summary + '\n　' + seer_list.join('\n　');
   }
+  if (medium_list.length >= 1) {
+    summary = summary + '\n　' + medium_list.join('\n　');
+  }
+  return summary;
 }
 
 function updateSummary(arg) {
