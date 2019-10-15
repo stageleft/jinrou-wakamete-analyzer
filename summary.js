@@ -25,11 +25,11 @@ function calcSubSummary(index_str, max_count, menber_list, extra_letter) {
   // add names
   menber_list.forEach(function(m){
     if (player_info.comingout == "占い") {
-      seer_list.push(  m[0] + String(extra_letter_seer(m[0], m[1])));
+      seer_list.push(  m[0] + String(extra_letter(m[0], m[1])));
     } else if (player_info.comingout == "霊能"){
-      medium_list.push(m[0] + String(extra_letter_medium(m[0], m[1])));
+      medium_list.push(m[0] + String(extra_letter(m[0], m[1])));
     } else {
-      other_list.push( m[0]);
+      other_list.push( m[0] + String(extra_letter(m[0], m[1])));
     }
   });
 
