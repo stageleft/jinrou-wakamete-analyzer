@@ -122,9 +122,8 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
 # Troubleshooting （問題が発生した場合の対処例）
 
 * 村に参加したのに、推理表が表示されない
-  * デバッグメニューのURL（ about:debugging ）に入り、このFirefox → 本ツールの「調査」をクリックしてください。  
-    「コンソール」にて、赤いセル・赤文字で「 NS_ERROR_FILE_NOT_FOUND 」の文字を含むエラーが何度も表示されている場合、Firefoxの再インストールを実施してください。  
-    過去事例：Firefox70 で動かない  https://github.com/stageleft/jinrou-wakamete-analyzer/issues/71
+    * デバッグメニューのURL（ about:debugging ）に入り、このFirefox → 本ツールの「調査」をクリックしてデバッグツールを起動します。「コンソール」メニューをクリックして、表示されている文字を確認してください。  
+        * 赤いセル・赤文字で「 NS_ERROR_FILE_NOT_FOUND 」の文字を含むエラーが何度も表示されている場合、Firefoxの再インストールを実施してください。（ 過去事例：Firefox70 で動かない  https://github.com/stageleft/jinrou-wakamete-analyzer/issues/71 ）
 
 # Modification （改造してよい？）
 
