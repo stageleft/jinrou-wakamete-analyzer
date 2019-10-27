@@ -50,7 +50,7 @@ function onRefreshView(event) {
   } else if (target.value != ''){
     console.log ('Ignore refresh. Any CMBPLAYER is selected.');
   } else {
-    window.localStorage.setItem("page_ypos", String(window.innerHeight - window.pageYOffset));
+    window.localStorage.setItem("page_ypos", String(window.innerHeight + window.scrollMaxY - window.pageYOffset));
     // console.log ('Try Refresh.');
     // form.action="cgi_jinro.cgi";
     // form.method="POST";
@@ -59,13 +59,13 @@ function onRefreshView(event) {
 }
 try {
   var s = parseInt(window.localStorage.getItem("page_ypos"));
-  if (s <= window.innerHeight - window.pageYOffset) {
-    window.pageYOffset = window.innerHeight - s;
-  }  
+  //if (s <= window.scrollMaxY - window.pageYOffset) {
+    window.scrollTo(0, window.innerHeight + window.scrollMaxY - s);
+  //}
 } catch(e) {
   console.log(e.name + ':' + e.message);
   console.log(e.stack);
-}
+};
 setTimeout(onRefreshView, 10000);
 
 setInterval(onLogLoad, 1000);
