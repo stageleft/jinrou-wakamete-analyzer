@@ -49,15 +49,6 @@ function onRefreshView(event) {
     } else if (target.value != ''){
       console.log ('Ignore refresh. Any CMBPLAYER is selected.');
     } else {
-      if (text.getBoundingClientRect()['y'] < 0) {
-        window.localStorage.setItem("page_ypos",
-                                    JSON.stringify({from:"end",
-                                                    pos:String(window.innerHeight + window.scrollMaxY - window.pageYOffset)}));
-      } else {
-        window.localStorage.setItem("page_ypos",
-                                    JSON.stringify({from:"start",
-                                                    pos:String(window.pageYOffset)}));
-      }
       // console.log ('Try Refresh.');
       // form.action="cgi_jinro.cgi";
       // form.method="POST";
@@ -68,6 +59,23 @@ function onRefreshView(event) {
     // ignore e.
   }
 }
+document.onscroll = function(){
+  try {
+    var text = document.getElementsByName('TXTMSG')[0];
+    if (text.getBoundingClientRect()['y'] < 0) {
+      window.localStorage.setItem("page_ypos",
+                                  JSON.stringify({from:"end",
+                                                  pos:String(window.innerHeight + window.scrollMaxY - window.pageYOffset)}));
+    } else {
+      window.localStorage.setItem("page_ypos",
+                                  JSON.stringify({from:"start",
+                                                  pos:String(window.pageYOffset)}));
+    }
+  } catch (e) {
+    console.log ('Ignore refresh. No COMMAND,CMBPLAYER,TXTMSG is defined.');
+    // ignore e.
+  }
+};
 try {
   var y = JSON.parse(window.localStorage.getItem("page_ypos"));
   var f = y.from;
