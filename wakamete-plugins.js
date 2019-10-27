@@ -3,15 +3,15 @@ document.getElementsByName('TXTMSG')[0].oninput = function(){
   var is_logBroken = false;
   text.value.split(/\n/).forEach(function(l){
     if (l.length > 40) {
-      ls_logBroken = true;
+      is_logBroken = true;
     }
   });
   if( is_logBroken == true ){
-    text.setAttribute("style", "color:red");
+    text.setAttribute("style", "background-color:pink");
   } else {
     text.removeAttribute("style");
   }
-}
+};
 
 function handleResponse(message){
   // nop.
@@ -50,16 +50,21 @@ function onRefreshView(event) {
   } else if (target.value != ''){
     console.log ('Ignore refresh. Any CMBPLAYER is selected.');
   } else {
-    window.localStorage.setItem("page_ypos", parseString(window.innerHeight - window.pageYOffset));
+    window.localStorage.setItem("page_ypos", String(window.innerHeight - window.pageYOffset));
     // console.log ('Try Refresh.');
     // form.action="cgi_jinro.cgi";
     // form.method="POST";
     form.submit();
   }
 }
-var s = parseInt(window.localStorage.getItem("page_ypos"));
-if (s <= window.innerHeight - window.pageYOffset) {
-  window.pageYOffset = window.innerHeight - s;
+try {
+  var s = parseInt(window.localStorage.getItem("page_ypos"));
+  if (s <= window.innerHeight - window.pageYOffset) {
+    window.pageYOffset = window.innerHeight - s;
+  }  
+} catch(e) {
+  console.log(e.name + ':' + e.message);
+  console.log(e.stack);
 }
 setTimeout(onRefreshView, 10000);
 
