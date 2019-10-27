@@ -1,10 +1,24 @@
+document.getElementsByName('TXTMSG')[0].oninput = function(){
+  var text = document.getElementsByName('TXTMSG')[0];
+  var is_logBroken = false;
+  text.value.split(/\n/).forEach(function(l){
+    if (l.length > 40) {
+      ls_logBroken = true;
+    }
+  });
+  if( is_logBroken == true ){
+    text.setAttribute("style", "color:red");
+  } else {
+    text.removeAttribute("style");
+  }
+}
+
 function handleResponse(message){
   // nop.
 }
 function handleError(error){
   // nop.
 }
-
 function onLogLoad(event) {
   var target = document.getElementsByTagName("form").item(0);
 
@@ -17,22 +31,21 @@ function onLogLoad(event) {
 }
 
 function onRefreshView(event) {
-  console.log ('Ignore refresh.');
   var command = document.getElementsByName('COMMAND')[0];
   var target  = document.getElementsByName('CMBPLAYER')[0];
   var text    = document.getElementsByName('TXTMSG')[0];
   var form    = document.querySelector('form');
 
   if (text.value.length >= 1) {
-    // console.log ('Ignore refresh. TXTMSG has any messsage.');
+    console.log ('Ignore refresh. TXTMSG has any messsage.');
   } else if ((command.value != 'MSG') &&     // 発　言（昼）
              (command.value != 'MSGFRE') &&  // 会　話（夜）
              (command.value != 'MSGWLF') &&  // 遠吠え（夜）
              (command.value != 'MSGFOX') &&  // 念　話（夜）
              (command.value != 'MUMBLE')) {  // 独り言（夜）
-    // console.log ('Ignore refresh. Any COMMAND is selected.');
+    console.log ('Ignore refresh. Any COMMAND is selected.');
   } else if (target.value != ''){
-    // console.log ('Ignore refresh. Any CMBPLAYER is selected.');
+    console.log ('Ignore refresh. Any CMBPLAYER is selected.');
   } else {
     // console.log ('Try Refresh.');
     // form.action="cgi_jinro.cgi";
