@@ -31,30 +31,33 @@ function onLogLoad(event) {
 }
 
 function onRefreshView(event) {
-  var command = document.getElementsByName('COMMAND')[0];
-  var target  = document.getElementsByName('CMBPLAYER')[0];
-  var text    = document.getElementsByName('TXTMSG')[0];
-  var form    = document.querySelector('form');
+  try {
+    var command = document.getElementsByName('COMMAND')[0];
+    var target  = document.getElementsByName('CMBPLAYER')[0];
+    var text    = document.getElementsByName('TXTMSG')[0];
+    var form    = document.querySelector('form');
 
-  if (text.value.length >= 1) {
-    console.log ('Ignore refresh. TXTMSG has any messsage.');
-  } else if (document.getElementsByName('COMMAND').length < 1) {
-    console.log ('Ignore refresh. No COMMAND is defined.');
-  } else if ((command.value != 'MSG') &&     // 発　言（昼）
-             (command.value != 'MSG0') &&    // 霊　話（昼＆夜）
-             (command.value != 'MSGFRE') &&  // 会　話（夜）
-             (command.value != 'MSGWLF') &&  // 遠吠え（夜）
-             (command.value != 'MSGFOX') &&  // 念　話（夜）
-             (command.value != 'MUMBLE')) {  // 独り言（夜）
-    console.log ('Ignore refresh. Any COMMAND is selected.');
-  } else if (target.value != ''){
-    console.log ('Ignore refresh. Any CMBPLAYER is selected.');
-  } else {
-    window.localStorage.setItem("page_ypos", String(window.innerHeight + window.scrollMaxY - window.pageYOffset));
-    // console.log ('Try Refresh.');
-    // form.action="cgi_jinro.cgi";
-    // form.method="POST";
-    form.submit();
+    if (text.value.length >= 1) {
+      console.log ('Ignore refresh. TXTMSG has any messsage.');
+    } else if ((command.value != 'MSG') &&     // 発　言（昼）
+               (command.value != 'MSG0') &&    // 霊　話（昼＆夜）
+               (command.value != 'MSGFRE') &&  // 会　話（夜）
+               (command.value != 'MSGWLF') &&  // 遠吠え（夜）
+               (command.value != 'MSGFOX') &&  // 念　話（夜）
+               (command.value != 'MUMBLE')) {  // 独り言（夜）
+      console.log ('Ignore refresh. Any COMMAND is selected.');
+    } else if (target.value != ''){
+      console.log ('Ignore refresh. Any CMBPLAYER is selected.');
+    } else {
+      window.localStorage.setItem("page_ypos", String(window.innerHeight + window.scrollMaxY - window.pageYOffset));
+      // console.log ('Try Refresh.');
+      // form.action="cgi_jinro.cgi";
+      // form.method="POST";
+      form.submit();
+    }
+  } catch (e) {
+    console.log ('Ignore refresh. No COMMAND,CMBPLAYER,TXTMSG is defined.');
+    // ignore e.
   }
 }
 try {
