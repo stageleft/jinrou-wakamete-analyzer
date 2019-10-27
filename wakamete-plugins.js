@@ -49,7 +49,13 @@ function onRefreshView(event) {
     } else if (target.value != ''){
       console.log ('Ignore refresh. Any CMBPLAYER is selected.');
     } else {
-      window.localStorage.setItem("page_ypos", String(window.innerHeight + window.scrollMaxY - window.pageYOffset));
+      if (text.getBoundingClientRect()['y'] < 0) {
+        window.localStorage.setItem("page_ypos_from", "end");
+        window.localStorage.setItem("page_ypos", String(window.innerHeight + window.scrollMaxY - window.pageYOffset));
+      } else {
+        window.localStorage.setItem("page_ypos_from", "start");
+        window.localStorage.setItem("page_ypos", String(window.pageYOffset));
+      }
       // console.log ('Try Refresh.');
       // form.action="cgi_jinro.cgi";
       // form.method="POST";
@@ -61,10 +67,15 @@ function onRefreshView(event) {
   }
 }
 try {
+  var f = window.localStorage.getItem("page_ypos_from");
   var s = parseInt(window.localStorage.getItem("page_ypos"));
-  //if (s <= window.scrollMaxY - window.pageYOffset) {
+  if (f == "end") {
     window.scrollTo(0, window.innerHeight + window.scrollMaxY - s);
-  //}
+  } else if (f == "start") {
+    window.scrollTo(0, s);
+  } else {
+    window.scrollTo(0, 0);
+  }
 } catch(e) {
   console.log(e.name + ':' + e.message);
   console.log(e.stack);
