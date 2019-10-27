@@ -1,5 +1,6 @@
 var recvLog_lock = false;
 var comment_id   = null;
+var village_number = null;
 
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
 function recvLog_proc(request, sender, sendResponse) {
@@ -15,11 +16,18 @@ function recvLog_proc(request, sender, sendResponse) {
     return;
   };
 
-
   // Load from Web Storaget API
   var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
   if ( value == null ) {
-    value = { village_number:"" };
+    value = {};
+  } else if (value.length > 8) { // preserve log : newest 8 villages by Village ID
+    var minimum_key = null;
+    Object.keys(value).forEach(function(v){
+      if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
+        minimum_key = v;
+      }
+    });
+    delete value[minimum_key];
   }
 
   // Parse and Update wakamete village log
@@ -29,11 +37,14 @@ function recvLog_proc(request, sender, sendResponse) {
      var receivedLog = parser.parseFromString(request.html_log, "text/html");
      var todayLog    = html2json_villager_log_1day(receivedLog);
      if (todayLog != null) {
-       if ( value.village_number != todayLog.number ) {
-         value = { village_number: todayLog.number, log:new Object(), input:new Object()};
+      if ( village_number != todayLog.number ) {
          is_same_village = false;
-       }
-       Object.assign(value.log, { [todayLog.msg_date]:todayLog });
+      }
+      if (value[todayLog.number] == null) {
+        Object.assign(value, {[todayLog.number]:{ village_number: todayLog.number, log:new Object(), input:new Object()}});
+      }
+      Object.assign(value[todayLog.number].log, { [todayLog.msg_date]:todayLog });
+      village_number = todayLog.number;
      }
   } catch(e) {
     // exception case
@@ -45,9 +56,16 @@ function recvLog_proc(request, sender, sendResponse) {
   // update input table
   try {
     if (is_same_village == false) {
-      refreshInputField(value);
+      refreshInputField(value[village_number]);
     }
-    updateInputField(value);
+  } catch(e) {
+    // exception case
+    //   (1) no log
+    console.log(e.name + ':' + e.message);
+    console.log(e.stack);  
+  };
+  try {
+    updateInputField(value[village_number]);
   } catch(e) {
     // exception case
     //   (1) 事件前日
@@ -55,10 +73,17 @@ function recvLog_proc(request, sender, sendResponse) {
     console.log(e.name + ':' + e.message);
     console.log(e.stack);
     // refresh input field for recovery.
-    refreshInputField(value);
+    try {
+      refreshInputField(value[village_number]);
+    } catch(e) {
+      // exception case
+      //   (1) no log
+      console.log(e.name + ':' + e.message);
+      console.log(e.stack);  
+    };
   }
   try {
-    value.input = updateInput(value);
+    value[village_number].input = updateInput(value[village_number]);
   } catch(e) {
     // exception case
     //   (1) 事件前日
@@ -70,13 +95,13 @@ function recvLog_proc(request, sender, sendResponse) {
   // update
   try {
     if ('popup-active' == document.getElementById("vote-summary").getAttribute('class')) {
-      updateVotes(value);
+      updateVotes(value[village_number]);
     } else if ('popup-active' == document.getElementById("comment-summary").getAttribute('class')) {
       if (comment_id != null) {
-        updateCommentLog(value, comment_id);
+        updateCommentLog(value[village_number], comment_id);
       }
     } else {
-      updateSummary(value);    // deduce-summary
+      updateSummary(value[village_number]);    // deduce-summary
     };
   } catch(e) {
     // exception case
@@ -102,7 +127,7 @@ function event_click_deduce(arg) {
 
       if (id.indexOf('log') != -1){
         //// create comment-summary
-        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
+        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
         updateCommentLog(value, id);
         comment_id = id;
 
@@ -116,7 +141,7 @@ function event_click_deduce(arg) {
         document.getElementById("summary-field").scrollLeft = 0;
       } else if(id.indexOf('vote') != -1) {
         //// create vote-summary
-        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
+        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
         updateVotes(value);
 
         //// show vote-summary
@@ -193,7 +218,7 @@ function checkbox_change(arg) {
   document.getElementById("deduce").scrollLeft = 0;
 }
 function output_memo_template(arg) {
-  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
+  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
   var id = arg.srcElement.getAttribute('id');
   var v = document.getElementById("freememo").value;
   if (id.indexOf('template-seer') != -1) {
