@@ -47,11 +47,16 @@ function onRefreshView(event) {
   } else if (target.value != ''){
     console.log ('Ignore refresh. Any CMBPLAYER is selected.');
   } else {
+    window.localStorage.setItem("page_ypos", parseString(window.innerHeight - window.pageYOffset));
     // console.log ('Try Refresh.');
     // form.action="cgi_jinro.cgi";
     // form.method="POST";
     form.submit();
   }
+}
+var s = parseInt(window.localStorage.getItem("page_ypos"));
+if (s <= window.innerHeight - window.pageYOffset) {
+  window.pageYOffset = window.innerHeight - s;
 }
 setTimeout(onRefreshView, 10000);
 
