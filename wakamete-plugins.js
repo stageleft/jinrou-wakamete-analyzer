@@ -38,6 +38,8 @@ function onRefreshView(event) {
 
   if (text.value.length >= 1) {
     console.log ('Ignore refresh. TXTMSG has any messsage.');
+  } else if (document.getElementsByName('COMMAND').length < 1) {
+    console.log ('Ignore refresh. No COMMAND is defined.');
   } else if ((command.value != 'MSG') &&     // 発　言（昼）
              (command.value != 'MSG0') &&    // 霊　話（昼＆夜）
              (command.value != 'MSGFRE') &&  // 会　話（夜）
