@@ -1,16 +1,21 @@
-document.getElementsByName('TXTMSG')[0].oninput = function(){
-  var text = document.getElementsByName('TXTMSG')[0];
-  var is_logBroken = false;
-  text.value.split(/\n/).forEach(function(l){
-    if (l.length > 40) {
-      is_logBroken = true;
+try {
+  document.getElementsByName('TXTMSG')[0].oninput = function(){
+    var text = document.getElementsByName('TXTMSG')[0];
+    var is_logBroken = false;
+    text.value.split(/\n/).forEach(function(l){
+      if (l.length > 40) {
+        is_logBroken = true;
+      }
+    });
+    if( is_logBroken == true ){
+      text.setAttribute("style", "background-color:pink");
+    } else {
+      text.removeAttribute("style");
     }
-  });
-  if( is_logBroken == true ){
-    text.setAttribute("style", "background-color:pink");
-  } else {
-    text.removeAttribute("style");
-  }
+  };
+} catch(e) {
+  console.log(e.name + ':' + e.message);
+  console.log(e.stack);
 };
 
 function handleResponse(message){
