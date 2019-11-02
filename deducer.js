@@ -1,7 +1,7 @@
 var job_list = ["村人","占い","霊能","狩人","共有","猫又"];
 var mob_list = ["村人","人外","人狼","狂人","妖狐","子狐"];
 var seer_result = ["","○","●"];
-var medium_result = ["","○","●","△"];
+var medium_result = ["","○","●","△","■"];
 
 function updateInput(arg) {
 // functional input  : JSON from Web Storage API
