@@ -53,6 +53,7 @@ function updateSummary(arg) {
                           Object.keys(list.posessed_mark).length +
                           Object.keys(list.werefox_mark).length +
                           Object.keys(list.minifox_mark).length;
+  var enemy_count       = enemy_found_count + Object.keys(list.enemy_mark).length;
   var enemy_other_count = enemy_all_count - enemy_found_count;
   var enemy_over_count  = 0;
   for (var i = arg.input.seer_count;      i < Object.keys(list.seer_co).length;      i++) {
@@ -77,9 +78,11 @@ function updateSummary(arg) {
   }
     
   // 占い視点グレー算出、まとめ表示
-  function extra_letter_base(player_name, player_info, separator, job_count, co_count) {
+  function extra_letter_base(player_name, player_info, separator, job_count, co_list) {
     var seer_gray_list = {};
-    var seer_black_list = {};
+    var seer_black_list = [];
+    var duplicated_enemy_over_black = 0;
+    var duplicated_enemy_found_black = 0;
     Object.assign(seer_gray_list, list.villager_live);
 
     delete seer_gray_list[player_name];
@@ -94,6 +97,18 @@ function updateSummary(arg) {
           delete seer_gray_list[target];
           if (result != "" && result != "○") {
             seer_black_list.push(target);
+            // ●兼対抗の重複排除
+            if (co_list[target] != null) {
+              duplicated_enemy_over_black = duplicated_enemy_over_black + 1;
+            }
+            // ●兼推理人外の重複排除
+            if ((list.werewolf_mark[target] != null) ||
+                (list.posessed_mark[target] != null) ||
+                (list.werefox_mark[target] != null) ||
+                (list.minifox_mark[target] != null) ||
+                (list.enemy_mark[target] != null)) {
+              duplicated_enemy_found_black = duplicated_enemy_found_black + 1;
+            }
           }
           if (ret != separator){
             ret = ret + ' → ';
@@ -103,20 +118,20 @@ function updateSummary(arg) {
       }
     });
     ret = ret + '\n　（視点グレー：' + Object.keys(seer_gray_list).join('、') + '）';
-    ret = ret + '\n　（視点人外数：●' + String(seer_black_list.length) +
-                               ' 露呈' + String(enemy_over_count) +
-                               ' 推定' + String(enemy_found_count + list.enemy_mark.length) +
-                               ' 他'   + String(enemy_all_count - 
-                                                seer_black_list.length - 
-                                                enemy_over_count - 
-                                                (enemy_found_count + list.enemy_mark.length)) + '）';
+    ret = ret + '\n　（視点人外数：' +
+                        ' 潜伏' + String(enemy_all_count - 
+                                         (seer_black_list.length + enemy_over_count - duplicated_enemy_over_black) - 
+                                         (enemy_count - duplicated_enemy_found_black)) +
+                        ' 露呈' + String(seer_black_list.length + enemy_over_count - duplicated_enemy_over_black) +
+                        ' 推理' + String(enemy_count - duplicated_enemy_found_black) +
+                       '）';
     return ret;
   }
   function extra_letter_seer(player_name, player_info) {
-    return extra_letter_base(player_name, player_info, '[占]', arg.input.seer_count);
+    return extra_letter_base(player_name, player_info, '[占]', arg.input.seer_count,  list.seer_co);
   }
   function extra_letter_medium(player_name, player_info) {
-    return extra_letter_base(player_name, player_info, '[霊]', arg.input.medium_count);
+    return extra_letter_base(player_name, player_info, '[霊]', arg.input.medium_count,list.medium_co);
   }
   // usage : String = calcSubSummary(String, Number, Array of [key, value], function(String, Object))
   //            Object form: { comingout:"xxxx", enemymark:"xxxx" }
