@@ -77,6 +77,7 @@ document.onscroll = function(){
                                                   pos:String(window.pageYOffset)}));
     }
   } catch (e) {
+    localStorage.removeItem("page_ypos");
     console.log ('Ignore refresh. No COMMAND,CMBPLAYER,TXTMSG is defined.');
     // ignore e.
   }
