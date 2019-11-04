@@ -38,23 +38,25 @@ function createDateArray(arg) {
     }
   }
   // afterplay
-  if (arg.log["「村　人」の勝利です！"] != null) {
-    ret.push("「村　人」の勝利です！");
-  } else if (arg.log["「人　狼」の勝利です！"] != null) {
-    ret.push("「人　狼」の勝利です！");
-  } else if (arg.log["「妖　狐」の勝利です！"] != null) {
-    ret.push("「妖　狐」の勝利です！");
-  } else if (arg.log["「猫　又」の勝利です！"] != null) {
-    ret.push("「猫　又」の勝利です！");
-  } else if (arg.log["「引き分け」です！"] != null) {
-    ret.push("「引き分け」です！");
+  if (ret.length == 0) {
+    if (arg.log["「村　人」の勝利です！"] != null) {
+      ret.push("「村　人」の勝利です！");
+    } else if (arg.log["「人　狼」の勝利です！"] != null) {
+      ret.push("「人　狼」の勝利です！");
+    } else if (arg.log["「妖　狐」の勝利です！"] != null) {
+      ret.push("「妖　狐」の勝利です！");
+    } else if (arg.log["「猫　又」の勝利です！"] != null) {
+      ret.push("「猫　又」の勝利です！");
+    } else if (arg.log["「引き分け」です！"] != null) {
+      ret.push("「引き分け」です！");
+    }
   }
 
   // calc base_date
   if (arg.log["１日目の夜となりました。"] != null) {
     base_date = "１日目の夜となりました。";
   } else {
-    base_date = ret[ret.length - 1];
+    base_date = ret[0];
   }
 
   return [ret, base_date];
