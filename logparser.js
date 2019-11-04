@@ -216,7 +216,7 @@ function html2json_village_log(arg) {
             msgs_sudden.push(base_td_list.item(0).querySelector("b").innerText);
           }
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/msg.gif") {
-          if (msg_text.match("^無残な姿で発見された・・・。$")) {
+          if (msg_text.match("^奇跡的に生き返った。$")) {
             // <img src="./img/msg.gif" width="32" height="32" border="0"> <b>パチュリー</b>さんは<font color="#ff0000">奇跡的に生き返った。</font>
             msgs_revived.push(base_td_list.item(0).querySelector("b").innerText);
           } else {
