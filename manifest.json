@@ -19,7 +19,7 @@
 
   "content_scripts": [
     {
-      "matches": ["*://jinrou.dip.jp/~jinrou/cgi_jinro.cgi"],
+      "matches": ["*://jinrou.dip.jp/~jinrou/cgi_jinro.cgi","*://jinrou.dip.jp/~jinrou/kako/*.html"],
       "js": ["wakamete-plugins.js"]
     }
   ],
