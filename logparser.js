@@ -139,12 +139,13 @@ function html2json_village_log(arg) {
 // input  : HTMLCollction
 //          <tbody> ... </tbody> of <table table cellpadding="0"></table>
 // output : Hash
-//            msg_date:    "date-string",
-//            list_voted:  [ "character-name", ... ],
-//            list_cursed: [ "character-name", ... ],
-//            list_bitten: [ "character-name", ... ],
-//            list_dnoted: [ "character-name", ... ],
-//            list_sudden: [ "character-name", ... ],
+//            msg_date:     "date-string",
+//            list_voted:   [ "character-name", ... ],
+//            list_cursed:  [ "character-name", ... ],
+//            list_revived: [ "character-name", ... ],
+//            list_bitten:  [ "character-name", ... ],
+//            list_dnoted:  [ "character-name", ... ],
+//            list_sudden:  [ "character-name", ... ],
 //            comments: [
 //              { speaker:value, type:value, comment:[value_with_each_line] },
 //              ...
@@ -154,9 +155,10 @@ function html2json_village_log(arg) {
   var cmts = [];
   var msg_date    = "１日目の朝となりました。";
   var msgs_voted  = [];
-  var msgs_cursed = []; // Voted to WereCat
+  var msgs_cursed = [];  // Cursed  by WereCat (only in voting)
+  var msgs_revived = []; // Revived by WereCat
   var msgs_bitten = [];
-  var msgs_dnoted = []; // Death Note
+  var msgs_dnoted = [];  // Death Note
   var msgs_sudden = [];
   var vote_result = [];
   var re = new RegExp('^\.\/', '');
@@ -213,11 +215,18 @@ function html2json_village_log(arg) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>海星</b>さんは都合により<font color="#ff0000">突然死しました・・・。</font>
             msgs_sudden.push(base_td_list.item(0).querySelector("b").innerText);
           }
+        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/msg.gif") {
+          if (msg_text.match("^奇跡的に生き返った。$")) {
+            // <img src="./img/msg.gif" width="32" height="32" border="0"> <b>パチュリー</b>さんは<font color="#ff0000">奇跡的に生き返った。</font>
+            msgs_revived.push(base_td_list.item(0).querySelector("b").innerText);
+          } else {
+            // <img src="./img/msg.gif" width="32" height="32" border="0">
+            //      <font size="+1">再投票となりました。</font>あと
+            //      <font size="+2">1</font>回の投票で結論が出なければ引き分けとなります。</td>
+            // ignore. it maybe unused message or inner font tag of winner message.
+          }
         } else {
-          // <img src="./img/msg.gif" width="32" height="32" border="0">
-          //      <font size="+1">再投票となりました。</font>あと
-          //      <font size="+2">1</font>回の投票で結論が出なければ引き分けとなります。</td>
-          // ignore. it maybe unused message or inner font tag of winner message.
+          // ignore messages with unknown icon. it is not important.
         }
       } else {
         // ignore messages without icon. it is not important.
@@ -258,13 +267,14 @@ function html2json_village_log(arg) {
 
   }
 
-  return { comments:    cmts, 
-           msg_date:    msg_date,
-           list_voted:  msgs_voted,
-           list_cursed: msgs_cursed,
-           list_bitten: msgs_bitten,
-           list_dnoted: msgs_dnoted,
-           list_sudden: msgs_sudden,
+  return { comments:     cmts, 
+           msg_date:     msg_date,
+           list_voted:   msgs_voted,
+           list_cursed:  msgs_cursed,
+           list_revived: msgs_revived,
+           list_bitten:  msgs_bitten,
+           list_dnoted:  msgs_dnoted,
+           list_sudden:  msgs_sudden,
            vote_log: vote_result.reverse() };
 }
 
