@@ -133,7 +133,7 @@ function updateInputField(arg) {
             (arg.log[datearray[i-2]].players[k].stat == "（死　亡）")) {
           document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = "復活";
         } else {
-          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = "生存中";  // debug : innerTex must be ""
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = "";
         }
       } else {
         // if dead
