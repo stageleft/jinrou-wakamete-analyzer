@@ -168,8 +168,8 @@ function html2log(arg) {
 //   type:value : "Normal" or "Strong" or "WithColor"
   var re = new RegExp('^\.\/', '');
 
-  function init_ret(d){
-    var o = { msg_date:     d,
+  function init_ret(){
+    var o = { msg_date:     null,
               list_voted:   [],
               list_cursed:  [], // Cursed  by WereCat (only in voting)
               list_revived: [], // Revived by WereCat
@@ -183,7 +183,7 @@ function html2log(arg) {
   };
   var msg_date = "１日目の朝となりました。";
   var ret = {};
-  ret[msg_date] = init_ret(msg_date);
+  var current_day_log = init_ret();
 
   // console.log(arg.innerHTML); // debug
 
@@ -203,42 +203,52 @@ function html2log(arg) {
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">9日目の朝となりました。</font>(19/07/06 01:43:35)
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「引き分け」です！</font>(19/08/13 00:22:35)
           msg_date = msg_text;
-          ret[msg_date] = init_ret(msg_date);
+          current_day_log.msg_date = msg_date;
+          ret[msg_date] = current_day_log;
+          current_day_log = init_ret();
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/hum.gif") {
           // <img src="./img/hum.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「村　人」の勝利です！</font>(19/08/12 02:05:13)
           msg_date = msg_text;
-          ret[msg_date] = init_ret(msg_date);
+          current_day_log.msg_date = msg_date;
+          ret[msg_date] = current_day_log;
+          current_day_log = init_ret();
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/wlf.gif") {
           // <img src="./img/wlf.gif" width="32" height="32" border="0"> <font size="+2" color="#dd0000">「<font color="#ff0000">人　狼</font>」の勝利です！</font>(19/08/04 02:57:29)
           msg_date = msg_text;
-          ret[msg_date] = init_ret(msg_date);
+          current_day_log.msg_date = msg_date;
+          ret[msg_date] = current_day_log;
+          current_day_log = init_ret();
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/fox.gif") {
           // <img src="./img/fox.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ffcc33">妖　狐</font>」の勝利です！</font>(19/08/12 00:30:03)
           msg_date = msg_text;
-          ret[msg_date] = init_ret(msg_date);
+          current_day_log.msg_date = msg_date;
+          ret[msg_date] = current_day_log;
+          current_day_log = init_ret();
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/sc5.gif") {
           // <img src="./img/sc5.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ff9999">猫　又</font>」の勝利です！</font>(19/07/15 00:11:04)
           msg_date = msg_text;
-          ret[msg_date] = init_ret(msg_date);
+          current_day_log.msg_date = msg_date;
+          ret[msg_date] = current_day_log;
+          current_day_log = init_ret();
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead1.gif") {
           if (msg_text.match("^処刑されました・・・。$")) {
             // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font>
-            ret[msg_date].list_voted.push(base_td_list.item(0).querySelector("b").innerText);
+            current_day_log.list_voted.push(base_td_list.item(0).querySelector("b").innerText);
           } else {
             // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>タマトイズ</b>さんは猫又の呪いで<font color="#ff0000">死亡しました・・・。</font>
-            ret[msg_date].list_cursed.push(base_td_list.item(0).querySelector("b").innerText);
+            current_day_log.list_cursed.push(base_td_list.item(0).querySelector("b").innerText);
           }
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead2.gif") {
           if (msg_text.match("^無残な姿で発見された・・・。$")) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>伊吹翼</b>さんは翌日<font color="#ff0000">無残な姿で発見された・・・。</font>
-            ret[msg_date].list_bitten.push(base_td_list.item(0).querySelector("b").innerText);
+            current_day_log.list_bitten.push(base_td_list.item(0).querySelector("b").innerText);
           } else if (msg_text.match("^に死体で発見された・・・。$")) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>久川凪</b>さんは翌日<font color="#ff0000">に死体で発見された・・・。</font>
-            ret[msg_date].list_dnoted.push(base_td_list.item(0).querySelector("b").innerText);
+            current_day_log.list_dnoted.push(base_td_list.item(0).querySelector("b").innerText);
           } else {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>八神マキノ</b>さんは都合により<font color="#ff0000">突然死しました・・・。【ペナルティ】</font>
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>海星</b>さんは都合により<font color="#ff0000">突然死しました・・・。</font>
-            ret[msg_date].list_sudden.push(base_td_list.item(0).querySelector("b").innerText);
+            current_day_log.list_sudden.push(base_td_list.item(0).querySelector("b").innerText);
           }
         } else {
           // <img src="./img/msg.gif" width="32" height="32" border="0">
@@ -267,7 +277,7 @@ function html2log(arg) {
             v_comtype = "Unknown";
           }
         }
-        ret[msg_date].comments.push({ speaker: villager , comment : v_comment , type : v_comtype});
+        current_day_log.comments.push({ speaker: villager , comment : v_comment , type : v_comtype});
       } catch (e) {
         // nop : skip "◆狼の遠吠え"
       }
@@ -277,13 +287,16 @@ function html2log(arg) {
       if (vote_table != null) {            // vote table
         var r = {title: vote_title.innerText};
         Object.assign(r, html2json_vote_result(vote_table));
-        ret[msg_date].vote_log.push(r);
+        current_day_log.vote_log.push(r);
       } else {                             // inner tag in vote table
         // nop:
       }
     }
   }
-
+  if (current_day_log.comments.length > 0) {
+    current_day_log.msg_date = "１日目の朝となりました。";
+    ret["１日目の朝となりました。"] = current_day_log;  
+  }
   Object.keys(ret).forEach(function(d){
     try {
       ret[d].vote_log = ret[d].vote_log.reverse();
