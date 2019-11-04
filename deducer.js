@@ -118,7 +118,7 @@ function updateInputField(arg) {
   player_list.forEach(function(k){
     document.getElementById('villager-list-' + k).style.visibility = 'visible';
 
-    for (var i = 1 ; i <= datearray.length ; i++) {
+    for (var i = 2 ; i <= datearray.length ; i++) {
       if (arg.log[datearray[i-1]].players[k].stat == "（生存中）") {
         // if alive : set comment count
         var datekey = datearray[i-1];
@@ -481,13 +481,6 @@ function refreshInputField(arg) {
     tr.insertAdjacentElement('beforeend', td_villager);
 
     //// process 2: add job and mob deducer field into 2nd to 4th col
-
-    // deducer: Comments
-    var td_a = document.createElement('td');
-    var comment_count_day1 = document.createElement('p');
-    comment_count_day1.setAttribute('id', 'stat-' + k + '-1-count');
-    td_a.insertAdjacentElement('beforeend', comment_count_day1);
-    tr.insertAdjacentElement('beforeend', td_a);
 
     // deducer: deduced Job
     var td_b = document.createElement('td');
