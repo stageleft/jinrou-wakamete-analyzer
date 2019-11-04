@@ -22,7 +22,7 @@ function html2json_village_log(arg) {
 //              }
 //          }
 //          
-  var ret = {village_number:null, log:null};
+  var ret = {village_number:null, log:{}};
   var player_list;
 
   var base_table   = arg.querySelector("table").querySelector("tbody");
@@ -64,7 +64,7 @@ function html2json_village_log(arg) {
       //    date is from messages.
       // parse sub <table> as village_log
       var village_log = html2log(base_tr_list.item(i).querySelector("table"));
-      ret = Object.assign(ret.log, village_log);
+      Object.assign(ret.log, village_log);
       // console.log(JSON.stringify(village_log));
     } else if (base_tr_list.item(i).innerText.match("^◆ 幽霊の間")) {
       // nop : tag
@@ -92,7 +92,10 @@ function html2json_village_log(arg) {
     }
   }
 
-  ret.log.each(function(l){ Object.assign(l.players, player_list)});
+  Object.keys(ret.log).forEach(function(l){
+    ret.log[l].players = {};
+    Object.assign(ret.log[l].players, player_list);
+  });
   return ret;
 };
 
@@ -174,6 +177,23 @@ function html2log(arg) {
   var vote_result = [];
   var re = new RegExp('^\.\/', '');
 
+  function init_ret(d){
+    var o = { msg_date:     d,
+              list_voted:   [],
+              list_cursed:  [], // Cursed  by WereCat (only in voting)
+              list_revived: [], // Revived by WereCat
+              list_bitten:  [],
+              list_dnoted:  [], // dead by Death Note
+              list_sudden:  [],
+              comments:     [],
+              vote_log:     []
+            };
+    return o;
+  };
+  var msg_date = "１日目の朝となりました。";
+  var ret = {};
+  ret[msg_date] = init_ret(msg_date);
+
   // console.log(arg.innerHTML); // debug
 
   var base_tr_list = arg.querySelectorAll("tr");
@@ -191,40 +211,43 @@ function html2log(arg) {
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">3日目の夜となりました。</font>(19/07/14 23:32:09)
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">9日目の朝となりました。</font>(19/07/06 01:43:35)
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「引き分け」です！</font>(19/08/13 00:22:35)
-          if (msg_date == "１日目の朝となりました。") {
-            msg_date = msg_text;
-          }
+          msg_date = msg_text;
+          ret[msg_date] = init_ret(msg_date);
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/hum.gif") {
           // <img src="./img/hum.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「村　人」の勝利です！</font>(19/08/12 02:05:13)
           msg_date = msg_text;
+          ret[msg_date] = init_ret(msg_date);
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/wlf.gif") {
           // <img src="./img/wlf.gif" width="32" height="32" border="0"> <font size="+2" color="#dd0000">「<font color="#ff0000">人　狼</font>」の勝利です！</font>(19/08/04 02:57:29)
           msg_date = msg_text;
+          ret[msg_date] = init_ret(msg_date);
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/fox.gif") {
           // <img src="./img/fox.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ffcc33">妖　狐</font>」の勝利です！</font>(19/08/12 00:30:03)
           msg_date = msg_text;
+          ret[msg_date] = init_ret(msg_date);
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/sc5.gif") {
           // <img src="./img/sc5.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ff9999">猫　又</font>」の勝利です！</font>(19/07/15 00:11:04)
           msg_date = msg_text;
+          ret[msg_date] = init_ret(msg_date);
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead1.gif") {
           if (msg_text.match("^処刑されました・・・。$")) {
             // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font>
-            msgs_voted.push(base_td_list.item(0).querySelector("b").innerText);
+            ret[msg_date].list_voted.push(base_td_list.item(0).querySelector("b").innerText);
           } else {
             // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>タマトイズ</b>さんは猫又の呪いで<font color="#ff0000">死亡しました・・・。</font>
-            msgs_cursed.push(base_td_list.item(0).querySelector("b").innerText);
+            ret[msg_date].list_cursed.push(base_td_list.item(0).querySelector("b").innerText);
           }
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead2.gif") {
           if (msg_text.match("^無残な姿で発見された・・・。$")) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>伊吹翼</b>さんは翌日<font color="#ff0000">無残な姿で発見された・・・。</font>
-            msgs_bitten.push(base_td_list.item(0).querySelector("b").innerText);
+            ret[msg_date].list_bitten.push(base_td_list.item(0).querySelector("b").innerText);
           } else if (msg_text.match("^に死体で発見された・・・。$")) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>久川凪</b>さんは翌日<font color="#ff0000">に死体で発見された・・・。</font>
-            msgs_dnoted.push(base_td_list.item(0).querySelector("b").innerText);
+            ret[msg_date].list_dnoted.push(base_td_list.item(0).querySelector("b").innerText);
           } else {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>八神マキノ</b>さんは都合により<font color="#ff0000">突然死しました・・・。【ペナルティ】</font>
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>海星</b>さんは都合により<font color="#ff0000">突然死しました・・・。</font>
-            msgs_sudden.push(base_td_list.item(0).querySelector("b").innerText);
+            ret[msg_date].list_sudden.push(base_td_list.item(0).querySelector("b").innerText);
           }
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/msg.gif") {
           if (msg_text.match("^奇跡的に生き返った。$")) {
@@ -260,7 +283,7 @@ function html2log(arg) {
             v_comtype = "Unknown";
           }
         }
-        cmts.push({ speaker: villager , comment : v_comment , type : v_comtype});
+        ret[msg_date].comments.push({ speaker: villager , comment : v_comment , type : v_comtype});
       } catch (e) {
         // nop : skip "◆狼の遠吠え"
       }
@@ -270,21 +293,21 @@ function html2log(arg) {
       if (vote_table != null) {            // vote table
         var r = {title: vote_title.innerText};
         Object.assign(r, html2json_vote_result(vote_table));
-        vote_result.push(r);
+        ret[msg_date].vote_log.push(r);
       } else {                             // inner tag in vote table
         // nop:
       }
     }
   }
 
-  return {[msg_date]:{ comments:    cmts, 
-                       msg_date:    msg_date,
-                       list_voted:  msgs_voted,
-                       list_cursed: msgs_cursed,
-                       list_bitten: msgs_bitten,
-                       list_dnoted: msgs_dnoted,
-                       list_sudden: msgs_sudden,
-                       vote_log:    vote_result.reverse() }};
+  Object.keys(ret).forEach(function(d){
+    try {
+      ret[d].vote_log = ret[d].vote_log.reverse();
+    } catch(e) {
+      // nop : d is other than msg_date;
+    };
+  });
+  return ret;
 }
 
 function html2json_vote_result(arg) {
