@@ -5,18 +5,25 @@
 //   json_data = function(json_data)
 
 
-function html2json_villager_log_1day(arg) {
+function html2json_village_log(arg) {
 // input  : HTMLCollction
 //          <table width="770" cellspacing="5"><tbody> ... </tbody></table>
 // output : Hash
 //          {
-//            number:   ""
-//            date:     ""
-//            players:  {}
-//            comments: {}
-//            vote:
+//              village_number:"string", // village number
+//              log: {
+//                  "date-string":{
+//                      players:  {...}
+//                      comments: {...}
+//                      vote_log: {...}
+//                  },
+//                  "date-string":{},
+//                  ...  
+//              }
 //          }
-  var ret = {};
+//          
+  var ret = {village_number:null, log:null};
+  var player_list;
 
   var base_table   = arg.querySelector("table").querySelector("tbody");
   var base_tr_list = base_table.querySelectorAll("tr");
@@ -32,7 +39,7 @@ function html2json_villager_log_1day(arg) {
       // nop : tag
     } else if (base_tr_list.item(i-1).innerText.match("^◆ 村人たち")) {
       // parse sub <table> as villager_list
-      ret.players = html2json_villager_list(base_tr_list.item(i).querySelector("table")).players;
+      player_list = html2json_villager_list(base_tr_list.item(i).querySelector("table")).players;
     } else if (base_tr_list.item(i).innerText.match("^◆ 再表示")) {
       // nop : tag
     } else if (base_tr_list.item(i-1).innerText.match("^◆ 再表示")) {
@@ -56,8 +63,8 @@ function html2json_villager_log_1day(arg) {
       //    village_id is from input tag.
       //    date is from messages.
       // parse sub <table> as village_log
-      var village_log = html2json_village_log(base_tr_list.item(i).querySelector("table"));
-      ret = Object.assign(ret, village_log);
+      var village_log = html2log(base_tr_list.item(i).querySelector("table"));
+      ret = Object.assign(ret.log, village_log);
       // console.log(JSON.stringify(village_log));
     } else if (base_tr_list.item(i).innerText.match("^◆ 幽霊の間")) {
       // nop : tag
@@ -75,7 +82,7 @@ function html2json_villager_log_1day(arg) {
     if (base_input_list.item(i).name == "VILLAGENO") {
       // get village number from below tag.
       //   <input type="hidden" name="VILLAGENO" value="153063">
-      ret.number = base_input_list.item(i).value;
+      ret.village_number = base_input_list.item(i).value;
     } else {
       // nop : information to system.
       //    <input type="hidden" name="TXTPNO" value="60">
@@ -85,6 +92,7 @@ function html2json_villager_log_1day(arg) {
     }
   }
 
+  ret.log.each(function(l){ Object.assign(l.players, player_list)});
   return ret;
 };
 
@@ -92,7 +100,7 @@ function html2json_villager_list(arg) {
 // input  : HTMLCollction
 //          <tbody> ... </tbody> of <table class="CLSTABLE"></table>
 // output : Hash
-//            player: {
+//            players: {
 //              "character-name": { icon:value, stat:value },
 //              "character-name": { icon:value, stat:value },
 //              ...
@@ -135,22 +143,25 @@ function html2json_villager_list(arg) {
   return { players: ret };
 }
 
-function html2json_village_log(arg) {
+function html2log(arg) {
 // input  : HTMLCollction
 //          <tbody> ... </tbody> of <table table cellpadding="0"></table>
 // output : Hash
-//            msg_date:     "date-string",
-//            list_voted:   [ "character-name", ... ],
-//            list_cursed:  [ "character-name", ... ],
-//            list_revived: [ "character-name", ... ],
-//            list_bitten:  [ "character-name", ... ],
-//            list_dnoted:  [ "character-name", ... ],
-//            list_sudden:  [ "character-name", ... ],
+//          "date-string":{
+//            msg_date:    "date-string",
+//            list_voted:  [ "character-name", ... ],
+//            list_cursed: [ "character-name", ... ],
+//            list_bitten: [ "character-name", ... ],
+//            list_dnoted: [ "character-name", ... ],
+//            list_sudden: [ "character-name", ... ],
 //            comments: [
 //              { speaker:value, type:value, comment:[value_with_each_line] },
 //              ...
 //            ],
 //            vote_log : [<from html2json_vote_result()>]
+//          },
+//          "date-string":{},
+//          ...
 //   type:value : "Normal" or "Strong" or "WithColor"
   var cmts = [];
   var msg_date    = "１日目の朝となりました。";
@@ -264,18 +275,16 @@ function html2json_village_log(arg) {
         // nop:
       }
     }
-
   }
 
-  return { comments:     cmts, 
-           msg_date:     msg_date,
-           list_voted:   msgs_voted,
-           list_cursed:  msgs_cursed,
-           list_revived: msgs_revived,
-           list_bitten:  msgs_bitten,
-           list_dnoted:  msgs_dnoted,
-           list_sudden:  msgs_sudden,
-           vote_log: vote_result.reverse() };
+  return {[msg_date]:{ comments:    cmts, 
+                       msg_date:    msg_date,
+                       list_voted:  msgs_voted,
+                       list_cursed: msgs_cursed,
+                       list_bitten: msgs_bitten,
+                       list_dnoted: msgs_dnoted,
+                       list_sudden: msgs_sudden,
+                       vote_log:    vote_result.reverse() }};
 }
 
 function html2json_vote_result(arg) {
