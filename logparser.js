@@ -151,12 +151,13 @@ function html2log(arg) {
 //          <tbody> ... </tbody> of <table table cellpadding="0"></table>
 // output : Hash
 //          "date-string":{
-//            msg_date:    "date-string",
-//            list_voted:  [ "character-name", ... ],
-//            list_cursed: [ "character-name", ... ],
-//            list_bitten: [ "character-name", ... ],
-//            list_dnoted: [ "character-name", ... ],
-//            list_sudden: [ "character-name", ... ],
+//            msg_date:     "date-string",
+//            list_voted:   [ "character-name", ... ],
+//            list_cursed:  [ "character-name", ... ],
+//            list_revived: [ "character-name", ... ],
+//            list_bitten:  [ "character-name", ... ],
+//            list_dnoted:  [ "character-name", ... ],
+//            list_sudden:  [ "character-name", ... ],
 //            comments: [
 //              { speaker:value, type:value, comment:[value_with_each_line] },
 //              ...
@@ -250,11 +251,18 @@ function html2log(arg) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>海星</b>さんは都合により<font color="#ff0000">突然死しました・・・。</font>
             current_day_log.list_sudden.push(base_td_list.item(0).querySelector("b").innerText);
           }
+        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/msg.gif") {
+          if (msg_text.match("^奇跡的に生き返った。$")) {
+            // <img src="./img/msg.gif" width="32" height="32" border="0"> <b>パチュリー</b>さんは<font color="#ff0000">奇跡的に生き返った。</font>
+            current_day_log.list_revived.push(base_td_list.item(0).querySelector("b").innerText);
+          } else {
+            // <img src="./img/msg.gif" width="32" height="32" border="0">
+            //      <font size="+1">再投票となりました。</font>あと
+            //      <font size="+2">1</font>回の投票で結論が出なければ引き分けとなります。</td>
+            // ignore. it maybe unused message or inner font tag of winner message.
+          }
         } else {
-          // <img src="./img/msg.gif" width="32" height="32" border="0">
-          //      <font size="+1">再投票となりました。</font>あと
-          //      <font size="+2">1</font>回の投票で結論が出なければ引き分けとなります。</td>
-          // ignore. it maybe unused message or inner font tag of winner message.
+          // ignore messages with unknown icon. it is not important.
         }
       } else {
         // ignore messages without icon. it is not important.

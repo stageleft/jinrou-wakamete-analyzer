@@ -129,7 +129,10 @@ function updateInputField(arg) {
           }
         });
         document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText = "発言 "+String(c);
-        if (i > 2) {
+        if ((i > 2) &&
+            (arg.log[datearray[i-2]].players[k].stat == "（死　亡）")) {
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = "復活";
+        } else {
           document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = "";
         }
       } else {
