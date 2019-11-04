@@ -12,10 +12,11 @@ function updateSummary(arg) {
   // 参加者の、推理情報による振り分け情報
   var list = makeGrayVillagerList(arg);
 
-  // 吊り・噛み・デスノ算出
-  var voted  = [];
-  var bitten = [];
-  var dnoted = [];
+  // 吊り・噛み・死体・復活算出
+  var voted   = [];
+  var bitten  = [];
+  var dnoted  = [];
+  var revived = [];
   datearray.forEach(function(d){
     if (d == "１日目の朝となりました。") return;
 
@@ -41,6 +42,14 @@ function updateSummary(arg) {
 
     if (arg.log[d].list_dnoted.length != 0) {
       dnoted.push([arg.log[d].list_dnoted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+    } else if (dnoted.length != 0) {
+      dnoted.push(["×", { comingout:"村人", enemymark:"村人" }]);
+    }
+
+    if (arg.log[d].list_revived.length == 0) {
+      revived.push(["×", { comingout:"村人", enemymark:"村人" }]);
+    } else {
+      revived.push([arg.log[d].list_revived.join('＆'), { comingout:"村人", enemymark:"村人" }]);
     }
   });
 
@@ -212,10 +221,11 @@ function updateSummary(arg) {
   ret.push(calcSubSummary("【妖　狐 (x/y)】", arg.input.werefox_count,  Object.entries(list.werefox_mark),  false));
   ret.push(calcSubSummary("【子　狐 (x/y)】", arg.input.minifox_count,  Object.entries(list.minifox_mark),  false));
   ret.push(calcSubSummary("【人　外 (x/y)】", enemy_other_count,        Object.entries(list.enemy_mark),    false));
-  // 死亡情報まとめ
-  ret.push(calcSubSummary("【吊　り (x)】", null, voted,  true));
-  ret.push(calcSubSummary("【噛　み (x)】", null, bitten, true));
-  ret.push(calcSubSummary("【デスノ (x)】", null, dnoted, true));
+  // 死亡＆復活情報まとめ
+  ret.push(calcSubSummary("【吊り (x)】", null, voted,   true));
+  ret.push(calcSubSummary("【噛み (x)】", null, bitten,  true));
+  ret.push(calcSubSummary("【死体 (x)】", null, dnoted,  true));
+  ret.push(calcSubSummary("【復活 (x)】", null, revived, true));
 
   document.getElementById('deduce-summary').innerText = ret.filter(x => x.length > 0).join('\n');
   return;
