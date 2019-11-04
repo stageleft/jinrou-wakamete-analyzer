@@ -35,20 +35,21 @@ function recvLog_proc(request, sender, sendResponse) {
   try {
      var parser = new DOMParser();
      var receivedLog = parser.parseFromString(request.html_log, "text/html");
-     var todayLog    = html2json_villager_log_1day(receivedLog);
-     if (todayLog != null) {
-      if ( village_number != todayLog.number ) {
+     var parsedLog = html2json_village_log(receivedLog);
+     if (parsedLog != null) {
+      if ( village_number != parsedLog.village_number ) {
          is_same_village = false;
       }
-      if (value[todayLog.number] == null) {
-        Object.assign(value, {[todayLog.number]:{ village_number: todayLog.number, log:new Object(), input:new Object()}});
+      if (value[parsedLog.village_number] == null) {
+        Object.assign(value, {[parsedLog.village_number]:parsedLog });
+      } else {
+        Object.assign(value[parsedLog.village_number].log, parsedLog.log);
       }
-      Object.assign(value[todayLog.number].log, { [todayLog.msg_date]:todayLog });
-      village_number = todayLog.number;
+      village_number = parsedLog.village_number;
      }
   } catch(e) {
     // exception case
-    //   (1) re-login to village: html2json_villager_log_1day() must be aborted.
+    //   (1) re-login to village: html2json_village_log() must be aborted.
     //   (2) illegal case
     console.log(e.name + ':' + e.message);
     console.log(e.stack);
