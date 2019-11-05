@@ -67,13 +67,15 @@ function updateCommentLog(arg, param) {
   if (param.indexOf('date-log-') == 0) {
     // create day log by date
     var datestr = datearray[Number(param.replace('date-log-','')) - 1];
-    ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr));
-    arg.log[datestr].comments.forEach(function(l){
-      ret.insertAdjacentElement('beforeend', createLogTableRow(l));
-    });
+    if (arg.log[datestr] != null) {
+      ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr));
+      arg.log[datestr].comments.forEach(function(l){
+        ret.insertAdjacentElement('beforeend', createLogTableRow(l));
+      });
+    }
     // create previous night log by date (if day2..N)
     var datestr_night = logTag_d2n(datestr);
-    if (datestr_night != datestr) {
+    if ((datestr_night != datestr) && (arg.log[datestr_night] != null)) {
       ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr_night));
       arg.log[datestr_night].comments.forEach(function(l){
         ret.insertAdjacentElement('beforeend', createLogTableRow(l));
@@ -85,15 +87,17 @@ function updateCommentLog(arg, param) {
     for (var i = date_count ; i >= 1 ; i-- ) {
       var datestr = datearray[i-1];
       // create day log by date
-      ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr));
-      arg.log[datestr].comments.forEach(function(l){
-        if (l.speaker.trim() == villager_str) {
-          ret.insertAdjacentElement('beforeend', createLogTableRow(l));
-        }
-      });
+      if (arg.log[datestr] != null) {
+        ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr));
+        arg.log[datestr].comments.forEach(function(l){
+          if (l.speaker.trim() == villager_str) {
+            ret.insertAdjacentElement('beforeend', createLogTableRow(l));
+          }
+        });
+      }
       // create previous night log by date (if day2..N)
       var datestr_night = logTag_d2n(datestr);
-      if (datestr_night != datestr) {
+      if ((datestr_night != datestr) && (arg.log[datestr_night] != null)) {
         ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr_night));
         arg.log[datestr_night].comments.forEach(function(l){
           if (l.speaker.trim() == villager_str) {
