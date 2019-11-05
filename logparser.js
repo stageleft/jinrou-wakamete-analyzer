@@ -94,7 +94,8 @@ function html2json_village_log(arg) {
 
   if (Object.keys(ret.log).length < 2) {
     // single day log
-    Object.assign(ret.log.players, player_list);
+    ret.log[Object.keys(ret.log)[0]].players = {};
+    Object.assign(ret.log[Object.keys(ret.log)[0]].players, player_list);
   } else {
     // multi days log
     var datearray;
@@ -111,7 +112,7 @@ function html2json_village_log(arg) {
         ret.log[d].players = {};
         Object.assign(ret.log[d].players, player_list);
         return;
-      } else if (d != logTag_d2n(d)) {
+      } else if ((d != logTag_d2n(d)) && (ret.log[logTag_d2n(d)] != null)) {
         var p = datearray[datearray.indexOf(d) - 1];
         // set player_list into current log
         // (n-1)th Nighttime: calc player_list of 1 day ago from ret.log[l].list_*
@@ -394,12 +395,14 @@ function html2log(arg) {
       ret[datearray[i]].list_sudden  = ret[datearray[i+1]].list_sudden;
       ret[datearray[i]].list_sudden.concat(ret[datearray[i+2]].list_sudden);  // (n-1) day + (n-1) night -> n day
     }
-    ret[datearray[datearray.length - 2]].list_bitten  = ret[datearray[datearray.length - 1]].list_bitten;
-    ret[datearray[datearray.length - 2]].list_voted   = [];
-    ret[datearray[datearray.length - 2]].list_revived = ret[datearray[datearray.length - 1]].list_revived;
-    ret[datearray[datearray.length - 2]].list_cursed  = [];
-    ret[datearray[datearray.length - 2]].list_dnoted  = ret[datearray[datearray.length - 1]].list_dnoted;
-    ret[datearray[datearray.length - 2]].list_sudden  = ret[datearray[datearray.length - 1]].list_sudden;
+    if (datearray >= 2) {
+      ret[datearray[datearray.length - 2]].list_bitten  = ret[datearray[datearray.length - 1]].list_bitten;
+      ret[datearray[datearray.length - 2]].list_voted   = [];
+      ret[datearray[datearray.length - 2]].list_revived = ret[datearray[datearray.length - 1]].list_revived;
+      ret[datearray[datearray.length - 2]].list_cursed  = [];
+      ret[datearray[datearray.length - 2]].list_dnoted  = ret[datearray[datearray.length - 1]].list_dnoted;
+      ret[datearray[datearray.length - 2]].list_sudden  = ret[datearray[datearray.length - 1]].list_sudden;
+    }
     ret[datearray[datearray.length - 1]].list_bitten  = [];
     ret[datearray[datearray.length - 1]].list_voted   = [];
     ret[datearray[datearray.length - 1]].list_revived = [];
