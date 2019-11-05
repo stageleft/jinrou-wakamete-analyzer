@@ -92,10 +92,93 @@ function html2json_village_log(arg) {
     }
   }
 
-  Object.keys(ret.log).forEach(function(l){
-    ret.log[l].players = {};
-    Object.assign(ret.log[l].players, player_list);
-  });
+  if (Object.keys(ret.log).length < 2) {
+    // single day log
+    Object.assign(ret.log.players, player_list);
+  } else {
+    // multi days log
+    var datearray;
+    var base_date;
+    [datearray, base_date] = createDateArray(ret);
+    if ((datearray == null) || (datearray.length == 0)){
+      return;
+    }
+    Object.keys(player_list).forEach(function(k){
+      player_list[k].stat = "（生存中）";
+    });
+    datearray.forEach(function(d){
+      if (d == "１日目の朝となりました。") {
+        ret.log[d].players = {};
+        Object.assign(ret.log[d].players, player_list);
+        return;
+      } else if (d != logTag_d2n(d)) {
+        var p = datearray[datearray.indexOf(d) - 1];
+        // set player_list into current log
+        // (n-1)th Nighttime: calc player_list of 1 day ago from ret.log[l].list_*
+        var n = logTag_d2n(d);
+        ret.log[n].players = {};
+        Object.keys(player_list).forEach(function(k){
+          ret.log[n].players[k] = {icon:ret.log[p].players[k].icon, stat:""};
+          if (ret.log[p].players[k].stat == "（生存中）") {
+            ret.log[n].players[k].stat = "（生存中）";
+            if ((ret.log[n].list_bitten.includes(k) == true) ||
+                (ret.log[n].list_voted.includes(k) == true) || 
+                (ret.log[n].list_sudden.includes(k) == true) || 
+                (ret.log[n].list_dnoted.includes(k) == true) || 
+                (ret.log[n].list_cursed.includes(k) == true)) {
+              ret.log[n].players[k].stat = "（死　亡）";
+            }
+          } else {
+            ret.log[n].players[k].stat = "（死　亡）";
+            if ((ret.log[n].list_revived.includes(k) == true)) {
+              ret.log[n].players[k].stat = "（生存中）";
+            }
+          }
+        });
+        // nth Daytime: calc player_list of 1 day ago from ret.log[l].list_*
+        ret.log[d].players = {};
+        Object.keys(player_list).forEach(function(k){
+          ret.log[d].players[k] = {icon:ret.log[n].players[k].icon, stat:""};
+          if (ret.log[n].players[k].stat == "（生存中）") {
+            ret.log[d].players[k].stat = "（生存中）";
+            if ((ret.log[d].list_bitten.includes(k) == true) ||
+                (ret.log[d].list_voted.includes(k) == true) || 
+                (ret.log[d].list_sudden.includes(k) == true) || 
+                (ret.log[d].list_dnoted.includes(k) == true) || 
+                (ret.log[d].list_cursed.includes(k) == true)) {
+              ret.log[d].players[k].stat = "（死　亡）";
+            }
+          } else {
+            ret.log[d].players[k].stat = "（死　亡）";
+            if ((ret.log[d].list_revived.includes(k) == true)) {
+              ret.log[d].players[k].stat = "（生存中）";
+            }
+          }
+        });
+      } else {
+        var p = datearray[datearray.indexOf(d) - 1];
+        ret.log[d].players = {};
+        Object.keys(player_list).forEach(function(k){
+          ret.log[d].players[k] = {icon:ret.log[p].players[k].icon, stat:""};
+          if (ret.log[p].players[k].stat == "（生存中）") {
+            ret.log[d].players[k].stat = "（生存中）";
+            if ((ret.log[d].list_bitten.includes(k) == true) ||
+                (ret.log[d].list_voted.includes(k) == true) || 
+                (ret.log[d].list_sudden.includes(k) == true) || 
+                (ret.log[d].list_dnoted.includes(k) == true) || 
+                (ret.log[d].list_cursed.includes(k) == true)) {
+              ret.log[d].players[k].stat = "（死　亡）";
+            }
+          } else {
+            ret.log[d].players[k].stat = "（死　亡）";
+            if ((ret.log[d].list_revived.includes(k) == true)) {
+              ret.log[d].players[k].stat = "（生存中）";
+            }
+          }
+        });
+      }
+    });
+  }
   return ret;
 };
 
@@ -182,7 +265,8 @@ function html2log(arg) {
             };
     return o;
   };
-  var msg_date = "１日目の朝となりました。";
+  var msg_date = null;
+  var datearray = [];
   var ret = {};
   var current_day_log = init_ret();
 
@@ -198,38 +282,22 @@ function html2log(arg) {
 
         var icon_uri   = icon_selector.getAttribute("src").replace(re, "http://jinrou.dip.jp/~jinrou/");
         var msg_text   = base_td_list.item(0).querySelector("font").innerText;
-        if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/ampm.gif") {
+        if ((icon_uri == "http://jinrou.dip.jp/~jinrou/img/ampm.gif") ||
+            (icon_uri == "http://jinrou.dip.jp/~jinrou/img/hum.gif") ||
+            (icon_uri == "http://jinrou.dip.jp/~jinrou/img/wlf.gif") ||
+            (icon_uri == "http://jinrou.dip.jp/~jinrou/img/fox.gif") ||
+            (icon_uri == "http://jinrou.dip.jp/~jinrou/img/sc5.gif")) {
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">１日目の夜となりました。</font>(19/07/15 00:39:10)
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">3日目の夜となりました。</font>(19/07/14 23:32:09)
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">9日目の朝となりました。</font>(19/07/06 01:43:35)
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「引き分け」です！</font>(19/08/13 00:22:35)
-          msg_date = msg_text;
-          current_day_log.msg_date = msg_date;
-          ret[msg_date] = current_day_log;
-          current_day_log = init_ret();
-        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/hum.gif") {
           // <img src="./img/hum.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「村　人」の勝利です！</font>(19/08/12 02:05:13)
-          msg_date = msg_text;
-          current_day_log.msg_date = msg_date;
-          ret[msg_date] = current_day_log;
-          current_day_log = init_ret();
-        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/wlf.gif") {
           // <img src="./img/wlf.gif" width="32" height="32" border="0"> <font size="+2" color="#dd0000">「<font color="#ff0000">人　狼</font>」の勝利です！</font>(19/08/04 02:57:29)
-          msg_date = msg_text;
-          current_day_log.msg_date = msg_date;
-          ret[msg_date] = current_day_log;
-          current_day_log = init_ret();
-        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/fox.gif") {
           // <img src="./img/fox.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ffcc33">妖　狐</font>」の勝利です！</font>(19/08/12 00:30:03)
-          msg_date = msg_text;
-          current_day_log.msg_date = msg_date;
-          ret[msg_date] = current_day_log;
-          current_day_log = init_ret();
-        } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/sc5.gif") {
           // <img src="./img/sc5.gif" width="32" height="32" border="0"> <font size="+2" color="#ff6600">「<font color="#ff9999">猫　又</font>」の勝利です！</font>(19/07/15 00:11:04)
-          msg_date = msg_text;
-          current_day_log.msg_date = msg_date;
-          ret[msg_date] = current_day_log;
+          datearray.push(msg_text);
+          current_day_log.msg_date = datearray[datearray.length - 1];
+          ret[datearray[datearray.length - 1]] = current_day_log;
           current_day_log = init_ret();
         } else if (icon_uri == "http://jinrou.dip.jp/~jinrou/img/dead1.gif") {
           if (msg_text.match("^処刑されました・・・。$")) {
@@ -301,17 +369,47 @@ function html2log(arg) {
       }
     }
   }
-  if (current_day_log.comments.length > 0) {
-    current_day_log.msg_date = "１日目の朝となりました。";
-    ret["１日目の朝となりました。"] = current_day_log;  
+
+  if (datearray.length == 1) {
+    Object.keys(current_day_log).forEach(function(k){
+      ret[datearray[0]][k].concat(current_day_log[k]);
+    });
+  } else {
+    if (current_day_log.comments.length > 0) {
+      datearray.push("１日目の朝となりました。");
+      current_day_log.msg_date = "１日目の朝となりました。";
+      ret["１日目の朝となりました。"] = current_day_log;  
+    }
+    Object.keys(ret).forEach(function(d){
+      try {
+        ret[d].vote_log = ret[d].vote_log.reverse();
+      } catch(e) {
+        // nop : d is other than msg_date;
+      };
+    });
+    // shift all list 1 day.
+    for (var i = 0; i < datearray.length - 2; i++){
+      ret[datearray[i]].list_bitten  = ret[datearray[i+1]].list_bitten;  // (n-1) night -> n day
+      ret[datearray[i]].list_voted   = ret[datearray[i+2]].list_voted;   // (n-1) day   -> n day
+      ret[datearray[i]].list_revived = ret[datearray[i+1]].list_revived; // (n-1) night -> n day
+      ret[datearray[i]].list_cursed  = ret[datearray[i+2]].list_cursed;  // (n-1) day   -> n day
+      ret[datearray[i]].list_dnoted  = ret[datearray[i+1]].list_dnoted;  // (n-1) night -> n day
+      ret[datearray[i]].list_sudden  = ret[datearray[i+1]].list_sudden;
+      ret[datearray[i]].list_sudden.concat(ret[datearray[i+2]].list_sudden);  // (n-1) day + (n-1) night -> n day
+    }
+    ret[datearray[datearray.length - 2]].list_bitten  = ret[datearray[datearray.length - 1]].list_bitten;
+    ret[datearray[datearray.length - 2]].list_voted   = [];
+    ret[datearray[datearray.length - 2]].list_revived = ret[datearray[datearray.length - 1]].list_revived;
+    ret[datearray[datearray.length - 2]].list_cursed  = [];
+    ret[datearray[datearray.length - 2]].list_dnoted  = ret[datearray[datearray.length - 1]].list_dnoted;
+    ret[datearray[datearray.length - 2]].list_sudden  = ret[datearray[datearray.length - 1]].list_sudden;
+    ret[datearray[datearray.length - 1]].list_bitten  = [];
+    ret[datearray[datearray.length - 1]].list_voted   = [];
+    ret[datearray[datearray.length - 1]].list_revived = [];
+    ret[datearray[datearray.length - 1]].list_cursed  = [];
+    ret[datearray[datearray.length - 1]].list_dnoted  = [];
+    ret[datearray[datearray.length - 1]].list_sudden  = [];
   }
-  Object.keys(ret).forEach(function(d){
-    try {
-      ret[d].vote_log = ret[d].vote_log.reverse();
-    } catch(e) {
-      // nop : d is other than msg_date;
-    };
-  });
   return ret;
 }
 
