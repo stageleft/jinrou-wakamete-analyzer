@@ -387,7 +387,7 @@ function refreshInputField(arg) {
   //  <thead>
   //    <tr id="deducer-title">
   //      <td></td>
-  //      <td id="deducer-title-1" colspan=3><a id="date-log-1">１日目</a></td>
+  //      <td id="deducer-title-1" colspan=2><a id="date-log-1">１日目</a></td>
   //      <td id="deducer-title-2" colspan=3><a id="date-log-2">2日目</a></td>
   //      <td>...</td>
   //      <td id="deducer-title-X" colspan=3><a id="date-log-X">X日目</a></td>
@@ -404,7 +404,7 @@ function refreshInputField(arg) {
 
   var td_title = document.createElement('td');
   td_title.setAttribute('id', 'deducer-title-1');
-  td_title.setAttribute('colspan', '3');
+  td_title.setAttribute('colspan', '2');
 
   var a  = document.createElement('a');
   a.setAttribute('id', 'date-log-1');
@@ -434,7 +434,7 @@ function refreshInputField(arg) {
   //    <tr id='villager-list-villagerA'>
   //      <td id='villager-villagerA'><img src=[icon] /><a id="all-day-log-villagerA">villagerA</a></td>
   //
-  //      <td id='stat-villagerA-1-count'>comment_count_date1</td><td>ＣＯ<br><input id='job-villagerA'/></td><td>推理<br><input id='mrk-villagerA'/></td>
+  //      <td>ＣＯ<br><input id='job-villagerA'/></td><td>推理<br><input id='mrk-villagerA'/></td>
   //
   //      <td>
   //        <p id='stat-villagerA-2-count'>comment_count_date2</p>
