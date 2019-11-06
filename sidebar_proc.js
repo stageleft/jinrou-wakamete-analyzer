@@ -20,14 +20,6 @@ function recvLog_proc(request, sender, sendResponse) {
   var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
   if ( value == null ) {
     value = {};
-  } else if (value.length > 8) { // preserve log : newest 8 villages by Village ID
-    var minimum_key = null;
-    Object.keys(value).forEach(function(v){
-      if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
-        minimum_key = v;
-      }
-    });
-    delete value[minimum_key];
   }
 
   // Parse and Update wakamete village log
@@ -111,6 +103,17 @@ function recvLog_proc(request, sender, sendResponse) {
   }
 
   // save to Web Storaget API
+  if (Object.keys(value).length > 8) { // preserve log : newest 8 villages by Village ID
+    var minimum_key = null;
+    Object.keys(value).forEach(function(v){
+      if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
+        minimum_key = v;
+      }
+    });
+    if (minimum_key != village_number) {
+      delete value[minimum_key];
+    }
+  }
   window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(value)));
 
   recvLog_lock = false;
