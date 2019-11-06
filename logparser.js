@@ -231,26 +231,26 @@ function html2json_villager_list(arg) {
 }
 
 function html2log(arg) {
-  // input  : HTMLCollction
-  //          <tbody> ... </tbody> of <table table cellpadding="0"></table>
-  // output : Hash
-  //          "date-string":{
-  //            msg_date:    "date-string",
-  //            list_voted:  [ "character-name", ... ],
-  //            list_cursed: [ "character-name", ... ],
-  //            list_revived: [ "character-name", ... ],
-  //            list_bitten: [ "character-name", ... ],
-  //            list_dnoted: [ "character-name", ... ],
-  //            list_sudden: [ "character-name", ... ],
-  //            comments: [
-  //              { speaker:value, type:value, comment:[value_with_each_line] },
-  //              ...
-  //            ],
-  //            vote_log : [<from html2json_vote_result()>]
-  //          },
-  //          "date-string":{},
-  //          ...
-  //   type:value : "Normal" or "Strong" or "WithColor"
+// input  : HTMLCollction
+//          <tbody> ... </tbody> of <table table cellpadding="0"></table>
+// output : Hash
+//          "date-string":{
+//            msg_date:     "date-string",
+//            list_voted:   [ "character-name", ... ],
+//            list_cursed:  [ "character-name", ... ],
+//            list_revived: [ "character-name", ... ],
+//            list_bitten:  [ "character-name", ... ],
+//            list_dnoted:  [ "character-name", ... ],
+//            list_sudden:  [ "character-name", ... ],
+//            comments: [
+//              { speaker:value, type:value, comment:[value_with_each_line] },
+//              ...
+//            ],
+//            vote_log : [<from html2json_vote_result()>]
+//          },
+//          "date-string":{},
+//          ...
+//   type:value : "Normal" or "Strong" or "WithColor"
   var re = new RegExp('^\.\/', '');
 
   function init_ret(){
@@ -270,6 +270,7 @@ function html2log(arg) {
   var datearray = [];
   var ret = {};
   var current_day_log = init_ret();
+
   var base_tr_list = arg.querySelectorAll("tr");
   for (var i = 0 ; i < base_tr_list.length ; i++) {
     var base_td_list = base_tr_list.item(i).querySelectorAll("td");
