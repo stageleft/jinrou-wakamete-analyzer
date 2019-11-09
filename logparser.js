@@ -369,9 +369,10 @@ function html2log(arg) {
     }
   }
 
-  if (datearray.length == 1) {
+  if ((datearray.length == 1) ||
+      (datearray.length == 2) && (ret[datearray[0]].vote_log.length == 0)) {
     Object.keys(current_day_log).forEach(function(k){
-      ret[datearray[0]][k].concat(current_day_log[k]);
+      ret[datearray[0]][k] = ret[datearray[0]][k].concat(current_day_log[k]);
     });
   } else {
     if (current_day_log.comments.length > 0) {
