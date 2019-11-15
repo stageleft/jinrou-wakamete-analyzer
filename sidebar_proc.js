@@ -20,14 +20,6 @@ function recvLog_proc(request, sender, sendResponse) {
   var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
   if ( value == null ) {
     value = {};
-  } else if (value.length > 8) { // preserve log : newest 8 villages by Village ID
-    var minimum_key = null;
-    Object.keys(value).forEach(function(v){
-      if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
-        minimum_key = v;
-      }
-    });
-    delete value[minimum_key];
   }
 
   // Parse and Update wakamete village log
@@ -35,20 +27,21 @@ function recvLog_proc(request, sender, sendResponse) {
   try {
      var parser = new DOMParser();
      var receivedLog = parser.parseFromString(request.html_log, "text/html");
-     var todayLog    = html2json_villager_log_1day(receivedLog);
-     if (todayLog != null) {
-      if ( village_number != todayLog.number ) {
+     var parsedLog = html2json_village_log(receivedLog);
+     if (parsedLog != null) {
+      if ( village_number != parsedLog.village_number ) {
          is_same_village = false;
       }
-      if (value[todayLog.number] == null) {
-        Object.assign(value, {[todayLog.number]:{ village_number: todayLog.number, log:new Object(), input:new Object()}});
+      if (value[parsedLog.village_number] == null) {
+        Object.assign(value, {[parsedLog.village_number]:parsedLog });
+      } else {
+        Object.assign(value[parsedLog.village_number].log, parsedLog.log);
       }
-      Object.assign(value[todayLog.number].log, { [todayLog.msg_date]:todayLog });
-      village_number = todayLog.number;
+      village_number = parsedLog.village_number;
      }
   } catch(e) {
     // exception case
-    //   (1) re-login to village: html2json_villager_log_1day() must be aborted.
+    //   (1) re-login to village: html2json_village_log() must be aborted.
     //   (2) illegal case
     console.log(e.name + ':' + e.message);
     console.log(e.stack);
@@ -110,6 +103,17 @@ function recvLog_proc(request, sender, sendResponse) {
   }
 
   // save to Web Storaget API
+  if (Object.keys(value).length > 8) { // preserve log : newest 8 villages by Village ID
+    var minimum_key = null;
+    Object.keys(value).forEach(function(v){
+      if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
+        minimum_key = v;
+      }
+    });
+    if (minimum_key != village_number) {
+      delete value[minimum_key];
+    }
+  }
   window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(value)));
 
   recvLog_lock = false;
