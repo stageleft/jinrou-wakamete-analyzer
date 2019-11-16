@@ -85,6 +85,26 @@
   }
 ```
 
+* 代入方法 ：window.localStorage.setItem("wakamete_village_raw_log", encodeURIComponent(JSON.stringify(value)));
+* 取得方法 ：value = Json.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_raw_log")));
+* キー(key)：wakamete_village_raw_log
+* 値(value)：取得した html_log。誤入村対策に複数の村のデータを保持するが、多くなったら村番号の古いものからクリアしていく。形式は以下。
+```
+  village: {
+    "village_number_string" : {  
+      // 村
+      village_number: "string", // "village_number_string" と同じ値を入れる。
+      // ログ（日付別Hash）
+      log: {
+        "date-string": JSON.stringify(html_log),
+        ...
+      },    
+    },
+    "village_number_string":{ village_number:"", log:"", input:"" },
+    ...
+  }
+```
+
 # スクリプトメイン→各種機能→各種画面
 
 * 入力データ： JSON形式。 内容は上記 スクリプトメイン←→Web Storage API参照。
