@@ -92,15 +92,13 @@
 ```
   village: {
     "village_number_string" : {  
-      // 村
-      village_number: "string", // "village_number_string" と同じ値を入れる。
       // ログ（日付別Hash）
       log: {
         "date-string": JSON.stringify(html_log),
         ...
       },    
     },
-    "village_number_string":{ village_number:"", log:"", input:"" },
+    "village_number_string":{ ... },
     ...
   }
 ```

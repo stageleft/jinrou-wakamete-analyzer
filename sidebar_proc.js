@@ -44,13 +44,9 @@ function recvLog_proc(request, sender, sendResponse) {
       village_number = parsedLog.village_number;
       if (Object.keys(parsedLog.log).length == 1) {
         if (raw_log[parsedLog.village_number] == null) {
-          Object.assign(raw_log, {[parsedLog.village_number]:parsedLog });
-        } else {
-          if (raw_log[parsedLog.village_number].log == null) {
-            raw_log[parsedLog.village_number].log = {};
-          }
-          raw_log[parsedLog.village_number].log[Object.keys(parsedLog.log)[0]] = request.html_log;
+          raw_log[parsedLog.village_number] = {log:{}};
         }
+        raw_log[parsedLog.village_number].log[Object.keys(parsedLog.log)[0]] = request.html_log;
       }
      }
   } catch(e) {
