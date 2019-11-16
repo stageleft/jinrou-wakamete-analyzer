@@ -21,6 +21,10 @@ function recvLog_proc(request, sender, sendResponse) {
   if ( value == null ) {
     value = {};
   }
+  var raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_raw_log")));
+  if ( raw_log == null ) {
+    raw_log = {};
+  }
 
   // Parse and Update wakamete village log
   var is_same_village = true;
@@ -38,6 +42,12 @@ function recvLog_proc(request, sender, sendResponse) {
         Object.assign(value[parsedLog.village_number].log, parsedLog.log);
       }
       village_number = parsedLog.village_number;
+      if (Object.keys(parsedLog.log).length == 1) {
+        if (raw_log[parsedLog.village_number] == null) {
+          raw_log[parsedLog.village_number] = {log:{}};
+        }
+        raw_log[parsedLog.village_number].log[Object.keys(parsedLog.log)[0]] = request.html_log;
+      }
      }
   } catch(e) {
     // exception case
@@ -112,9 +122,11 @@ function recvLog_proc(request, sender, sendResponse) {
     });
     if (minimum_key != village_number) {
       delete value[minimum_key];
+      delete raw_log[minimum_key];
     }
   }
   window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(value)));
+  window.localStorage.setItem("wakamete_village_raw_log", encodeURIComponent(JSON.stringify(raw_log)));
 
   recvLog_lock = false;
   sendResponse({response: "OK"});
