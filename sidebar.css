@@ -57,6 +57,49 @@ td{
   background-color: #888888;
 }
 
+.seer{
+  color: #00cc33;
+}
+.medium{
+  color: #33ccff;
+}
+.bodyguard{
+  color: #00ccff;
+}
+.freemason{
+  color: #33dd33;
+}
+.werecat{
+  color: #ff9999;
+}
+.enemy{
+  color: #cc4400;
+}
+.werewolf{
+  color: #ff0000;
+}
+.posessed{
+  color: #ff0099;
+}
+.largewolf{
+  color: #ff0000;
+}
+.werefox{
+  color: #ffcc33;
+}
+.minifox{
+  color: #ffcc33;
+}
+.gray_random{
+  background-color: #cccccc;
+}
+.gray_random_voted_killer{
+  background-color: #ffcccc;
+}
+.gray_random_no_voted{
+  background-color: #ffffcc;
+}
+
 p {
   margin: 0px;
   padding: 0px;
