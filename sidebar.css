@@ -99,6 +99,9 @@ td{
 .gray_random_no_voted{
   background-color: #ffffcc;
 }
+.gray_random_voted_killer_with_no_voted{
+  background-color: #ffe4cc;
+}
 
 p {
   margin: 0px;
