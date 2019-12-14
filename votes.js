@@ -50,7 +50,8 @@ function updateVotes(arg) {
   [datearray, base_date] = createDateArray(arg);
   for (var i = 0; i < datearray.length; i++) {
     var datestr = datearray[i];
-    if (logTag_d2n(datestr) === datestr) {
+    if ((logTag_d2n(datestr) === datestr) && 
+        (!datestr.match("夜となりました。$"))) {
       continue;
     }
     if ((arg.log[datestr] == null) ||
