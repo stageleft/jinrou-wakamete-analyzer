@@ -140,11 +140,14 @@ function updateVotes(arg) {
       td.className = setColorClass(arg.input.each_player[from_person]);
       if (vote_count.is_gray_random == true) {
         // グレランの場合に、セルに色をつける
-        if (td.className === '' && vote_count[to_person] == vote_count['voted_count_max']){
+        if (td.className === '' && vote_count[to_person] == vote_count['voted_count_max'] && vote_count[from_person] == 0){
+          // 役職CO者以外、かつ、吊られ者に投票した人、かつ、得票0票者
+          td.className = 'gray_random_voted_killer_with_no_voted';
+        } else if (td.className === '' && vote_count[to_person] == vote_count['voted_count_max']){
           // 役職CO者以外、かつ、吊られ者に投票した人
           td.className = 'gray_random_voted_killer';
         } else if (td.className === '' && vote_count[from_person] == 0) {
-          // 役職CO者以外、かつ、得票0票者の色をつける（グレランで0票もらい）
+          // 役職CO者以外、かつ、得票0票者
           td.className = 'gray_random_no_voted';
         } else {
           // その他
