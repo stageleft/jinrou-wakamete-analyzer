@@ -51,7 +51,7 @@ function updateVotes(arg) {
   for (var i = 0; i < datearray.length; i++) {
     var datestr = datearray[i];
     if ((logTag_d2n(datestr) === datestr) && 
-        (!datestr.match("夜となりました。$"))) {
+        (datestr.match("夜となりました。$") === null)) {
       continue;
     }
     if ((arg.log[datestr] == null) ||
