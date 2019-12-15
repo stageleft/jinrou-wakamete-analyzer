@@ -51,6 +51,14 @@ function createDateArray(arg) {
       ret.push("「引き分け」です！");
     }
   }
+  // 過去ログ日数制限
+  var date_limit = document.getElementById('datelimit_passed_log').value;
+  if ((date_limit != 0) && (date_count > date_limit)) {
+    date_count = date_limit;
+    while(ret.length > date_count) {
+      ret.pop();
+    }
+  }
 
   // calc base_date
   if (arg.log["１日目の夜となりました。"] != null) {
