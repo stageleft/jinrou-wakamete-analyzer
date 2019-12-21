@@ -21,7 +21,6 @@
     {
       "matches": ["*://jinrou.dip.jp/~jinrou/cgi_jinro.cgi",
                   "*://jinrou.dip.jp/~jinrou/kako/*.html",
-                  "*://raw.githubusercontent.com/stageleft/jinrou-wakamete-analyzer/master/debug/sample/*.html",
                   "file:///*/jinrou-wakamete-analyzer/debug/sample/*.html"],
       "js": ["wakamete-plugins.js"]
     }
