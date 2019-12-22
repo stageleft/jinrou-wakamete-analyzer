@@ -1,0 +1,34 @@
+{
+
+  "manifest_version": 2,
+  "name": "Jinrou Wakamete Analyzer",
+  "version": "1.9",
+
+  "description": "Realtime Log Analyzer of Jinrou Wakamete Server.",
+
+  "icons": {
+    "48": "icons/wakame-te.svg",
+    "96": "icons/wakame-te.svg"
+  },
+
+  "sidebar_action": {
+    "default_title": "Jinrou Wakamete Analyzer",
+    "default_panel": "sidebar.html",
+    "default_icon": "icons/wakame-te.svg"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://jinrou.dip.jp/~jinrou/cgi_jinro.cgi",
+                  "*://jinrou.dip.jp/~jinrou/kako/*.html",
+                  "file:///*/jinrou-wakamete-analyzer/debug/sample/*.html"],
+      "js": ["wakamete-plugins.js"]
+    }
+  ],
+
+  "applications": {
+    "gecko": {
+      "id": "jinrou-wakamete-analyzer@elder-alliance.org"
+    }
+  }
+}
