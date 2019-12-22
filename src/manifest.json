@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "Jinrou Wakamete Analyzer",
-  "version": "1.9",
+  "version": "1.10",
 
   "description": "Realtime Log Analyzer of Jinrou Wakamete Server.",
 
