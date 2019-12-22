@@ -28,7 +28,7 @@
 
 # サンプル説明
 
-## sample/15353/\*.html
+## sample/153535/\*.html
 
 http://jinrou.dip.jp/~jinrou/kako/153535.html 【モバマス】年の瀬村 より、共有者のログ。
 
