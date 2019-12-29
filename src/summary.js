@@ -212,9 +212,11 @@ function updateSummary(arg) {
       summary_text.insertAdjacentHTML('beforeend', '<span>' + other_list.join('、') + '</span>');
     }
     if (seer_list.length >= 1) {
+      summary_text.insertAdjacentHTML('beforeend', '<br />　');
       summary_text.insertAdjacentHTML('beforeend', '<span>' + seer_list.join('<br />　')   + '</span>');
     }
     if (medium_list.length >= 1) {
+      summary_text.insertAdjacentHTML('beforeend', '<br />　');
       summary_text.insertAdjacentHTML('beforeend', '<span>' + medium_list.join('<br />　') + '</span>');
     }
 
@@ -223,11 +225,11 @@ function updateSummary(arg) {
   }
 
   // 村COまとめ
-  calcSubSummary(ret, "【占い師 (x/y)】", arg.input.seer_count,      Object.entries(list.seer_co),      false);
-  calcSubSummary(ret, "【霊能者 (x/y)】", arg.input.medium_count,    Object.entries(list.medium_co),    false);
-  calcSubSummary(ret, "【共有者 (x/y)】", arg.input.freemason_count, Object.entries(list.freemason_co), true);
-  calcSubSummary(ret, "【猫　又 (x/y)】", arg.input.werecat_count,   Object.entries(list.werecat_co),   true);
-  calcSubSummary(ret, "【狩　人 (x/y)】", arg.input.bodyguard_count, Object.entries(list.bodyguard_co), true);
+  calcSubSummary(ret, "<span class='seer'>【占い師 (x/y)】</span>", arg.input.seer_count,      Object.entries(list.seer_co),      false);
+  calcSubSummary(ret, "<span class='medium'>【霊能者 (x/y)】</span>", arg.input.medium_count,    Object.entries(list.medium_co),    false);
+  calcSubSummary(ret, "<span class='freemason'>【共有者 (x/y)】</span>", arg.input.freemason_count, Object.entries(list.freemason_co), true);
+  calcSubSummary(ret, "<span class='werecat'>【猫　又 (x/y)】</span>", arg.input.werecat_count,   Object.entries(list.werecat_co),   true);
+  calcSubSummary(ret, "<span class='bodyguard'>【狩　人 (x/y)】</span>", arg.input.bodyguard_count, Object.entries(list.bodyguard_co), true);
   // 村状況まとめ
   calcSubSummary(ret, "【生存者 (x)】", Object.entries(list.villager_live).length,  Object.entries(list.villager_live),  true);
   calcSubSummary(ret, "【完グレ (x)】", Object.entries(list.villager_gray).length,  Object.entries(list.villager_gray),  true);
@@ -235,11 +237,11 @@ function updateSummary(arg) {
   calcSubSummary(ret, "【村人● (x)】", Object.entries(list.villager_black).length, Object.entries(list.villager_black), true);
   calcSubSummary(ret, "【村○● (x)】", Object.entries(list.villager_panda).length, Object.entries(list.villager_panda), true);
   // 人外情報まとめ
-  calcSubSummary(ret, "【人　狼 (x/y)】", arg.input.werewolf_count, Object.entries(list.werewolf_mark), false);
-  calcSubSummary(ret, "【狂　人 (x/y)】", arg.input.posessed_count, Object.entries(list.posessed_mark), false);
-  calcSubSummary(ret, "【妖　狐 (x/y)】", arg.input.werefox_count,  Object.entries(list.werefox_mark),  false);
-  calcSubSummary(ret, "【子　狐 (x/y)】", arg.input.minifox_count,  Object.entries(list.minifox_mark),  false);
-  calcSubSummary(ret, "【人　外 (x/y)】", enemy_other_count,        Object.entries(list.enemy_mark),    false);
+  calcSubSummary(ret, "<span class='werewolf'>【人　狼 (x/y)】</span>", arg.input.werewolf_count, Object.entries(list.werewolf_mark), false);
+  calcSubSummary(ret, "<span class='posessed'>【狂　人 (x/y)】</span>", arg.input.posessed_count, Object.entries(list.posessed_mark), false);
+  calcSubSummary(ret, "<span class='werefox'>【妖　狐 (x/y)】</span>", arg.input.werefox_count,  Object.entries(list.werefox_mark),  false);
+  calcSubSummary(ret, "<span class='minifox'>【子　狐 (x/y)】</span>", arg.input.minifox_count,  Object.entries(list.minifox_mark),  false);
+  calcSubSummary(ret, "<span class='enemy'>【人　外 (x/y)】</span>", enemy_other_count,        Object.entries(list.enemy_mark),    false);
   // 死亡＆復活情報まとめ
   calcSubSummary(ret, "【吊り (x)】", voted_count,   voted,   true);
   calcSubSummary(ret, "【噛み (x)】", bitten_count,  bitten,  true);
