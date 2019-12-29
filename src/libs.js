@@ -88,6 +88,47 @@ function logTag_d2n(key_day) {
   return key_day;
 }
 
+function setColorClass(player_info){
+// input  : JSON Object : arg.input.each_player['target player']
+// output : String : CSS Class name. see sidebar.css
+  if (player_info === undefined || player_info === null) {
+    return;
+  }
+  // 人外被推理者の名前に色をつける
+  if (player_info.enemymark == "人外") {
+    return 'enemy';
+  }
+  if (player_info.enemymark == "人狼") {
+    return 'werewolf';
+  }
+  if (player_info.enemymark == "狂人") {
+    return 'posessed';
+  }
+  if (player_info.enemymark == "妖狐") {
+    return 'werefox';
+  }
+  if (player_info.enemymark == "子狐") {
+    return 'minifox';
+  }
+  // 役職CO者の名前に色をつける
+  if (player_info.comingout == "占い") {
+    return 'seer';
+  }
+  if (player_info.comingout == "霊能") {
+    return 'medium';
+  }
+  if (player_info.comingout == "狩人") {
+    return 'bodyguard';
+  }
+  if (player_info.comingout == "共有") {
+    return 'freemason';
+  }
+  if (player_info.comingout == "猫又") {
+    return 'werecat';
+  }
+  return '';
+}
+
 function makeComingOutList(arg) {
 // input  : JSON from Web Storage API
 // output : Object {

@@ -8,40 +8,6 @@ function updateVotes(arg) {
 //     <tr id="vote-from-from"><td>from</td><td>...</td><td alt="dayX(1):from->to">  to   </td><td>...</td></tr>
 //     <tr                    ><td>....</td><td>...</td><td alt="dayX(1):....->..">.......</td><td>...</td></tr>
 //    </tbody>
-  function setColorClass(player_info){
-    // 役職CO者の名前に色をつける
-    if (player_info.enemymark == "人外") {
-      return 'enemy';
-    }
-    if (player_info.enemymark == "人狼") {
-      return 'werewolf';
-    }
-    if (player_info.enemymark == "狂人") {
-      return 'posessed';
-    }
-    if (player_info.enemymark == "妖狐") {
-      return 'werefox';
-    }
-    if (player_info.enemymark == "子狐") {
-      return 'minifox';
-    }
-    if (player_info.comingout == "占い") {
-      return 'seer';
-    }
-    if (player_info.comingout == "霊能") {
-      return 'medium';
-    }
-    if (player_info.comingout == "狩人") {
-      return 'bodyguard';
-    }
-    if (player_info.comingout == "共有") {
-      return 'freemason';
-    }
-    if (player_info.comingout == "猫又") {
-      return 'werecat';
-    }
-    return '';
-  }
   var voted_title_list = [];
   var head = document.createElement('thead');
   var body = document.createElement('tbody');

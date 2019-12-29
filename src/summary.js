@@ -2,7 +2,7 @@ function updateSummary(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : -
   // Another output    : innerText of <div id="deduce-summary" />
-  var ret = [];
+  var ret = document.createElement('tbody');
 
   // 本日（最新日）の日付
   var datearray;
@@ -28,8 +28,12 @@ function updateSummary(arg) {
       bitten.push(["×", { comingout:"村人", enemymark:"村人" }]);
       // keep bitten_count
     } else {
-      bitten.push([arg.log[d].list_bitten.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-      bitten_count = bitten_count + arg.log[d].list_bitten.length;
+      var list_bitten_today = [];
+        arg.log[d].list_bitten.forEach(function(f){
+          list_bitten_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+        });
+      bitten.push([list_bitten_today.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+      bitten_count = bitten_count + list_bitten_today.length;
     }
 
     if (d == "2日目の朝となりました。") return;
@@ -38,20 +42,24 @@ function updateSummary(arg) {
       voted.push(["×", { comingout:"村人", enemymark:"村人" }]);
       // keep voted_count
     } else {
-      if (arg.log[d].list_cursed.length != 0) {
-        var v = arg.log[d].list_voted;
-        v.concat(arg.log[d].list_cursed);
-        voted.push([v.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-        voted_count = voted_count + v.length;
-      } else {
-        voted.push([arg.log[d].list_voted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-        voted_count = voted_count + arg.log[d].list_voted.length;
-      }
+      var list_voted_today = [];
+      arg.log[d].list_voted.forEach(function(f){
+        list_voted_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      });
+      arg.log[d].list_cursed.forEach(function(f){
+        list_voted_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      });
+      voted.push([list_voted_today.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+      voted_count = voted_count + list_voted_today.length;
     }
 
     if (arg.log[d].list_dnoted.length != 0) {
-      dnoted.push([arg.log[d].list_dnoted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-      dnoted_count = dnoted_count + arg.log[d].list_dnoted.length;
+      var list_dnoted_today = [];
+      arg.log[d].list_dnoted.forEach(function(f){
+        list_dnoted_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      });
+      dnoted.push([list_dnoted_today.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+      dnoted_count = dnoted_count + list_dnoted_today.length;
     } else if (dnoted.length != 0) {
       dnoted.push(["×", { comingout:"村人", enemymark:"村人" }]);
       // keep dnoted_count
@@ -61,8 +69,12 @@ function updateSummary(arg) {
       revived.push(["×", { comingout:"村人", enemymark:"村人" }]);
       // keep revived_count
     } else {
-      revived.push([arg.log[d].list_revived.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-      revived_count = revived_count + arg.log[d].list_revived.length;
+      var list_revived_today = [];
+      arg.log[d].list_revived.forEach(function(f){
+        list_revived_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      });
+      revived.push([list_revived_today.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+      revived_count = revived_count + list_revived_today.length;
     }
   });
 
@@ -100,7 +112,7 @@ function updateSummary(arg) {
   }
     
   // 占い視点グレー算出、まとめ表示
-  function extra_letter_base(player_name, player_info, separator, job_count, co_list) {
+  function extra_letter_base(player_name, player_info, separator, co_list) {
     var seer_gray_list = {};
     var seer_black_list = [];
     var duplicated_enemy_over_black = 0;
@@ -135,12 +147,16 @@ function updateSummary(arg) {
           if (ret != separator){
             ret = ret + ' → ';
           }
-          ret = ret + String(target) + String(result);
+          ret = ret + '<span class="' + setColorClass(arg.input.each_player[target]) + '">' + String(target) + String(result)+ '</span>';
         }
       }
     });
-    ret = ret + '\n　（視点グレー：' + Object.keys(seer_gray_list).join('、') + '）';
-    ret = ret + '\n　（視点人外数：' +
+    var seer_gray_name = [];
+    Object.keys(seer_gray_list).forEach(function(f){
+      seer_gray_name.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+    })
+    ret = ret + '<br />　（視点グレー：' + seer_gray_name.join('、') + '）';
+    ret = ret + '<br />　（視点人外数：' +
                         ' 潜伏' + String(enemy_all_count - 
                                          (seer_black_list.length + enemy_over_count - duplicated_enemy_over_black) - 
                                          (enemy_count - duplicated_enemy_found_black)) +
@@ -150,30 +166,32 @@ function updateSummary(arg) {
     return ret;
   }
   function extra_letter_seer(player_name, player_info) {
-    return extra_letter_base(player_name, player_info, '[占]', arg.input.seer_count,  list.seer_co);
+    return extra_letter_base(player_name, player_info, '[占]', list.seer_co);
   }
   function extra_letter_medium(player_name, player_info) {
-    return extra_letter_base(player_name, player_info, '[霊]', arg.input.medium_count,list.medium_co);
+    return extra_letter_base(player_name, player_info, '[霊]', list.medium_co);
   }
-  // usage : String = calcSubSummary(String, Number, Array of [key, value], function(String, Object))
+  // usage : calcSubSummary(parent_element, String, Number, Array of [key, value], function(String, Object))
   //            Object form: { comingout:"xxxx", enemymark:"xxxx" }
-  function calcSubSummary(index_str, max_count, menber_list, force_empty = false) {
-    var summary;
+  function calcSubSummary(parent_element, index_str, max_count, menber_list, force_empty = false) {
+    var summary = document.createElement('tr');
+    var summary_text = document.createElement('td');
+    summary.insertAdjacentElement('beforeend', summary_text);
 
     if (index_str.indexOf('(x/y)') != -1) {
       // index_str has "(x/y)" letters : x -> member_list.length, y -> max_count
       if (max_count <= 0) {
-        return '';
+        return;
       }
-      summary = [index_str.replace('(x/', '(' + menber_list.length + '/').replace('/y)', '/' + max_count + ')')];
+      summary_text.insertAdjacentHTML('beforeend', '<span>' + index_str.replace('(x/', '(' + menber_list.length + '/').replace('/y)', '/' + max_count + ')') + '</span>');
     } else if (index_str.indexOf('(x)') != -1) {
       // index_str has "(x)"   letters : x -> max_count
       if (max_count <= 0) {
-        return '';
+        return;
       }
-      summary = [index_str.replace('(x)', '(' + max_count + ')')];
+      summary_text.insertAdjacentHTML('beforeend', '<span>' + index_str.replace('(x)', '(' + max_count + ')') + '</span>');
     } else {
-      summary = [index_str];
+      summary_text.insertAdjacentHTML('beforeend', '<span>' + index_str + '</span>');
     }
     var seer_list   = [];
     var medium_list = [];
@@ -191,14 +209,14 @@ function updateSummary(arg) {
             seer_list.push(  m[0] + String(extra_letter_seer(m[0], m[1])));
           } else {
             var s = extra_letter_seer(m[0], m[1]);
-            seer_list.push(  m[0] + String(s.substr(0, s.indexOf('\n'))));
+            seer_list.push(  m[0] + String(s.substr(0, s.indexOf('<br />'))));
           }
         } else if (m[1].comingout == "霊能"){
           if (m[1].enemymark == "村人") {
             medium_list.push(m[0] + String(extra_letter_medium(m[0], m[1])));
           } else {
             var s = extra_letter_medium(m[0], m[1]);
-            seer_list.push(  m[0] + String(s.substr(0, s.indexOf('\n'))));
+            seer_list.push(  m[0] + String(s.substr(0, s.indexOf('<br />'))));
           }
         } else {
           other_list.push( m[0]);
@@ -206,40 +224,53 @@ function updateSummary(arg) {
       });
     }
 
-    summary = summary + other_list.join('、');
+    if (other_list.length >= 1) {
+      var other_name = [];
+      other_list.forEach(function(f){
+        other_name.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      })
+      summary_text.insertAdjacentHTML('beforeend', other_name.join('、'));
+    }
     if (seer_list.length >= 1) {
-      summary = summary + '\n　' + seer_list.join('\n　');
+      summary_text.insertAdjacentHTML('beforeend', '<br />　');
+      summary_text.insertAdjacentHTML('beforeend', '<span>' + seer_list.join('<br />　')   + '</span>');
     }
     if (medium_list.length >= 1) {
-      summary = summary + '\n　' + medium_list.join('\n　');
+      summary_text.insertAdjacentHTML('beforeend', '<br />　');
+      summary_text.insertAdjacentHTML('beforeend', '<span>' + medium_list.join('<br />　') + '</span>');
     }
-    return summary;
+
+    parent_element.insertAdjacentElement('beforeend', summary);
+    return;
   }
 
   // 村COまとめ
-  ret.push(calcSubSummary("【占い師 (x/y)】", arg.input.seer_count,      Object.entries(list.seer_co),      false));
-  ret.push(calcSubSummary("【霊能者 (x/y)】", arg.input.medium_count,    Object.entries(list.medium_co),    false));
-  ret.push(calcSubSummary("【共有者 (x/y)】", arg.input.freemason_count, Object.entries(list.freemason_co), true));
-  ret.push(calcSubSummary("【猫　又 (x/y)】", arg.input.werecat_count,   Object.entries(list.werecat_co),   true));
-  ret.push(calcSubSummary("【狩　人 (x/y)】", arg.input.bodyguard_count, Object.entries(list.bodyguard_co), true));
+  calcSubSummary(ret, "<span class='seer'>【占い師 (x/y)】</span>", arg.input.seer_count,      Object.entries(list.seer_co),      false);
+  calcSubSummary(ret, "<span class='medium'>【霊能者 (x/y)】</span>", arg.input.medium_count,    Object.entries(list.medium_co),    false);
+  calcSubSummary(ret, "<span class='freemason'>【共有者 (x/y)】</span>", arg.input.freemason_count, Object.entries(list.freemason_co), true);
+  calcSubSummary(ret, "<span class='werecat'>【猫　又 (x/y)】</span>", arg.input.werecat_count,   Object.entries(list.werecat_co),   true);
+  calcSubSummary(ret, "<span class='bodyguard'>【狩　人 (x/y)】</span>", arg.input.bodyguard_count, Object.entries(list.bodyguard_co), true);
   // 村状況まとめ
-  ret.push(calcSubSummary("【生存者 (x)】", Object.entries(list.villager_live).length,  Object.entries(list.villager_live),  true));
-  ret.push(calcSubSummary("【完グレ (x)】", Object.entries(list.villager_gray).length,  Object.entries(list.villager_gray),  true));
-  ret.push(calcSubSummary("【村人○ (x)】", Object.entries(list.villager_white).length, Object.entries(list.villager_white), true));
-  ret.push(calcSubSummary("【村人● (x)】", Object.entries(list.villager_black).length, Object.entries(list.villager_black), true));
-  ret.push(calcSubSummary("【村○● (x)】", Object.entries(list.villager_panda).length, Object.entries(list.villager_panda), true));
+  calcSubSummary(ret, "【生存者 (x)】", Object.entries(list.villager_live).length,  Object.entries(list.villager_live),  true);
+  calcSubSummary(ret, "【完グレ (x)】", Object.entries(list.villager_gray).length,  Object.entries(list.villager_gray),  true);
+  calcSubSummary(ret, "【村人○ (x)】", Object.entries(list.villager_white).length, Object.entries(list.villager_white), true);
+  calcSubSummary(ret, "【村人● (x)】", Object.entries(list.villager_black).length, Object.entries(list.villager_black), true);
+  calcSubSummary(ret, "【村○● (x)】", Object.entries(list.villager_panda).length, Object.entries(list.villager_panda), true);
   // 人外情報まとめ
-  ret.push(calcSubSummary("【人　狼 (x/y)】", arg.input.werewolf_count, Object.entries(list.werewolf_mark), false));
-  ret.push(calcSubSummary("【狂　人 (x/y)】", arg.input.posessed_count, Object.entries(list.posessed_mark), false));
-  ret.push(calcSubSummary("【妖　狐 (x/y)】", arg.input.werefox_count,  Object.entries(list.werefox_mark),  false));
-  ret.push(calcSubSummary("【子　狐 (x/y)】", arg.input.minifox_count,  Object.entries(list.minifox_mark),  false));
-  ret.push(calcSubSummary("【人　外 (x/y)】", enemy_other_count,        Object.entries(list.enemy_mark),    false));
+  calcSubSummary(ret, "<span class='werewolf'>【人　狼 (x/y)】</span>", arg.input.werewolf_count, Object.entries(list.werewolf_mark), false);
+  calcSubSummary(ret, "<span class='posessed'>【狂　人 (x/y)】</span>", arg.input.posessed_count, Object.entries(list.posessed_mark), false);
+  calcSubSummary(ret, "<span class='werefox'>【妖　狐 (x/y)】</span>", arg.input.werefox_count,  Object.entries(list.werefox_mark),  false);
+  calcSubSummary(ret, "<span class='minifox'>【子　狐 (x/y)】</span>", arg.input.minifox_count,  Object.entries(list.minifox_mark),  false);
+  calcSubSummary(ret, "<span class='enemy'>【人　外 (x/y)】</span>", enemy_other_count,        Object.entries(list.enemy_mark),    false);
   // 死亡＆復活情報まとめ
-  ret.push(calcSubSummary("【吊り (x)】", voted_count,   voted,   true));
-  ret.push(calcSubSummary("【噛み (x)】", bitten_count,  bitten,  true));
-  ret.push(calcSubSummary("【死体 (x)】", dnoted_count,  dnoted,  true));
-  ret.push(calcSubSummary("【復活 (x)】", revived_count, revived, true));
+  calcSubSummary(ret, "【吊り (x)】", voted_count,   voted,   true);
+  calcSubSummary(ret, "【噛み (x)】", bitten_count,  bitten,  true);
+  calcSubSummary(ret, "【死体 (x)】", dnoted_count,  dnoted,  true);
+  calcSubSummary(ret, "【復活 (x)】", revived_count, revived, true);
 
-  document.getElementById('deduce-summary').innerText = ret.filter(x => x.length > 0).join('\n');
+  var summary_table = document.createElement('table');
+  summary_table.insertAdjacentElement('beforeend', ret);
+  document.getElementById('deduce-summary').innerHTML = '';
+  document.getElementById('deduce-summary').insertAdjacentElement('beforeend', summary_table);
   return;
 };
