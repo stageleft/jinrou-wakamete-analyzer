@@ -100,7 +100,7 @@ function updateSummary(arg) {
   }
     
   // 占い視点グレー算出、まとめ表示
-  function extra_letter_base(player_name, player_info, separator, job_count, co_list) {
+  function extra_letter_base(player_name, player_info, separator, co_list) {
     var seer_gray_list = {};
     var seer_black_list = [];
     var duplicated_enemy_over_black = 0;
@@ -150,10 +150,10 @@ function updateSummary(arg) {
     return ret;
   }
   function extra_letter_seer(player_name, player_info) {
-    return extra_letter_base(player_name, player_info, '[占]', arg.input.seer_count,  list.seer_co);
+    return extra_letter_base(player_name, player_info, '[占]', list.seer_co);
   }
   function extra_letter_medium(player_name, player_info) {
-    return extra_letter_base(player_name, player_info, '[霊]', arg.input.medium_count,list.medium_co);
+    return extra_letter_base(player_name, player_info, '[霊]', list.medium_co);
   }
   // usage : calcSubSummary(parent_element, String, Number, Array of [key, value], function(String, Object))
   //            Object form: { comingout:"xxxx", enemymark:"xxxx" }
