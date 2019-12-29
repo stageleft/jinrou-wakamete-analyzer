@@ -139,7 +139,11 @@ function updateSummary(arg) {
         }
       }
     });
-    ret = ret + '<br />　（視点グレー：' + Object.keys(seer_gray_list).join('、') + '）';
+    var seer_gray_name = [];
+    Object.keys(seer_gray_list).forEach(function(f){
+      seer_gray_name.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+    })
+    ret = ret + '<br />　（視点グレー：' + seer_gray_name.join('、') + '）';
     ret = ret + '<br />　（視点人外数：' +
                         ' 潜伏' + String(enemy_all_count - 
                                          (seer_black_list.length + enemy_over_count - duplicated_enemy_over_black) - 
