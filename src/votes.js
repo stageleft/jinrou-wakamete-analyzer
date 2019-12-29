@@ -42,6 +42,7 @@ function updateVotes(arg) {
     }
     return '';
   }
+  var voted_title_list = [];
   var head = document.createElement('thead');
   var body = document.createElement('tbody');
 
@@ -50,10 +51,6 @@ function updateVotes(arg) {
   [datearray, base_date] = createDateArray(arg);
   for (var i = 0; i < datearray.length; i++) {
     var datestr = datearray[i];
-    if ((logTag_d2n(datestr) === datestr) && 
-        (datestr.match("夜となりました。$") === null)) {
-      continue;
-    }
     if ((arg.log[datestr] == null) ||
         (arg.log[datestr].vote_log == null) || 
         (arg.log[datestr].vote_log.length == 0)) {
@@ -159,30 +156,19 @@ function updateVotes(arg) {
       tr.insertAdjacentElement('beforeend', td);
       return tr;
     }
-    vote_log_count = 0;
     arg.log[datestr].vote_log.forEach(function(l, j){
-      if ((datestr != datearray[datearray.length - 1]) && 
-          (arg.log[datestr].vote_log[j].title.match(/^.*日目/)[0] == datestr.match(/^.*日目/)[0])){
-        return;
+      var vote_title = arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）';
+      if (voted_title_list.includes(vote_title) == true) {
+        return; // contiune arg.log[datestr].vote_log.forEach()
       }
-      vote_log_count = vote_log_count + 1;
+      voted_title_list.push(vote_title);
 
-      head.insertAdjacentElement('beforeend', proc_set_vote_date(arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）'));
+      head.insertAdjacentElement('beforeend', proc_set_vote_date(vote_title));
       var vote_count = proc_vote_count(l);
       l.vote.forEach(function(f){
         body.insertAdjacentElement('beforeend', proc_set_vote_result(f, vote_count));
       });
     });
-    // if passed log
-    if (vote_log_count == 0) {
-      arg.log[datestr].vote_log.forEach(function(l, j){
-        head.insertAdjacentElement('beforeend', proc_set_vote_date(arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）'));
-        var vote_count = proc_vote_count(l);
-        l.vote.forEach(function(f){
-          body.insertAdjacentElement('beforeend', proc_set_vote_result(f, vote_count));
-        });
-      });  
-    };
   }
 
   var table = document.createElement('table');
