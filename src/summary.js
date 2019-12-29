@@ -28,8 +28,12 @@ function updateSummary(arg) {
       bitten.push(["×", { comingout:"村人", enemymark:"村人" }]);
       // keep bitten_count
     } else {
-      bitten.push([arg.log[d].list_bitten.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-      bitten_count = bitten_count + arg.log[d].list_bitten.length;
+      var list_bitten_today = [];
+        arg.log[d].list_bitten.forEach(function(f){
+          list_bitten_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+        });
+      bitten.push([list_bitten_today.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+      bitten_count = bitten_count + list_bitten_today.length;
     }
 
     if (d == "2日目の朝となりました。") return;
@@ -38,20 +42,24 @@ function updateSummary(arg) {
       voted.push(["×", { comingout:"村人", enemymark:"村人" }]);
       // keep voted_count
     } else {
-      if (arg.log[d].list_cursed.length != 0) {
-        var v = arg.log[d].list_voted;
-        v.concat(arg.log[d].list_cursed);
-        voted.push([v.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-        voted_count = voted_count + v.length;
-      } else {
-        voted.push([arg.log[d].list_voted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-        voted_count = voted_count + arg.log[d].list_voted.length;
-      }
+      var list_voted_today = [];
+      arg.log[d].list_voted.forEach(function(f){
+        list_voted_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      });
+      arg.log[d].list_cursed.forEach(function(f){
+        list_voted_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      });
+      voted.push([list_voted_today.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+      voted_count = voted_count + list_voted_today.length;
     }
 
     if (arg.log[d].list_dnoted.length != 0) {
-      dnoted.push([arg.log[d].list_dnoted.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-      dnoted_count = dnoted_count + arg.log[d].list_dnoted.length;
+      var list_dnoted_today = [];
+      arg.log[d].list_dnoted.forEach(function(f){
+        list_dnoted_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      });
+      dnoted.push([list_dnoted_today.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+      dnoted_count = dnoted_count + list_dnoted_today.length;
     } else if (dnoted.length != 0) {
       dnoted.push(["×", { comingout:"村人", enemymark:"村人" }]);
       // keep dnoted_count
@@ -61,8 +69,12 @@ function updateSummary(arg) {
       revived.push(["×", { comingout:"村人", enemymark:"村人" }]);
       // keep revived_count
     } else {
-      revived.push([arg.log[d].list_revived.join('＆'), { comingout:"村人", enemymark:"村人" }]);
-      revived_count = revived_count + arg.log[d].list_revived.length;
+      var list_revived_today = [];
+      arg.log[d].list_revived.forEach(function(f){
+        list_revived_today.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      });
+      revived.push([list_revived_today.join('＆'), { comingout:"村人", enemymark:"村人" }]);
+      revived_count = revived_count + list_revived_today.length;
     }
   });
 
@@ -213,7 +225,11 @@ function updateSummary(arg) {
     }
 
     if (other_list.length >= 1) {
-      summary_text.insertAdjacentHTML('beforeend', '<span>' + other_list.join('、') + '</span>');
+      var other_name = [];
+      other_list.forEach(function(f){
+        other_name.push('<span class="' + setColorClass(arg.input.each_player[f]) + '">' + f + '</span>');
+      })
+      summary_text.insertAdjacentHTML('beforeend', other_name.join('、'));
     }
     if (seer_list.length >= 1) {
       summary_text.insertAdjacentHTML('beforeend', '<br />　');

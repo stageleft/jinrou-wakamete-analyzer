@@ -50,3 +50,7 @@ CN「CV:若本規夫」「e+」の2名が、 #104 の問題に引っかかる。
   子狐入り。
 * http://jinrou.dip.jp/~jinrou/kako/153281.html 【モバマス】異世界なろう系さいつよ主人公村
   CN「炎上夢見.net」が、 #104 の問題に引っかかる。
+* http://jinrou.dip.jp/~jinrou/kako/153332.html ファミ通の攻略本村
+  猫又の呪いあり。 #58 の問題確認用。
+* http://jinrou.dip.jp/~jinrou/kako/153253.html 燐寸の蜃気楼村
+  死神手帳入り。
