@@ -218,10 +218,7 @@ function event_click_comments(arg) {
 }
 function event_click_summary(arg) {
   if (arg != null) {
-    var o = arg.srcElement;
-    while (o.tagName.toLowerCase() != "div") {
-      o = o.parentElement;
-    }
+    var o = document.getElementById("deduce-summary");
     // copy result
     var v = document.getElementById("freememo").value;
     v = v + "\n" + o.innerText;
