@@ -135,7 +135,7 @@ function updateSummary(arg) {
           if (ret != separator){
             ret = ret + ' → ';
           }
-          ret = ret + String(target) + String(result);
+          ret = ret + '<span class="' + setColorClass(arg.input.each_player[target]) + '">' + String(target) + String(result)+ '</span>';
         }
       }
     });
