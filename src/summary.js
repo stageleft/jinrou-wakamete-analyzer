@@ -2,7 +2,7 @@ function updateSummary(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : -
   // Another output    : innerText of <div id="deduce-summary" />
-  var ret = [];
+  var ret = document.createElement('tbody');
 
   // 本日（最新日）の日付
   var datearray;
@@ -158,22 +158,24 @@ function updateSummary(arg) {
   // usage : String = calcSubSummary(String, Number, Array of [key, value], function(String, Object))
   //            Object form: { comingout:"xxxx", enemymark:"xxxx" }
   function calcSubSummary(index_str, max_count, menber_list, force_empty = false) {
-    var summary;
+    var summary = document.createElement('tr');
+    var summary_text = document.createElement('td');
+    summary.insertAdjacentElement('beforeend', summary_text);
 
     if (index_str.indexOf('(x/y)') != -1) {
       // index_str has "(x/y)" letters : x -> member_list.length, y -> max_count
       if (max_count <= 0) {
-        return '';
+        return summary;
       }
-      summary = [index_str.replace('(x/', '(' + menber_list.length + '/').replace('/y)', '/' + max_count + ')')];
+      summary_text.innerText = [index_str.replace('(x/', '(' + menber_list.length + '/').replace('/y)', '/' + max_count + ')')];
     } else if (index_str.indexOf('(x)') != -1) {
       // index_str has "(x)"   letters : x -> max_count
       if (max_count <= 0) {
-        return '';
+        return summary;
       }
-      summary = [index_str.replace('(x)', '(' + max_count + ')')];
+      summary_text.innerText = [index_str.replace('(x)', '(' + max_count + ')')];
     } else {
-      summary = [index_str];
+      summary_text.innerText = [index_str];
     }
     var seer_list   = [];
     var medium_list = [];
@@ -206,40 +208,43 @@ function updateSummary(arg) {
       });
     }
 
-    summary = summary + other_list.join('、');
+    summary_text.innerText = summary_text.innerText + other_list.join('、');
     if (seer_list.length >= 1) {
-      summary = summary + '\n　' + seer_list.join('\n　');
+      summary_text.innerText = summary_text.innerText + '\n　' + seer_list.join('\n　');
     }
     if (medium_list.length >= 1) {
-      summary = summary + '\n　' + medium_list.join('\n　');
+      summary_text.innerText = summary_text.innerText + '\n　' + medium_list.join('\n　');
     }
     return summary;
   }
 
   // 村COまとめ
-  ret.push(calcSubSummary("【占い師 (x/y)】", arg.input.seer_count,      Object.entries(list.seer_co),      false));
-  ret.push(calcSubSummary("【霊能者 (x/y)】", arg.input.medium_count,    Object.entries(list.medium_co),    false));
-  ret.push(calcSubSummary("【共有者 (x/y)】", arg.input.freemason_count, Object.entries(list.freemason_co), true));
-  ret.push(calcSubSummary("【猫　又 (x/y)】", arg.input.werecat_count,   Object.entries(list.werecat_co),   true));
-  ret.push(calcSubSummary("【狩　人 (x/y)】", arg.input.bodyguard_count, Object.entries(list.bodyguard_co), true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【占い師 (x/y)】", arg.input.seer_count,      Object.entries(list.seer_co),      false));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【霊能者 (x/y)】", arg.input.medium_count,    Object.entries(list.medium_co),    false));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【共有者 (x/y)】", arg.input.freemason_count, Object.entries(list.freemason_co), true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【猫　又 (x/y)】", arg.input.werecat_count,   Object.entries(list.werecat_co),   true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【狩　人 (x/y)】", arg.input.bodyguard_count, Object.entries(list.bodyguard_co), true));
   // 村状況まとめ
-  ret.push(calcSubSummary("【生存者 (x)】", Object.entries(list.villager_live).length,  Object.entries(list.villager_live),  true));
-  ret.push(calcSubSummary("【完グレ (x)】", Object.entries(list.villager_gray).length,  Object.entries(list.villager_gray),  true));
-  ret.push(calcSubSummary("【村人○ (x)】", Object.entries(list.villager_white).length, Object.entries(list.villager_white), true));
-  ret.push(calcSubSummary("【村人● (x)】", Object.entries(list.villager_black).length, Object.entries(list.villager_black), true));
-  ret.push(calcSubSummary("【村○● (x)】", Object.entries(list.villager_panda).length, Object.entries(list.villager_panda), true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【生存者 (x)】", Object.entries(list.villager_live).length,  Object.entries(list.villager_live),  true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【完グレ (x)】", Object.entries(list.villager_gray).length,  Object.entries(list.villager_gray),  true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【村人○ (x)】", Object.entries(list.villager_white).length, Object.entries(list.villager_white), true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【村人● (x)】", Object.entries(list.villager_black).length, Object.entries(list.villager_black), true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【村○● (x)】", Object.entries(list.villager_panda).length, Object.entries(list.villager_panda), true));
   // 人外情報まとめ
-  ret.push(calcSubSummary("【人　狼 (x/y)】", arg.input.werewolf_count, Object.entries(list.werewolf_mark), false));
-  ret.push(calcSubSummary("【狂　人 (x/y)】", arg.input.posessed_count, Object.entries(list.posessed_mark), false));
-  ret.push(calcSubSummary("【妖　狐 (x/y)】", arg.input.werefox_count,  Object.entries(list.werefox_mark),  false));
-  ret.push(calcSubSummary("【子　狐 (x/y)】", arg.input.minifox_count,  Object.entries(list.minifox_mark),  false));
-  ret.push(calcSubSummary("【人　外 (x/y)】", enemy_other_count,        Object.entries(list.enemy_mark),    false));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【人　狼 (x/y)】", arg.input.werewolf_count, Object.entries(list.werewolf_mark), false));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【狂　人 (x/y)】", arg.input.posessed_count, Object.entries(list.posessed_mark), false));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【妖　狐 (x/y)】", arg.input.werefox_count,  Object.entries(list.werefox_mark),  false));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【子　狐 (x/y)】", arg.input.minifox_count,  Object.entries(list.minifox_mark),  false));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【人　外 (x/y)】", enemy_other_count,        Object.entries(list.enemy_mark),    false));
   // 死亡＆復活情報まとめ
-  ret.push(calcSubSummary("【吊り (x)】", voted_count,   voted,   true));
-  ret.push(calcSubSummary("【噛み (x)】", bitten_count,  bitten,  true));
-  ret.push(calcSubSummary("【死体 (x)】", dnoted_count,  dnoted,  true));
-  ret.push(calcSubSummary("【復活 (x)】", revived_count, revived, true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【吊り (x)】", voted_count,   voted,   true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【噛み (x)】", bitten_count,  bitten,  true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【死体 (x)】", dnoted_count,  dnoted,  true));
+  ret.insertAdjacentElement('beforeend', calcSubSummary("【復活 (x)】", revived_count, revived, true));
 
-  document.getElementById('deduce-summary').innerText = ret.filter(x => x.length > 0).join('\n');
+  var summary_table = document.createElement('table');
+  summary_table.insertAdjacentElement('beforeend', ret);
+  document.getElementById('deduce-summary').innerHTML = '';
+  document.getElementById('deduce-summary').insertAdjacentElement('beforeend', summary_table);
   return;
 };
