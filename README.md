@@ -177,7 +177,6 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
 
 # Bugs that cannot be fixed （ざんねんな仕様）
 
-* 推理表に表示された死亡理由にて、最終日吊られが突然死で表示される。 https://github.com/stageleft/jinrou-wakamete-analyzer/issues/16
 * 直前の昼に吊られた人を、推理表で占いの対象にできる。 https://github.com/stageleft/jinrou-wakamete-analyzer/issues/46
 * 名前に特別な半角記号が入っている場合、投票まとめが働かないことがある（都度のバージョンアップで修正可能だが、修正には「特別な半角記号」を特定する必要がある）。 https://github.com/stageleft/jinrou-wakamete-analyzer/issues/104
 
