@@ -183,7 +183,9 @@ function updateSummary(arg) {
       if (max_count <= 0) {
         return;
       }
-      summary_text.insertAdjacentHTML('beforeend', '<span>' + index_str.replace('(x/', '(' + menber_list.length + '/').replace('/y)', '/' + max_count + ')') + '</span>');
+      var tmp = document.createElement('span');
+      tmp.innerText = index_str.replace('(x/', '(' + menber_list.length + '/').replace('/y)', '/' + max_count + ')');
+      summary_text.insertAdjacentElement('beforeend', tmp);
     } else if (index_str.indexOf('(x)') != -1) {
       // index_str has "(x)"   letters : x -> max_count
       if (max_count <= 0) {
