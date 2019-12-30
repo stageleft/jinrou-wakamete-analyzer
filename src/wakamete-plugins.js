@@ -57,6 +57,8 @@ function onRefreshView(event) {
       // console.log ('Try Refresh.');
       // form.action="cgi_jinro.cgi";
       // form.method="POST";
+      text.setAttribute("disabled");
+      text.setAttribute("style", "background-color:gray");
       form.submit();
     }
   } catch (e) {
