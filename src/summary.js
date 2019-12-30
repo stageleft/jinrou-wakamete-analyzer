@@ -191,9 +191,13 @@ function updateSummary(arg) {
       if (max_count <= 0) {
         return;
       }
-      summary_text.insertAdjacentHTML('beforeend', '<span>' + index_str.replace('(x)', '(' + max_count + ')') + '</span>');
+      var tmp = document.createElement('span');
+      tmp.innerText = index_str.replace('(x)', '(' + max_count + ')');
+      summary_text.insertAdjacentElement('beforeend', tmp);
     } else {
-      summary_text.insertAdjacentHTML('beforeend', '<span>' + index_str + '</span>');
+      var tmp = document.createElement('span');
+      tmp.innerText = index_str;
+      summary_text.insertAdjacentElement('beforeend', tmp);
     }
     var seer_list   = [];
     var medium_list = [];
