@@ -57,6 +57,7 @@ function onRefreshView(event) {
       // console.log ('Try Refresh.');
       // form.action="cgi_jinro.cgi";
       // form.method="POST";
+      text.setAttribute("disabled", "disabled");
       form.submit();
     }
   } catch (e) {
@@ -78,7 +79,7 @@ document.onscroll = function(){
     }
   } catch (e) {
     localStorage.removeItem("page_ypos");
-    console.log ('Ignore refresh. No COMMAND,CMBPLAYER,TXTMSG is defined.');
+    console.log ('Ignore scroll_pos saving. No TXTMSG is defined.');
     // ignore e.
   }
 };
