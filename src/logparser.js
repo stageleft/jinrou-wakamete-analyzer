@@ -374,12 +374,14 @@ function html2log(arg) {
     Object.keys(current_day_log).forEach(function(k){
       ret[datearray[0]][k] = ret[datearray[0]][k].concat(current_day_log[k]);
     });
+    ret[datearray[0]].vote_log = ret[datearray[0]].vote_log.reverse();
   } else if ((datearray.length == 2) && (current_day_log.vote_log.length == 0)) {
     // nighttime log
     Object.keys(current_day_log).forEach(function(k){
       ret[datearray[0]][k] = ret[datearray[0]][k].concat(ret[datearray[1]][k]).concat(current_day_log[k]);
     });
     delete ret[datearray[1]];
+    ret[datearray[0]].vote_log = ret[datearray[0]].vote_log.reverse();
   } else {
     if (current_day_log.comments.length > 0) {
       datearray.push("１日目の朝となりました。");
