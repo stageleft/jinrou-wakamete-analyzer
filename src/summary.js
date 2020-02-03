@@ -135,7 +135,11 @@ function updateSummary(arg) {
   function extra_letter_base(player_name, player_info, separator, co_list, is_calc_gray) {
     var seer_gray_list = {};
     var seer_black_list = [];
-    var duplicated_enemy_over_black = 0;
+    var duplicated_enemy_seer_black = 0;
+    var duplicated_enemy_medium_black = 0;
+    var duplicated_enemy_freemason_black = 0;
+    var duplicated_enemy_werecat_black = 0;
+    var duplicated_enemy_bodyguard_black = 0;
     var duplicated_enemy_found_black = 0;
     Object.assign(seer_gray_list, list.villager_live);
 
@@ -153,10 +157,33 @@ function updateSummary(arg) {
           delete seer_gray_list[target];
           if (result != "" && result != "○") {
             seer_black_list.push(target);
-            // ●兼対抗の重複排除
-            if (co_list[target] != null) {
-              duplicated_enemy_over_black = duplicated_enemy_over_black + 1;
+            // ●兼別役職CO者の重複排除（重複排除数は、偽CO数を上限とする）
+            if (list.seer_co[target] != null) {
+              if (duplicated_enemy_seer_black < Object.keys(list.seer_co).length - arg.input.seer_count) {
+                duplicated_enemy_seer_black = duplicated_enemy_seer_black + 1;
+              }
             }
+            if (list.medium_co[target] != null) {
+              if (duplicated_enemy_medium_black < Object.keys(list.medium_co).length - arg.input.medium_count) {
+                duplicated_enemy_medium_black = duplicated_enemy_medium_black + 1;
+              }
+            }
+            if (list.freemason_co[target] != null) {
+              if (duplicated_enemy_freemason_black < Object.keys(list.freemason_co).length - arg.input.freemason_count) {
+                duplicated_enemy_freemason_black = duplicated_enemy_freemason_black + 1;
+              }
+            }
+            if (list.werecat_co[target] != null) {
+              if (duplicated_enemy_werecat_black < Object.keys(list.werecat_co).length - arg.input.werecat_count) {
+                duplicated_enemy_werecat_black = duplicated_enemy_werecat_black + 1;
+              }
+            }
+            if (list.bodyguard_co[target] != null) {
+              if (duplicated_enemy_bodyguard_black < Object.keys(list.bodyguard_co).length - arg.input.bodyguard_count) {
+                duplicated_enemy_bodyguard_black = duplicated_enemy_bodyguard_black + 1;
+              }
+            }
+          
             // ●兼推理人外の重複排除
             if ((list.werewolf_mark[target] != null) ||
                 (list.posessed_mark[target] != null) ||
@@ -178,6 +205,11 @@ function updateSummary(arg) {
         }
       }
     });
+    var duplicated_enemy_over_black = duplicated_enemy_seer_black + 
+                                      duplicated_enemy_medium_black +
+                                      duplicated_enemy_freemason_black +
+                                      duplicated_enemy_werecat_black +
+                                      duplicated_enemy_bodyguard_black;
 
     if (is_calc_gray == true) {
       ret.insertAdjacentElement('beforeend', document.createElement('br'));
