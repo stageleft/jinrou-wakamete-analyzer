@@ -98,4 +98,4 @@ try {
 };
 setTimeout(onRefreshView, 10000);
 
-setInterval(onLogLoad, 1000);
+setInterval(onLogLoad, 300);
