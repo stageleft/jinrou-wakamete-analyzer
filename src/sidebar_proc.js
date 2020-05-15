@@ -2,6 +2,10 @@ var recvLog_lock = false;
 var comment_id   = null;
 var village_number = null;
 
+// memory area to store values
+var stored_value  = {};
+var sored_raw_log = {};
+
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
 function recvLog_proc(request, sender, sendResponse) {
 // input  : JSON
@@ -16,15 +20,18 @@ function recvLog_proc(request, sender, sendResponse) {
     return;
   };
 
-  // Load from Web Storaget API
-  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")));
-  if ( value == null ) {
-    value = {};
+  // Load from memory area or Web Storaget API
+  if (stored_value === {}) {
+    stored_value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info"))) || {};
   }
-  var raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_raw_log")));
-  if ( raw_log == null ) {
-    raw_log = {};
+  var value             = JSON.parse(JSON.stringify(stored_value)); // deep copy
+  var stored_value_prev = JSON.parse(JSON.stringify(stored_value)); // deep copy
+
+  if (stored_raw_log === {}) {
+    stored_raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_raw_log")));
   }
+  var raw_log             = JSON.parse(JSON.stringify(stored_raw_log)); // deep copy
+  var stored_raw_log_prev = JSON.parse(JSON.stringify(stored_raw_log)); // deep copy
 
   // Parse and Update wakamete village log
   var is_same_village = true;
@@ -112,21 +119,52 @@ function recvLog_proc(request, sender, sendResponse) {
     console.log(e.stack);
   }
 
-  // save to Web Storaget API
-  if (Object.keys(value).length > 8) { // preserve log : newest 8 villages by Village ID
+  // save to memory area
+  stored_value   = JSON.parse(JSON.stringify(value));   // deep copy
+  stored_raw_log = JSON.parse(JSON.stringify(raw_log)); // deep copy
+
+  // save raw_log to Web Storaget API
+  if (Object.keys(stored_raw_log).length > 8) { // preserve log : newest 8 villages by Village ID
     var minimum_key = null;
-    Object.keys(value).forEach(function(v){
+    Object.keys(stored_raw_log).forEach(function(v){
       if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
         minimum_key = v;
       }
     });
     if (minimum_key != village_number) {
-      delete value[minimum_key];
-      delete raw_log[minimum_key];
+      delete stored_raw_log[minimum_key];
+      delete stored_raw_log_prev[minimum_key];
     }
   }
-  window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(value)));
-  window.localStorage.setItem("wakamete_village_raw_log", encodeURIComponent(JSON.stringify(raw_log)));
+  try {
+    if (JSON.stringify(stored_raw_log).length > JSON.stringify(stored_raw_log_prev).length) {
+      window.localStorage.setItem("wakamete_village_raw_log", encodeURIComponent(JSON.stringify(stored_raw_log)));
+    }
+  } catch (e) {
+    console.log ('raw_log save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack);
+    // nop : ignore disk write error
+  }
+  // save value to Web Storaget API
+  if (Object.keys(stored_value).length > 8) { // preserve log : newest 8 villages by Village ID
+    var minimum_key = null;
+    Object.keys(stored_value).forEach(function(v){
+      if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
+        minimum_key = v;
+      }
+    });
+    if (minimum_key != village_number) {
+      delete stored_value[minimum_key];
+    }
+  }
+  try {
+    if (JSON.stringify(stored_value) !== JSON.stringify(stored_value_prev)) {
+      window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(stored_value)));
+    }
+  } catch {
+    console.log ('raw_log save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack);
+    // nop : ignore disk write error
+  }
+
 
   recvLog_lock = false;
   sendResponse({response: "OK"});
