@@ -3,8 +3,8 @@ var comment_id   = null;
 var village_number = null;
 
 // memory area to store values
-var stored_value  = {};
-var sored_raw_log = {};
+var stored_value   = {};
+var stored_raw_log = {};
 
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
 function recvLog_proc(request, sender, sendResponse) {
@@ -28,7 +28,7 @@ function recvLog_proc(request, sender, sendResponse) {
   var stored_value_prev = JSON.parse(JSON.stringify(stored_value)); // deep copy
 
   if (stored_raw_log === {}) {
-    stored_raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_raw_log")));
+    stored_raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_raw_log"))) || {};
   }
   var raw_log             = JSON.parse(JSON.stringify(stored_raw_log)); // deep copy
   var stored_raw_log_prev = JSON.parse(JSON.stringify(stored_raw_log)); // deep copy
@@ -164,7 +164,6 @@ function recvLog_proc(request, sender, sendResponse) {
     console.log ('raw_log save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack);
     // nop : ignore disk write error
   }
-
 
   recvLog_lock = false;
   sendResponse({response: "OK"});
