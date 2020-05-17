@@ -91,7 +91,7 @@ function updateVotes(arg) {
       var from_person = f.from_villager.trim();
       var to_person = f.to_villager.trim();
       // TODO: replace元の文字クラスを特定する。 issue #104 クローズ後の残件であり、１文字ごとにissue化する。
-      var tr = body.querySelector('#vote-from-' + from_person.replace(/([\.:+])/g, '\\$1'));
+      var tr = body.querySelector('#vote-from-' + from_person.replace(/([\.:+#])/g, '\\$1'));
 
       // <td><b>ｽｺﾞｲｶﾀｲｱｲｽ</b>さん</td><td>0 票</td><td>投票先 → <b>結城蜜柑</b>さん</td>
       // ｽｺﾞｲｶﾀｲｱｲｽさん	0 票	投票先 → 結城蜜柑さん
