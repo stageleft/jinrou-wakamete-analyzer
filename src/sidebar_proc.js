@@ -178,9 +178,13 @@ function event_click_deduce(arg) {
     if ( o.tagName.toLowerCase() == "a" ) {
       var id = o.getAttribute('id');
 
+      if (stored_value === {}) {
+        stored_value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info"))) || {};
+      }
+      var value = JSON.parse(JSON.stringify(stored_value[village_number])); // deep copy
+    
       if (id.indexOf('log') != -1){
         //// create comment-summary
-        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
         updateCommentLog(value, id);
         comment_id = id;
 
@@ -194,7 +198,6 @@ function event_click_deduce(arg) {
         document.getElementById("summary-field").scrollLeft = 0;
       } else if(id.indexOf('vote') != -1) {
         //// create vote-summary
-        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
         updateVotes(value);
 
         //// show vote-summary
@@ -268,7 +271,11 @@ function checkbox_change(arg) {
   document.getElementById("deduce").scrollLeft = 0;
 }
 function output_memo_template(arg) {
-  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
+  if (stored_value === {}) {
+    stored_value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info"))) || {};
+  }
+  var value = JSON.parse(JSON.stringify(stored_value[village_number])); // deep copy
+
   var id = arg.srcElement.getAttribute('id');
   var v = document.getElementById("freememo").value;
   if (id.indexOf('template-seer') != -1) {
