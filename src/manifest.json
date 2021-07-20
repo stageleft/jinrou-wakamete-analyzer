@@ -19,8 +19,8 @@
 
   "content_scripts": [
     {
-      "matches": ["*://jinrou.dip.jp/~jinrou/cgi_jinro.cgi*",
-                  "*://jinrou.dip.jp/~jinrou/kako/*.html",
+      "matches": ["*://*/~jinrou/cgi_jinro.cgi*",
+                  "*://*/~jinrou/kako/*.html",
                   "file:///*/jinrou-wakamete-analyzer.debug-data/sample/*.html"],
       "js": ["wakamete-plugins.js"]
     }
