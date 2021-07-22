@@ -1,10 +1,10 @@
 # about Jinrou-Wakamete-Analyzer
 
-Support tool for online "Are You a Werewolf?" game in Wakamete Server ( http://124.32.233.3/~jinrou/ ).
+Support tool for online "Are You a Werewolf?" game in Wakamete Server ( http://jinrou.aa0.netvolante.jp/~jinrou/ ).
 You get easier to correct and analyze Chat Log.
 It is Sidebar Plugins for Mozilla Firefox.
 
-Firefoxのサイドバーを用いた、人狼ゲーム・わかめて鯖 http://124.32.233.3/~jinrou/ 向けログリアルタイム分析ツール。
+Firefoxのサイドバーを用いた、人狼ゲーム・わかめて鯖 http://jinrou.aa0.netvolante.jp/~jinrou/ 向けログリアルタイム分析ツール。
 
 # Support Language
 
@@ -64,7 +64,7 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
 
 ## 基本的な使い方・村参加時の推理サポート
 
-スクリーンショットは、 村（１５３５３５番【モバマス】年の瀬村 http://124.32.233.3/~jinrou/kako/153535.html ）の状況である（デバッグモードにて作成）。
+スクリーンショットは、 村（１５３５３５番【モバマス】年の瀬村 http://jinrou.aa0.netvolante.jp/~jinrou/kako/153535.html ）の状況である（デバッグモードにて作成）。
 
 1. サイドバーを表示する（下図）。  
    サイドバー上部の「Go To 「汝は人狼なりや？」続わかめてエディション」をクリックすることで、同サイトのフレームなし版にアクセスする。
@@ -165,7 +165,7 @@ https://addons.mozilla.org/ja/firefox/addon/jinrou-wakamete-analyzer/ からイ�
 
 ## 応用的な使い方・村の過去ログを読む
 
-スクリーンショットは、 村（１５３２５４番【モバマス】風林火山村 http://124.32.233.3/~jinrou/kako/153254.html ）の状況である。
+スクリーンショットは、 村（１５３２５４番【モバマス】風林火山村 http://jinrou.aa0.netvolante.jp/~jinrou/kako/153254.html ）の状況である。
 
 1. 村の過去ログを表示する。サイドバーから行く必要は特にない。
 1. 基本的な使い方と同様に、推理表や状況表示領域を活用しながら読んでいく。   
@@ -196,7 +196,7 @@ Mozilla Public License Version 2.0 に従った範囲で、自由に改造して
 # Special Thanks
 
 * ｢汝は人狼なりや？｣続わかめてエディション サーバー管理者およびWiki管理者各位  
-  http://124.32.233.3/~jinrou/
+  http://jinrou.aa0.netvolante.jp/~jinrou/
 * 「わかめてモバマス人狼」GMおよび参加者各位  
   https://twitter.com/mobamasjinrou  
   https://wikiwiki.jp/cinderejinro/
