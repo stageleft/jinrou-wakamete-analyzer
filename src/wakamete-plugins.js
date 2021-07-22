@@ -1,23 +1,38 @@
-try {
-  document.getElementsByName('TXTMSG')[0].oninput = function(){
-    var text = document.getElementsByName('TXTMSG')[0];
-    var is_logBroken = false;
-    text.value.split(/\n/).forEach(function(l){
-      if (l.length > 40) {
-        is_logBroken = true;
-      }
-    });
-    if( is_logBroken == true ){
-      text.setAttribute("style", "background-color:pink");
-    } else {
-      text.removeAttribute("style");
+// value
+const URL_TOP_literal = /^http:\/\/.*\/~jinrou\/(|index.html)$/g;
+
+// setTextAreaAlertColor
+function setTextAreaAlertColor(text){
+  var is_logBroken = false;
+  text.value.split(/\n/).forEach(function(l){
+    if (l.length > 40) {
+      is_logBroken = true;
     }
-  };
+  });
+  if ( is_logBroken == true ) {
+    text.setAttribute("style", "background-color:pink");
+  } else {
+    text.removeAttribute("style");
+  }
+}
+try {
+  var log_document;
+  if (document.URL.match(URL_TOP_literal)) {
+    log_document = top[1].document;
+  } else {
+    log_document = top.document;
+  }
+  if (log_document.getElementsByName('TXTMSG').length == 1) {
+    log_document.getElementsByName('TXTMSG')[0].oninput = function() {
+      setTextAreaAlertColor(log_document.getElementsByName('TXTMSG')[0]);
+    }  
+  }
 } catch(e) {
   console.log(e.name + ':' + e.message);
   console.log(e.stack);
 };
 
+// onLogLoad
 function handleResponse(message){
   // nop.
 }
@@ -25,7 +40,13 @@ function handleError(error){
   // nop.
 }
 function onLogLoad(event) {
-  var target = document.getElementsByTagName("form").item(0);
+  var log_document;
+  if (document.URL.match(URL_TOP_literal)) {
+    log_document = top[1].document;
+  } else {
+    log_document = top.document;
+  }
+  var target = log_document.getElementsByTagName("form").item(0);
 
   var village_log_html = JSON.parse(JSON.stringify(target.innerHTML));
   var village_msg = { html_log: village_log_html};
@@ -33,12 +54,19 @@ function onLogLoad(event) {
   send_object.then(handleResponse, handleError);
 }
 
+// onRefreshView
 function onRefreshView(event) {
   try {
-    var command = document.getElementsByName('COMMAND')[0];
-    var target  = document.getElementsByName('CMBPLAYER')[0];
-    var text    = document.getElementsByName('TXTMSG')[0];
-    var form    = document.querySelector('form');
+    var log_document;
+    if (document.URL.match(URL_TOP_literal)) {
+      log_document = top[1].document;
+    } else {
+      log_document = top.document;
+    }
+    var command = log_document.getElementsByName('COMMAND')[0];
+    var target  = log_document.getElementsByName('CMBPLAYER')[0];
+    var text    = log_document.getElementsByName('TXTMSG')[0];
+    var form    = log_document.querySelector('form');
 
     if (text.value.length >= 1) {
       console.log ('Ignore refresh. TXTMSG has any messsage.');
@@ -63,17 +91,30 @@ function onRefreshView(event) {
     // ignore e.
   }
 }
-document.onscroll = function(){
+var log_document;
+if (document.URL.match(URL_TOP_literal)) {
+  log_document = top[1].document;
+} else {
+  log_document = top.document;
+}
+log_document.onscroll = function(){
+  var log_window;
+  if (window.location.href.match(URL_TOP_literal)) {
+    log.console(top.window)
+    log_window = top[1].window;
+  } else {
+    log_window = top.window;
+  }
   try {
-    var text = document.getElementsByName('TXTMSG')[0];
+    var text = log_document.getElementsByName('TXTMSG')[0];
     if (text.getBoundingClientRect()['y'] < 0) {
-      window.localStorage.setItem("page_ypos",
+      log_window.localStorage.setItem("page_ypos",
                                   JSON.stringify({from:"end",
-                                                  pos:String(window.innerHeight + window.scrollMaxY - window.pageYOffset)}));
+                                                  pos:String(log_window.innerHeight + log_window.scrollMaxY - log_window.pageYOffset)}));
     } else {
-      window.localStorage.setItem("page_ypos",
+      log_window.localStorage.setItem("page_ypos",
                                   JSON.stringify({from:"start",
-                                                  pos:String(window.pageYOffset)}));
+                                                  pos:String(log_window.pageYOffset)}));
     }
   } catch (e) {
     localStorage.removeItem("page_ypos");
@@ -82,15 +123,21 @@ document.onscroll = function(){
   }
 };
 try {
-  var y = JSON.parse(window.localStorage.getItem("page_ypos"));
-  var f = y.from;
-  var s = y.pos;
-  if (f == "end") {
-    window.scrollTo(0, window.innerHeight + window.scrollMaxY - s);
-  } else if (f == "start") {
-    window.scrollTo(0, s);
+  var log_window;
+  if (window.location.href.match(URL_TOP_literal)) {
+    log_window = top[1].window;
   } else {
-    window.scrollTo(0, 0);
+    log_window = top.window;
+  }
+  var y = JSON.parse(log_window.localStorage.getItem("page_ypos"));
+  var f = (y != null) ? y.from : "";
+  var s = (y != null) ? y.pos  : "";
+  if (f == "end") {
+    log_window.scrollTo(0, log_window.innerHeight + log_window.scrollMaxY - s);
+  } else if (f == "start") {
+    log_window.scrollTo(0, s);
+  } else {
+    log_window.scrollTo(0, 0);
   }
 } catch(e) {
   console.log(e.name + ':' + e.message);
