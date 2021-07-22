@@ -1,5 +1,5 @@
 // value
-const URL_TOP_literal = /^http:\/\/.*\/~jinrou\/$/g;
+const URL_TOP_literal = /^http:\/\/.*\/~jinrou\/(|index.html)$/g;
 
 // setTextAreaAlertColor
 function setTextAreaAlertColor(text){

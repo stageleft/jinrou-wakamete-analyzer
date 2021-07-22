@@ -20,6 +20,7 @@
   "content_scripts": [
     {
       "matches": ["*://*/~jinrou/",
+                  "*://*/~jinrou/index.html",
                   "*://*/~jinrou/cgi_jinro.cgi*",
                   "*://*/~jinrou/kako/*.html",
                   "file:///*/jinrou-wakamete-analyzer.debug-data/sample/*.html"],
