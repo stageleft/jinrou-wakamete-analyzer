@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "Jinrou Wakamete Analyzer",
-  "version": "1.17",
+  "version": "2.0",
 
   "description": "Realtime Log Analyzer of Jinrou Wakamete Server.",
 
@@ -19,7 +19,8 @@
 
   "content_scripts": [
     {
-      "matches": ["*://*/~jinrou/cgi_jinro.cgi*",
+      "matches": ["*://*/~jinrou/",
+                  "*://*/~jinrou/cgi_jinro.cgi*",
                   "*://*/~jinrou/kako/*.html",
                   "file:///*/jinrou-wakamete-analyzer.debug-data/sample/*.html"],
       "js": ["wakamete-plugins.js"]
