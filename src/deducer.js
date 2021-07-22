@@ -3,12 +3,12 @@ var mob_list = ["村人","人外","人狼","狂人","妖狐","子狐"];
 var seer_result = ["","○","●"];
 var medium_result = ["","○","●","△","■"];
 var cast_list = [
-  {seer:1, medium:0, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:0, werefox:0, minifox:0}, //  8 villager with werefox
-  {seer:1, medium:1, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:0, werefox:0, minifox:0}, //  9 villager with werefox
-  {seer:1, medium:1, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 10 villager with werefox
-  {seer:1, medium:1, bodyguard:1, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 11 villager with werefox
-  {seer:1, medium:1, bodyguard:1, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 12 villager with werefox
-  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 13 villager with werefox
+  {seer:1, medium:0, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:0, werefox:0, minifox:0}, //  8 villager without werefox
+  {seer:1, medium:1, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:0, werefox:0, minifox:0}, //  9 villager without werefox
+  {seer:1, medium:1, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 10 villager without werefox
+  {seer:1, medium:1, bodyguard:1, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 11 villager without werefox
+  {seer:1, medium:1, bodyguard:1, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:1, minifox:0}, // 12 villager with increased werefox
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:2, posessed:1, werefox:1, minifox:0}, // 13 villager with increased werefox
   {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:2, posessed:1, werefox:1, minifox:0}, // 14 villager with werefox
   {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:2, posessed:1, werefox:1, minifox:0}, // 15 villager with werefox
   {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:3, posessed:1, werefox:1, minifox:0}, // 16 villager with werefox
