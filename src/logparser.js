@@ -215,7 +215,7 @@ function html2json_villager_list(arg) {
     // get info of base_td_list.item(i)
     var img_selector = base_td_list.item(i).querySelector("img");
     if (img_selector != null) {
-      img_src        = img_selector.getAttribute("src").replace(re, "http://124.32.233.3/~jinrou/");
+      img_src        = img_selector.getAttribute("src").replace(re, "http://jinrou.aa0.netvolante.jp/~jinrou/");
 
       // get info of base_td_list.item(i+1)
       var character_info = String(base_td_list.item(i+1).innerHTML).split('<br>');
@@ -279,13 +279,13 @@ function html2log(arg) {
       if (icon_selector != null) {
         if (base_td_list.item(0).querySelector("font") == null) { continue; }
 
-        var icon_uri   = icon_selector.getAttribute("src").replace(re, "http://124.32.233.3/~jinrou/");
+        var icon_uri   = icon_selector.getAttribute("src").replace(re, "http://jinrou.aa0.netvolante.jp/~jinrou/");
         var msg_text   = base_td_list.item(0).querySelector("font").innerText;
-        if ((icon_uri == "http://124.32.233.3/~jinrou/img/ampm.gif") ||
-            (icon_uri == "http://124.32.233.3/~jinrou/img/hum.gif") ||
-            (icon_uri == "http://124.32.233.3/~jinrou/img/wlf.gif") ||
-            (icon_uri == "http://124.32.233.3/~jinrou/img/fox.gif") ||
-            (icon_uri == "http://124.32.233.3/~jinrou/img/sc5.gif")) {
+        if ((icon_uri == "http://jinrou.aa0.netvolante.jp/~jinrou/img/ampm.gif") ||
+            (icon_uri == "http://jinrou.aa0.netvolante.jp/~jinrou/img/hum.gif") ||
+            (icon_uri == "http://jinrou.aa0.netvolante.jp/~jinrou/img/wlf.gif") ||
+            (icon_uri == "http://jinrou.aa0.netvolante.jp/~jinrou/img/fox.gif") ||
+            (icon_uri == "http://jinrou.aa0.netvolante.jp/~jinrou/img/sc5.gif")) {
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">１日目の夜となりました。</font>(19/07/15 00:39:10)
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">3日目の夜となりました。</font>(19/07/14 23:32:09)
           // <img src="./img/ampm.gif" width="32" height="32" border="0"> <font size="+1">9日目の朝となりました。</font>(19/07/06 01:43:35)
@@ -298,7 +298,7 @@ function html2log(arg) {
           current_day_log.msg_date = datearray[datearray.length - 1];
           ret[datearray[datearray.length - 1]] = current_day_log;
           current_day_log = init_ret();
-        } else if (icon_uri == "http://124.32.233.3/~jinrou/img/dead1.gif") {
+        } else if (icon_uri == "http://jinrou.aa0.netvolante.jp/~jinrou/img/dead1.gif") {
           if (msg_text.match("^処刑されました・・・。$")) {
             // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font>
             current_day_log.list_voted.push(base_td_list.item(0).querySelector("b").innerText);
@@ -306,7 +306,7 @@ function html2log(arg) {
             // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>タマトイズ</b>さんは猫又の呪いで<font color="#ff0000">死亡しました・・・。</font>
             current_day_log.list_cursed.push(base_td_list.item(0).querySelector("b").innerText);
           }
-        } else if (icon_uri == "http://124.32.233.3/~jinrou/img/dead2.gif") {
+        } else if (icon_uri == "http://jinrou.aa0.netvolante.jp/~jinrou/img/dead2.gif") {
           if (msg_text.match("^無残な姿で発見された・・・。$")) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>伊吹翼</b>さんは翌日<font color="#ff0000">無残な姿で発見された・・・。</font>
             current_day_log.list_bitten.push(base_td_list.item(0).querySelector("b").innerText);
@@ -318,7 +318,7 @@ function html2log(arg) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>海星</b>さんは都合により<font color="#ff0000">突然死しました・・・。</font>
             current_day_log.list_sudden.push(base_td_list.item(0).querySelector("b").innerText);
           }
-        } else if (icon_uri == "http://124.32.233.3/~jinrou/img/msg.gif") {
+        } else if (icon_uri == "http://jinrou.aa0.netvolante.jp/~jinrou/img/msg.gif") {
           if (msg_text.match("^奇跡的に生き返った。$")) {
             // <img src="./img/msg.gif" width="32" height="32" border="0"> <b>パチュリー</b>さんは<font color="#ff0000">奇跡的に生き返った。</font>
             current_day_log.list_revived.push(base_td_list.item(0).querySelector("b").innerText);
