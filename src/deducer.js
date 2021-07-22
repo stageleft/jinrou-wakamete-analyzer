@@ -2,6 +2,31 @@ var job_list = ["村人","占い","霊能","狩人","共有","猫又"];
 var mob_list = ["村人","人外","人狼","狂人","妖狐","子狐"];
 var seer_result = ["","○","●"];
 var medium_result = ["","○","●","△","■"];
+var cast_list = [
+  {seer:1, medium:0, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:0, werefox:0, minifox:0}, //  8 villager with werefox
+  {seer:1, medium:1, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:0, werefox:0, minifox:0}, //  9 villager with werefox
+  {seer:1, medium:1, bodyguard:0, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 10 villager with werefox
+  {seer:1, medium:1, bodyguard:1, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 11 villager with werefox
+  {seer:1, medium:1, bodyguard:1, freemason:0, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 12 villager with werefox
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:2, posessed:1, werefox:0, minifox:0}, // 13 villager with werefox
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:2, posessed:1, werefox:1, minifox:0}, // 14 villager with werefox
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:2, posessed:1, werefox:1, minifox:0}, // 15 villager with werefox
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:3, posessed:1, werefox:1, minifox:0}, // 16 villager with werefox
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:0, werewolf:3, posessed:1, werefox:1, minifox:0}, // 17 villager with werefox
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:3, posessed:1, werefox:1, minifox:0}, // 18 villager with werecat
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:3, posessed:1, werefox:1, minifox:0}, // 19 villager with werecat
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:4, posessed:1, werefox:1, minifox:0}, // 20 villager with werecat
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:4, posessed:1, werefox:1, minifox:0}, // 21 villager with werecat
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:4, posessed:1, werefox:2, minifox:0}, // 22 villager with werecat
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:4, posessed:1, werefox:2, minifox:0}, // 23 villager with werecat
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:4, posessed:1, werefox:2, minifox:0}, // 24 villager with werecat
+  {seer:1, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:5, posessed:1, werefox:2, minifox:0}, // 25 villager with werecat
+  {seer:2, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:5, posessed:1, werefox:3, minifox:0}, // 26 villager with werecat
+  {seer:2, medium:1, bodyguard:1, freemason:2, werecat:1, werewolf:5, posessed:1, werefox:3, minifox:0}, // 27 villager with werecat
+  {seer:2, medium:1, bodyguard:1, freemason:3, werecat:1, werewolf:5, posessed:2, werefox:3, minifox:0}, // 28 villager with werecat
+  {seer:2, medium:1, bodyguard:1, freemason:3, werecat:1, werewolf:6, posessed:2, werefox:3, minifox:0}, // 29 villager with werecat
+  {seer:2, medium:1, bodyguard:2, freemason:3, werecat:1, werewolf:7, posessed:2, werefox:3, minifox:0}, // 30 villager with werecat
+];
 
 function updateInput(arg) {
 // functional input  : JSON from Web Storage API
@@ -20,15 +45,27 @@ function updateInput(arg) {
 
   // 村全体の情報
   ret.player_count     = Object.keys(arg.log[base_date].players).length;
-  ret.seer_count       = Number(document.getElementById('seer').value);
-  ret.medium_count     = Number(document.getElementById('medium').value);
-  ret.bodyguard_count  = Number(document.getElementById('bodyguard').value);
-  ret.freemason_count  = Number(document.getElementById('freemason').value);
-  ret.werecat_count    = Number(document.getElementById('werecat').value);
-  ret.werewolf_count   = Number(document.getElementById('werewolf').value);
-  ret.posessed_count   = Number(document.getElementById('posessed').value);
-  ret.werefox_count    = Number(document.getElementById('werefox').value);
-  ret.minifox_count    = Number(document.getElementById('minifox').value);
+  if ( ret.player_count >= 8 && ret.player_count != Number(document.getElementById('all_villager_old').value) ) {
+    ret.seer_count       = cast_list[ret.player_count - 8].seer;
+    ret.medium_count     = cast_list[ret.player_count - 8].medium;
+    ret.bodyguard_count  = cast_list[ret.player_count - 8].bodyguard;
+    ret.freemason_count  = cast_list[ret.player_count - 8].freemason;
+    ret.werecat_count    = cast_list[ret.player_count - 8].werecat;
+    ret.werewolf_count   = cast_list[ret.player_count - 8].werewolf;
+    ret.posessed_count   = cast_list[ret.player_count - 8].posessed;
+    ret.werefox_count    = cast_list[ret.player_count - 8].werefox;
+    ret.minifox_count    = cast_list[ret.player_count - 8].minifox;  
+  } else {
+    ret.seer_count       = Number(document.getElementById('seer').value);
+    ret.medium_count     = Number(document.getElementById('medium').value);
+    ret.bodyguard_count  = Number(document.getElementById('bodyguard').value);
+    ret.freemason_count  = Number(document.getElementById('freemason').value);
+    ret.werecat_count    = Number(document.getElementById('werecat').value);
+    ret.werewolf_count   = Number(document.getElementById('werewolf').value);
+    ret.posessed_count   = Number(document.getElementById('posessed').value);
+    ret.werefox_count    = Number(document.getElementById('werefox').value);
+    ret.minifox_count    = Number(document.getElementById('minifox').value);  
+  }
   ret.villager_count   = ret.player_count - ( ret.seer_count + 
                                               ret.medium_count + 
                                               ret.bodyguard_count + 
@@ -107,6 +144,11 @@ function updateInputField(arg) {
     // refresh Input Field and saved date of Input Field if change player count
     is_initialize = true;
     no_input_key  = true;
+  }
+
+  // check villager count change
+  if ( arg.input.player_count != Number(document.getElementById('all_villager_old').value) ) {
+    is_initialize = true;
   }
 
   if (is_initialize == true) {
@@ -371,15 +413,16 @@ function refreshInputField(arg) {
   // update Table
   if ((arg.input != null) &&
       (arg.input.werewolf_count >= 1)) {
-    document.getElementById('seer').value      = String(arg.input.seer_count);
-    document.getElementById('medium').value    = String(arg.input.medium_count);
-    document.getElementById('bodyguard').value = String(arg.input.bodyguard_count);
-    document.getElementById('freemason').value = String(arg.input.freemason_count);
-    document.getElementById('werecat').value   = String(arg.input.werecat_count);
-    document.getElementById('werewolf').value  = String(arg.input.werewolf_count);
-    document.getElementById('posessed').value  = String(arg.input.posessed_count);
-    document.getElementById('werefox').value   = String(arg.input.werefox_count);
-    document.getElementById('minifox').value   = String(arg.input.minifox_count);
+    document.getElementById('all_villager_old').value = String(arg.input.player_count);
+    document.getElementById('seer').value             = String(arg.input.seer_count);
+    document.getElementById('medium').value           = String(arg.input.medium_count);
+    document.getElementById('bodyguard').value        = String(arg.input.bodyguard_count);
+    document.getElementById('freemason').value        = String(arg.input.freemason_count);
+    document.getElementById('werecat').value          = String(arg.input.werecat_count);
+    document.getElementById('werewolf').value         = String(arg.input.werewolf_count);
+    document.getElementById('posessed').value         = String(arg.input.posessed_count);
+    document.getElementById('werefox').value          = String(arg.input.werefox_count);
+    document.getElementById('minifox').value          = String(arg.input.minifox_count);
   }
 
   // create Villager List
