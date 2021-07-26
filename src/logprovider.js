@@ -9,7 +9,19 @@ function updateCommentLog(arg, param) {
 
     var td_daytitle = document.createElement('td');
     td_daytitle.setAttribute('colspan', '2');
-    td_daytitle.innerText     = '◆◆◆◆◆' + title + '◆◆◆◆◆'
+
+    var td_daytitlespan1 = document.createElement('span');
+    var td_daytitleb     = document.createElement('b');
+    var td_daytitlespan2 = document.createElement('span');
+
+    td_daytitlespan1.innerText = '◆◆◆◆◆'
+    td_daytitleb.innerText     = title
+    td_daytitlespan2.innerText = '◆◆◆◆◆'
+
+    td_daytitle.insertAdjacentElement('beforeend', td_daytitlespan1);
+    td_daytitle.insertAdjacentElement('beforeend', td_daytitleb);
+    td_daytitle.insertAdjacentElement('beforeend', td_daytitlespan2);
+
     tr_daytitle.insertAdjacentElement('beforeend', td_daytitle);
 
     return tr_daytitle;
@@ -109,7 +121,6 @@ function updateCommentLog(arg, param) {
       td_textlen_limit = parseInt((table_row_max_size - name_width) / char_width);
     }
   });
-  console.log("text limit : " + td_textlen_limit);
   var text_splitter = new RegExp('.{1,' + td_textlen_limit + '}', 'g');
   ret.childNodes.forEach(tr => {
     if (tr.childNodes.length == 2) {
