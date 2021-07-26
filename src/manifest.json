@@ -2,19 +2,22 @@
 
   "manifest_version": 2,
   "name": "Jinrou Wakamete Analyzer",
-  "version": "2.0",
+  "version": "2.1",
 
   "description": "Realtime Log Analyzer of Jinrou Wakamete Server.",
 
   "icons": {
-    "48": "icons/wakame-te.svg",
-    "96": "icons/wakame-te.svg"
+    "48": "wakame-te.svg",
+    "96": "wakame-te.svg"
   },
 
   "sidebar_action": {
     "default_title": "Jinrou Wakamete Analyzer",
     "default_panel": "sidebar.html",
-    "default_icon": "icons/wakame-te.svg"
+    "default_icon": {
+      "16": "wakame-te.svg",
+      "32": "wakame-te.svg"
+   }
   },
 
   "content_scripts": [
