@@ -104,15 +104,15 @@ function recvLog_proc(request, sender, sendResponse) {
 
   // update
   try {
-    if ('popup-active' == document.getElementById("vote-summary").getAttribute('class')) {
-      updateVotes(value[village_number]);
-    } else if ('popup-active' == document.getElementById("comment-summary").getAttribute('class')) {
-      if (comment_id != null) {
-        updateCommentLog(value[village_number], comment_id);
-      }
-    } else {
+  //  if ('popup-active' == document.getElementById("vote-summary").getAttribute('class')) {
+  //    updateVotes(value[village_number]);
+  //  } else if ('popup-active' == document.getElementById("comment-summary").getAttribute('class')) {
+  //    if (comment_id != null) {
+  //      updateCommentLog(value[village_number], comment_id);
+  //    }
+  //  } else {
       updateSummary(value[village_number]);    // deduce-summary
-    };
+  //  };
   } catch(e) {
     // exception case
     console.log(e.name + ':' + e.message);

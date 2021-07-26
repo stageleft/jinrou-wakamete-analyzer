@@ -9,19 +9,7 @@ function updateCommentLog(arg, param) {
 
     var td_daytitle = document.createElement('td');
     td_daytitle.setAttribute('colspan', '2');
-
-    var td_daytitlespan1 = document.createElement('span');
-    var td_daytitleb     = document.createElement('b');
-    var td_daytitlespan2 = document.createElement('span');
-
-    td_daytitlespan1.innerText = '◆◆◆◆◆'
-    td_daytitleb.innerText     = title
-    td_daytitlespan2.innerText = '◆◆◆◆◆'
-
-    td_daytitle.insertAdjacentElement('beforeend', td_daytitlespan1);
-    td_daytitle.insertAdjacentElement('beforeend', td_daytitleb);
-    td_daytitle.insertAdjacentElement('beforeend', td_daytitlespan2);
-
+    td_daytitle.innerText     = '◆◆◆◆◆' + title + '◆◆◆◆◆'
     tr_daytitle.insertAdjacentElement('beforeend', td_daytitle);
 
     return tr_daytitle;
@@ -33,17 +21,7 @@ function updateCommentLog(arg, param) {
     var tr = document.createElement('tr');
 
     var td1 = document.createElement('td');
-    var td1span1 = document.createElement('span');
-    var td1b     = document.createElement('b');
-    var td1span2 = document.createElement('span');
-
-    td1span1.innerText = '◆'
-    td1b.innerText     = l.speaker
-    td1span2.innerText = 'さん'
-
-    td1.insertAdjacentElement('beforeend', td1span1);
-    td1.insertAdjacentElement('beforeend', td1b);
-    td1.insertAdjacentElement('beforeend', td1span2);
+    td1.innerText     = '◆' + l.speaker + 'さん'
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
@@ -109,8 +87,45 @@ function updateCommentLog(arg, param) {
   }
 
   var table = document.createElement('table');
-  table.insertAdjacentElement('beforeend', ret)
+  table.insertAdjacentElement('beforeend', ret);
   document.getElementById('comment-summary').textContent = '';
   document.getElementById('comment-summary').insertAdjacentElement('afterbegin', table);
+
+  var table_row_max_size = parseInt(document.getElementById("link").offsetWidth);
+  var td_textlen_limit = table_row_max_size;
+  var name_length_max = 0;
+  ret.childNodes.forEach(tr => {
+    if (tr.childNodes.length == 2) {
+      var name = tr.childNodes[0].textContent;
+      if (name.length == 0){
+        return; // continue;
+      } else if (name_length_max > name.length) {
+        return; // continue;
+      } else {
+        name_length_max = name.length;
+      }
+      var name_width = tr.childNodes[0].offsetWidth;
+      var char_width = parseInt(name_width / name.length) + 1;
+      td_textlen_limit = parseInt((table_row_max_size - name_width) / char_width);
+    }
+  });
+  console.log("text limit : " + td_textlen_limit);
+  var text_splitter = new RegExp('.{1,' + td_textlen_limit + '}', 'g');
+  ret.childNodes.forEach(tr => {
+    if (tr.childNodes.length == 2) {
+      var text = tr.childNodes[1].innerHTML.split("<br>");
+      var fixed_text = [];
+      text.forEach(t => {
+        if (t.length == 0) {
+          fixed_text.push("");
+          return; // continue;
+        }
+        var splitted_t = t.match(text_splitter);
+        fixed_text.push(splitted_t.join("<br>"));
+      });
+      tr.childNodes[1].innerHTML = fixed_text.join("<br>");
+    }
+  });
+  
   return;
 };
