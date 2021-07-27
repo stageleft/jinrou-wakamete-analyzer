@@ -116,8 +116,9 @@ function updateCommentLog(arg, param) {
       } else {
         name_length_max = name.length;
       }
+      var name_hankaku_count = name.split(/[\x20-\x7e]/).length - 1;
       var name_width = tr.childNodes[0].offsetWidth;
-      var char_width = parseInt(name_width / name.length) + 1;
+      var char_width = parseInt(name_width / (name.length - (name_hankaku_count / 2))) + 1;
       td_textlen_limit = parseInt((table_row_max_size - name_width) / char_width);
     }
   });
