@@ -117,7 +117,7 @@ function updateCommentLog(arg, param) {
       throw e;
     }
   }
-  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 4;
+  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 32;
   var normal_talk_cell_ruler = document.getElementById("normal-ruler");
   var large_talk_cell_ruler = document.getElementById("large-ruler");
   ret.childNodes.forEach(tr => {
@@ -134,17 +134,18 @@ function updateCommentLog(arg, param) {
         if (talk_cell.style.fontSize == ""){
           // case if Normal font
           normal_talk_cell_ruler.innerHTML = t;
-          var t_visualLength = normal_talk_cell_ruler.offsetWidth + 4;
+          var t_visualLength = normal_talk_cell_ruler.offsetWidth;
           normal_talk_cell_ruler.innerHTML = "";
         } else {
           // case if Large font
           large_talk_cell_ruler.innerHTML = t;
-          var t_visualLength = large_talk_cell_ruler.offsetWidth + 4;
+          var t_visualLength = large_talk_cell_ruler.offsetWidth;
           large_talk_cell_ruler.innerHTML = "";
         }
         // textlen_limit : t.length  = table_talk_cell_size : t_visualLength;
         // => textlen_limit = table_talk_cell_size / (t.length / t_visualLength)
-        var textlen_limit = parseInt( t.length * table_talk_cell_size / t_visualLength) - 4;
+        var monospace_textlen = t.length - ((t.split(/[\x20-\x7f]/).length - 1) / 2);
+        var textlen_limit = parseInt( monospace_textlen * table_talk_cell_size / t_visualLength);
         var text_splitter = new RegExp('.{1,' + textlen_limit + '}', 'g');
 
         var splitted_t = t.match(text_splitter);
