@@ -104,34 +104,49 @@ function updateCommentLog(arg, param) {
   document.getElementById('comment-summary').insertAdjacentElement('afterbegin', table);
 
   var table_row_max_size = parseInt(document.getElementById("link").offsetWidth);
-  var td_textlen_limit = table_row_max_size;
-  var name_length_max = 0;
-  ret.childNodes.forEach(tr => {
-    if (tr.childNodes.length == 2) {
-      var name = tr.childNodes[0].textContent;
-      if (name.length == 0){
-        return; // continue;
-      } else if (name_length_max > name.length) {
-        return; // continue;
-      } else {
-        name_length_max = name.length;
+  var table_name_cell_size = 0;
+  try {
+    ret.childNodes.forEach(tr => {
+      if (tr.childNodes.length == 2) {
+        table_name_cell_size = tr.childNodes[0].offsetWidth;
+        throw "got table_name_cell_size.";
       }
-      var name_hankaku_count = name.split(/[\x20-\x7e]/).length - 1;
-      var name_width = tr.childNodes[0].offsetWidth;
-      var char_width = parseInt(name_width / (name.length - (name_hankaku_count / 2))) + 1;
-      td_textlen_limit = parseInt((table_row_max_size - name_width) / char_width);
+    });  
+  } catch (e) {
+    if (e != "got table_name_cell_size.") {
+      throw e;
     }
-  });
-  var text_splitter = new RegExp('.{1,' + td_textlen_limit + '}', 'g');
+  }
+  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 4;
+  var normal_talk_cell_ruler = document.getElementById("normal-ruler");
+  var large_talk_cell_ruler = document.getElementById("large-ruler");
   ret.childNodes.forEach(tr => {
     if (tr.childNodes.length == 2) {
-      var text = tr.childNodes[1].innerHTML.split("<br>");
+      var talk_cell = tr.childNodes[1];
+      var text = talk_cell.innerHTML.split("<br>");
       var fixed_text = [];
       text.forEach(t => {
         if (t.length == 0) {
           fixed_text.push("");
           return; // continue;
         }
+        // calcurate offsetWidth of each t
+        if (talk_cell.style.fontSize == ""){
+          // case if Normal font
+          normal_talk_cell_ruler.innerHTML = t;
+          var t_visualLength = normal_talk_cell_ruler.offsetWidth + 4;
+          normal_talk_cell_ruler.innerHTML = "";
+        } else {
+          // case if Large font
+          large_talk_cell_ruler.innerHTML = t;
+          var t_visualLength = large_talk_cell_ruler.offsetWidth + 4;
+          large_talk_cell_ruler.innerHTML = "";
+        }
+        // textlen_limit : t.length  = table_talk_cell_size : t_visualLength;
+        // => textlen_limit = table_talk_cell_size / (t.length / t_visualLength)
+        var textlen_limit = parseInt( t.length * table_talk_cell_size / t_visualLength) - 4;
+        var text_splitter = new RegExp('.{1,' + textlen_limit + '}', 'g');
+
         var splitted_t = t.match(text_splitter);
         fixed_text.push(splitted_t.join("<br>"));
       });
