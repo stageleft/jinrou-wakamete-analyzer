@@ -104,15 +104,7 @@ function recvLog_proc(request, sender, sendResponse) {
 
   // update
   try {
-    if ('popup-active' == document.getElementById("vote-summary").getAttribute('class')) {
-      updateVotes(value[village_number]);
-    } else if ('popup-active' == document.getElementById("comment-summary").getAttribute('class')) {
-      if (comment_id != null) {
-        updateCommentLog(value[village_number], comment_id);
-      }
-    } else {
-      updateSummary(value[village_number]);    // deduce-summary
-    };
+    updateSummary(value[village_number]);    // deduce-summary
   } catch(e) {
     // exception case
     console.log(e.name + ':' + e.message);
@@ -244,10 +236,10 @@ function event_click_comments(arg) {
     while (( o.tagName.toLowerCase() != "tr") && (o.tagName.toLowerCase() != "div")) {
       o = o.parentElement;
     }
-    if ((o.tagName.toLowerCase() == "tr") && (o.childElementCount == 2)) {
-      // copy innerText if outerHTML is <tr><td>charecter</td><td>comment</td></tr>
+    if ((o.tagName.toLowerCase() == "tr") && (o.childElementCount == 3)) {
+      // copy original_character_and_comment if outerHTML is <tr><td>layouted_charecter</td><td>layouted_comment</td><td style="display:none">original_character_and_comment</td></tr>
       var v = document.getElementById("freememo").value;
-      v = v + "\n" + o.innerText;
+      v = v + "\n" + o.childNodes[2].innerHTML.split('<br>').join("\n");
       document.getElementById("freememo").value = v;
     }
   }

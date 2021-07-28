@@ -29,6 +29,11 @@ table{
   padding: 0px;
   vertical-align: middle;
 }
+table.hidden-ruler{
+  visibility: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
 tr{
   margin: 0px;
   padding: 0px;

@@ -8,7 +8,7 @@ function updateCommentLog(arg, param) {
     var tr_daytitle = document.createElement('tr');
 
     var td_daytitle = document.createElement('td');
-    td_daytitle.setAttribute('colspan', '2');
+    td_daytitle.setAttribute('colspan', '3');
 
     var td_daytitlespan1 = document.createElement('span');
     var td_daytitleb     = document.createElement('b');
@@ -33,17 +33,7 @@ function updateCommentLog(arg, param) {
     var tr = document.createElement('tr');
 
     var td1 = document.createElement('td');
-    var td1span1 = document.createElement('span');
-    var td1b     = document.createElement('b');
-    var td1span2 = document.createElement('span');
-
-    td1span1.innerText = '◆'
-    td1b.innerText     = l.speaker
-    td1span2.innerText = 'さん'
-
-    td1.insertAdjacentElement('beforeend', td1span1);
-    td1.insertAdjacentElement('beforeend', td1b);
-    td1.insertAdjacentElement('beforeend', td1span2);
+    td1.innerText = l.speaker
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
@@ -54,6 +44,11 @@ function updateCommentLog(arg, param) {
       td2.setAttribute('style', 'color: #6666ee;');
     }
     tr.insertAdjacentElement('beforeend', td2);
+
+    var td3 = document.createElement('td');
+    td3.setAttribute('style', 'display:none;visibility:hidden;width:0px;');
+    td3.innerText = '◆' + l.speaker + 'さん' + "\t" + '「' + l.comment.join('\n') + '」'
+    tr.insertAdjacentElement('beforeend', td3);
 
     return tr;
   }
@@ -109,8 +104,61 @@ function updateCommentLog(arg, param) {
   }
 
   var table = document.createElement('table');
-  table.insertAdjacentElement('beforeend', ret)
+  table.insertAdjacentElement('beforeend', ret);
   document.getElementById('comment-summary').textContent = '';
   document.getElementById('comment-summary').insertAdjacentElement('afterbegin', table);
+
+  var table_row_max_size = parseInt(document.getElementById("link").offsetWidth);
+  var table_name_cell_size = 0;
+  try {
+    ret.childNodes.forEach(tr => {
+      if (tr.childNodes.length != 1) {
+        table_name_cell_size = tr.childNodes[0].offsetWidth;
+        throw "got table_name_cell_size.";
+      }
+    });  
+  } catch (e) {
+    if (e != "got table_name_cell_size.") {
+      throw e;
+    }
+  }
+  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 20; // size of scroll bar = 17
+  var normal_talk_cell_ruler = document.getElementById("normal-ruler");
+  var large_talk_cell_ruler = document.getElementById("large-ruler");
+  ret.childNodes.forEach(tr => {
+    if (tr.childNodes.length != 1) {
+      var talk_cell = tr.childNodes[1];
+      var text = talk_cell.innerHTML.split("<br>");
+      var fixed_text = [];
+      text.forEach(t => {
+        if (t.length == 0) {
+          fixed_text.push("");
+          return; // continue;
+        }
+        // calcurate offsetWidth of each t
+        if (talk_cell.style.fontSize == ""){
+          // case if Normal font
+          normal_talk_cell_ruler.innerHTML = t;
+          var t_visualLength = normal_talk_cell_ruler.offsetWidth;
+          normal_talk_cell_ruler.innerHTML = "";
+        } else {
+          // case if Large font
+          large_talk_cell_ruler.innerHTML = t;
+          var t_visualLength = large_talk_cell_ruler.offsetWidth;
+          large_talk_cell_ruler.innerHTML = "";
+        }
+        // textlen_limit : t.length  = table_talk_cell_size : t_visualLength;
+        // => textlen_limit = table_talk_cell_size / (t.length / t_visualLength)
+        var monospace_textlen = t.length - ((t.split(/[\x20-\x7f]/).length - 1) / 2);
+        var textlen_limit = parseInt( monospace_textlen * table_talk_cell_size / t_visualLength);
+        var text_splitter = new RegExp('.{1,' + textlen_limit + '}', 'g');
+
+        var splitted_t = t.match(text_splitter);
+        fixed_text.push(splitted_t.join("<br>"));
+      });
+      tr.childNodes[1].innerHTML = fixed_text.join("<br>");
+    }
+  });
+  
   return;
 };
