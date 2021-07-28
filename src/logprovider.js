@@ -8,7 +8,7 @@ function updateCommentLog(arg, param) {
     var tr_daytitle = document.createElement('tr');
 
     var td_daytitle = document.createElement('td');
-    td_daytitle.setAttribute('colspan', '2');
+    td_daytitle.setAttribute('colspan', '3');
 
     var td_daytitlespan1 = document.createElement('span');
     var td_daytitleb     = document.createElement('b');
@@ -33,7 +33,7 @@ function updateCommentLog(arg, param) {
     var tr = document.createElement('tr');
 
     var td1 = document.createElement('td');
-    td1.innerText     = '◆' + l.speaker + 'さん'
+    td1.innerText = l.speaker
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
@@ -44,6 +44,11 @@ function updateCommentLog(arg, param) {
       td2.setAttribute('style', 'color: #6666ee;');
     }
     tr.insertAdjacentElement('beforeend', td2);
+
+    var td3 = document.createElement('td');
+    td3.setAttribute('style', 'display:none;visibility:hidden;width:0px;');
+    td3.innerText = '◆' + l.speaker + 'さん' + "\t" + '「' + l.comment.join('\n') + '」'
+    tr.insertAdjacentElement('beforeend', td3);
 
     return tr;
   }
@@ -107,7 +112,7 @@ function updateCommentLog(arg, param) {
   var table_name_cell_size = 0;
   try {
     ret.childNodes.forEach(tr => {
-      if (tr.childNodes.length == 2) {
+      if (tr.childNodes.length != 1) {
         table_name_cell_size = tr.childNodes[0].offsetWidth;
         throw "got table_name_cell_size.";
       }
@@ -117,11 +122,11 @@ function updateCommentLog(arg, param) {
       throw e;
     }
   }
-  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 32;
+  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 20; // size of scroll bar = 17
   var normal_talk_cell_ruler = document.getElementById("normal-ruler");
   var large_talk_cell_ruler = document.getElementById("large-ruler");
   ret.childNodes.forEach(tr => {
-    if (tr.childNodes.length == 2) {
+    if (tr.childNodes.length != 1) {
       var talk_cell = tr.childNodes[1];
       var text = talk_cell.innerHTML.split("<br>");
       var fixed_text = [];

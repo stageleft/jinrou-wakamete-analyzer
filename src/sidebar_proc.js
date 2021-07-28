@@ -236,10 +236,10 @@ function event_click_comments(arg) {
     while (( o.tagName.toLowerCase() != "tr") && (o.tagName.toLowerCase() != "div")) {
       o = o.parentElement;
     }
-    if ((o.tagName.toLowerCase() == "tr") && (o.childElementCount == 2)) {
-      // copy innerText if outerHTML is <tr><td>charecter</td><td>comment</td></tr>
+    if ((o.tagName.toLowerCase() == "tr") && (o.childElementCount == 3)) {
+      // copy original_character_and_comment if outerHTML is <tr><td>layouted_charecter</td><td>layouted_comment</td><td style="display:none">original_character_and_comment</td></tr>
       var v = document.getElementById("freememo").value;
-      v = v + "\n" + o.innerText;
+      v = v + "\n" + o.childNodes[2].innerHTML.split('<br>').join("\n");
       document.getElementById("freememo").value = v;
     }
   }
