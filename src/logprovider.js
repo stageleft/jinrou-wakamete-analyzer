@@ -129,6 +129,7 @@ function updateCommentLog(arg, param) {
     if (tr.childNodes.length != 1) {
       var talk_cell = tr.childNodes[1];
       var text = talk_cell.innerHTML.split("<br>");
+      talk_cell.innerHTML = "";
       var fixed_text = [];
       text.forEach(t => {
         if (t.length == 0) {
@@ -138,14 +139,14 @@ function updateCommentLog(arg, param) {
         // calcurate offsetWidth of each t
         if (talk_cell.style.fontSize == ""){
           // case if Normal font
-          normal_talk_cell_ruler.innerHTML = t;
+          normal_talk_cell_ruler.innerText = t;
           var t_visualLength = normal_talk_cell_ruler.offsetWidth;
-          normal_talk_cell_ruler.innerHTML = "";
+          normal_talk_cell_ruler.innerText = "";
         } else {
           // case if Large font
-          large_talk_cell_ruler.innerHTML = t;
+          large_talk_cell_ruler.innerText = t;
           var t_visualLength = large_talk_cell_ruler.offsetWidth;
-          large_talk_cell_ruler.innerHTML = "";
+          large_talk_cell_ruler.innerText = "";
         }
         // textlen_limit : t.length  = table_talk_cell_size : t_visualLength;
         // => textlen_limit = table_talk_cell_size / (t.length / t_visualLength)
@@ -154,9 +155,15 @@ function updateCommentLog(arg, param) {
         var text_splitter = new RegExp('.{1,' + textlen_limit + '}', 'g');
 
         var splitted_t = t.match(text_splitter);
-        fixed_text.push(splitted_t.join("<br>"));
+        splitted_t.forEach (t => {
+          var span = document.createElement('span');
+          span.innerText = t;
+          talk_cell.appendChild(span);
+  
+          var br = document.createElement('br');
+          talk_cell.appendChild(br);
+        });
       });
-      tr.childNodes[1].innerHTML = fixed_text.join("<br>");
     }
   });
   
