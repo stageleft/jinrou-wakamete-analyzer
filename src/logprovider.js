@@ -38,7 +38,15 @@ function updateCommentLog(arg, param) {
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
-    td2.textContent = p.parseFromString('<html><body><td>' + l.comment.join('\n') + '</td></body></html>', 'text/html').body.textContent;
+    p.parseFromString('<html><body><td>' + l.comment.join('<br>') + '</td></body></html>', 'text/html').body.innerHTML.split('<br>').forEach(t => {
+      if(td2.innerHTML.length > 0) {
+        var br = document.createElement('br');
+        td2.appendChild(br);  
+      }
+      var span = document.createElement('span');
+      span.insertAdjacentHTML('afterbegin', t);
+      td2.appendChild(span);
+    });
     if (l.type == 'Strong'){
       td2.setAttribute('style', 'font-size: large;');
     } else if (l.type == 'WithColor'){
@@ -48,7 +56,7 @@ function updateCommentLog(arg, param) {
 
     var td3 = document.createElement('td');
     td3.setAttribute('style', 'display:none;visibility:hidden;width:0px;');
-    td3.textContent = p.parseFromString('<td>◆' + l.speaker + 'さん' + "\t" + '「'  + l.comment.join('\n') + '」</td>', 'text/html').body.textContent;
+    td3.textContent = p.parseFromString('◆' + l.speaker + 'さん' + "\t" + '「'  + l.comment.join('\n') + '」</td></body></html>', 'text/html').body.textContent;
     tr.insertAdjacentElement('beforeend', td3);
 
     return tr;
@@ -123,49 +131,61 @@ function updateCommentLog(arg, param) {
       throw e;
     }
   }
-  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 20; // size of scroll bar = 17
+  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 25; // size of scroll bar = 17
   var normal_talk_cell_ruler = document.getElementById("normal-ruler");
   var large_talk_cell_ruler = document.getElementById("large-ruler");
   ret.childNodes.forEach(tr => {
+    function get_visualLength(str, isLarge) {
+      var p = new DOMParser();
+      var ret;
+      if (isLarge == false){
+        // case if Normal font
+        normal_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
+        ret = normal_talk_cell_ruler.offsetWidth;
+        normal_talk_cell_ruler.textContent = "";
+      } else {
+        // case if Large font
+        large_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
+        ret = large_talk_cell_ruler.offsetWidth;
+        large_talk_cell_ruler.textContent = "";
+      }
+      return ret;
+    }
     if (tr.childNodes.length != 1) {
       var talk_cell = tr.childNodes[1];
       var text = talk_cell.innerHTML.split("<br>");
       talk_cell.innerHTML = "";
       var fixed_text = [];
       text.forEach(t => {
-        if (t.length == 0) {
-          fixed_text.push("");
-          return; // continue;
-        }
         // calcurate offsetWidth of each t
-        if (talk_cell.style.fontSize == ""){
-          // case if Normal font
-          normal_talk_cell_ruler.innerText = t;
-          var t_visualLength = normal_talk_cell_ruler.offsetWidth;
-          normal_talk_cell_ruler.innerText = "";
-        } else {
-          // case if Large font
-          large_talk_cell_ruler.innerText = t;
-          var t_visualLength = large_talk_cell_ruler.offsetWidth;
-          large_talk_cell_ruler.innerText = "";
+        var t_visualLengthOld = 0;
+        var t_visualLength;
+        var old_i = 0;
+        for (i = 0; i < t.length; i++) {
+          t_visualLength = get_visualLength(t.slice(old_i, i), talk_cell.style.fontSize != "");
+          if ((t_visualLength > t_visualLengthOld) && (t_visualLength >= table_talk_cell_size)) {
+            fixed_text.push(t.slice(old_i, i - 1));
+            old_i = i - 1;
+            t_visualLengthOld = 0;
+          } else {
+            t_visualLengthOld = t_visualLength;
+          }
         }
-        // textlen_limit : t.length  = table_talk_cell_size : t_visualLength;
-        // => textlen_limit = table_talk_cell_size / (t.length / t_visualLength)
-        var monospace_textlen = t.length - ((t.split(/[\x20-\x7f]/).length - 1) / 2);
-        var textlen_limit = parseInt( monospace_textlen * table_talk_cell_size / t_visualLength);
-        var text_splitter = new RegExp('.{1,' + textlen_limit + '}', 'g');
-
-        var splitted_t = t.match(text_splitter);
-        splitted_t.forEach (t => {
-          var span = document.createElement('span');
-          span.innerText = t;
-          talk_cell.appendChild(span);
-  
-          var br = document.createElement('br');
-          talk_cell.appendChild(br);
-        });
+        if (old_i < i) {
+          fixed_text.push(t.slice(old_i));
+        }
       });
-    }
+      var p = new DOMParser();
+      p.parseFromString('<html><body><td>' + fixed_text.join('<br>') + '</td></body></html>', 'text/html').body.innerHTML.split('<br>').forEach(t => {
+        if(talk_cell.innerHTML.length > 0) {
+          var br = document.createElement('br');
+          talk_cell.appendChild(br);  
+        }
+        var span = document.createElement('span');
+        span.insertAdjacentHTML('afterbegin', t);
+        talk_cell.appendChild(span);
+      });
+      }
   });
   
   return;
