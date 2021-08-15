@@ -38,15 +38,7 @@ function updateCommentLog(arg, param) {
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
-    p.parseFromString('<html><body><td>' + l.comment.join('<br>') + '</td></body></html>', 'text/html').body.innerHTML.split('<br>').forEach(t => {
-      if(td2.innerHTML.length > 0) {
-        var br = document.createElement('br');
-        td2.appendChild(br);  
-      }
-      var span = document.createElement('span');
-      span.insertAdjacentHTML('afterbegin', t);
-      td2.appendChild(span);
-    });
+    td2.textContent = p.parseFromString('<html><body><span>' + l.comment.join('\n') + '</span></body></html>', 'text/html').body.textContent;
     if (l.type == 'Strong'){
       td2.setAttribute('style', 'font-size: large;');
     } else if (l.type == 'WithColor'){
@@ -153,7 +145,7 @@ function updateCommentLog(arg, param) {
     }
     if (tr.childNodes.length != 1) {
       var talk_cell = tr.childNodes[1];
-      var text = talk_cell.innerHTML.split("<br>");
+      var text = talk_cell.innerHTML.split("\n");
       talk_cell.innerHTML = "";
       var fixed_text = [];
       text.forEach(t => {
@@ -171,21 +163,21 @@ function updateCommentLog(arg, param) {
             t_visualLengthOld = t_visualLength;
           }
         }
-        if (old_i < i) {
+        if ((old_i < i) || (i == 0)) {
           fixed_text.push(t.slice(old_i));
         }
       });
       var p = new DOMParser();
-      p.parseFromString('<html><body><td>' + fixed_text.join('<br>') + '</td></body></html>', 'text/html').body.innerHTML.split('<br>').forEach(t => {
+      fixed_text.forEach(t => {
         if(talk_cell.innerHTML.length > 0) {
           var br = document.createElement('br');
           talk_cell.appendChild(br);  
         }
         var span = document.createElement('span');
-        span.insertAdjacentHTML('afterbegin', t);
+        span.textContent = p.parseFromString('<html><body><span>' + t + '</span></body></html>', 'text/html').body.textContent;
         talk_cell.appendChild(span);
       });
-      }
+    }
   });
   
   return;
