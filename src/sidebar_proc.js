@@ -236,7 +236,7 @@ function event_click_comments(arg) {
     if ((o.tagName.toLowerCase() == "tr") && (o.childElementCount == 3)) {
       // copy original_character_and_comment if outerHTML is <tr><td>layouted_charecter</td><td>layouted_comment</td><td style="display:none">original_character_and_comment</td></tr>
       var v = document.getElementById("freememo").value;
-      v = v + "\n" + o.childNodes[2].innerHTML.split('<br>').join("\n");
+      v = v + "\n" + o.childNodes[2].textContent;
       document.getElementById("freememo").value = v;
     }
   }

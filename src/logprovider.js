@@ -30,6 +30,7 @@ function updateCommentLog(arg, param) {
   function createLogTableRow(l) {
     // 以下のログの形式（コピペ後）を再現できるように。
     // <tr><td valign="top" width="160"><font color="#ff9999">◆</font><b>五十嵐響子</b>さん</td><td>「えへへっ　PCS！いぇーい♪」</td></tr>
+    var p = new DOMParser();
     var tr = document.createElement('tr');
 
     var td1 = document.createElement('td');
@@ -37,7 +38,7 @@ function updateCommentLog(arg, param) {
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
-    td2.innerText = l.comment.join('\n');
+    td2.textContent = p.parseFromString('<html><body><span>' + l.comment.join('\n') + '</span></body></html>', 'text/html').body.textContent;
     if (l.type == 'Strong'){
       td2.setAttribute('style', 'font-size: large;');
     } else if (l.type == 'WithColor'){
@@ -47,7 +48,7 @@ function updateCommentLog(arg, param) {
 
     var td3 = document.createElement('td');
     td3.setAttribute('style', 'display:none;visibility:hidden;width:0px;');
-    td3.innerText = '◆' + l.speaker + 'さん' + "\t" + '「' + l.comment.join('\n') + '」'
+    td3.textContent = p.parseFromString('◆' + l.speaker + 'さん' + "\t" + '「'  + l.comment.join('\n') + '」</td></body></html>', 'text/html').body.textContent;
     tr.insertAdjacentElement('beforeend', td3);
 
     return tr;
@@ -122,47 +123,59 @@ function updateCommentLog(arg, param) {
       throw e;
     }
   }
-  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 20; // size of scroll bar = 17
+  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 25; // size of scroll bar = 17
   var normal_talk_cell_ruler = document.getElementById("normal-ruler");
   var large_talk_cell_ruler = document.getElementById("large-ruler");
   ret.childNodes.forEach(tr => {
+    function get_visualLength(str, isLarge) {
+      var p = new DOMParser();
+      var ret;
+      if (isLarge == false){
+        // case if Normal font
+        normal_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
+        ret = normal_talk_cell_ruler.offsetWidth;
+        normal_talk_cell_ruler.textContent = "";
+      } else {
+        // case if Large font
+        large_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
+        ret = large_talk_cell_ruler.offsetWidth;
+        large_talk_cell_ruler.textContent = "";
+      }
+      return ret;
+    }
     if (tr.childNodes.length != 1) {
       var talk_cell = tr.childNodes[1];
-      var text = talk_cell.innerHTML.split("<br>");
+      var text = talk_cell.innerHTML.split("\n");
       talk_cell.innerHTML = "";
       var fixed_text = [];
       text.forEach(t => {
-        if (t.length == 0) {
-          fixed_text.push("");
-          return; // continue;
-        }
         // calcurate offsetWidth of each t
-        if (talk_cell.style.fontSize == ""){
-          // case if Normal font
-          normal_talk_cell_ruler.innerText = t;
-          var t_visualLength = normal_talk_cell_ruler.offsetWidth;
-          normal_talk_cell_ruler.innerText = "";
-        } else {
-          // case if Large font
-          large_talk_cell_ruler.innerText = t;
-          var t_visualLength = large_talk_cell_ruler.offsetWidth;
-          large_talk_cell_ruler.innerText = "";
+        var t_visualLengthOld = 0;
+        var t_visualLength;
+        var old_i = 0;
+        for (i = 0; i < t.length; i++) {
+          t_visualLength = get_visualLength(t.slice(old_i, i), talk_cell.style.fontSize != "");
+          if ((t_visualLength > t_visualLengthOld) && (t_visualLength >= table_talk_cell_size)) {
+            fixed_text.push(t.slice(old_i, i - 1));
+            old_i = i - 1;
+            t_visualLengthOld = 0;
+          } else {
+            t_visualLengthOld = t_visualLength;
+          }
         }
-        // textlen_limit : t.length  = table_talk_cell_size : t_visualLength;
-        // => textlen_limit = table_talk_cell_size / (t.length / t_visualLength)
-        var monospace_textlen = t.length - ((t.split(/[\x20-\x7f]/).length - 1) / 2);
-        var textlen_limit = parseInt( monospace_textlen * table_talk_cell_size / t_visualLength);
-        var text_splitter = new RegExp('.{1,' + textlen_limit + '}', 'g');
-
-        var splitted_t = t.match(text_splitter);
-        splitted_t.forEach (t => {
-          var span = document.createElement('span');
-          span.innerText = t;
-          talk_cell.appendChild(span);
-  
+        if ((old_i < i) || (i == 0)) {
+          fixed_text.push(t.slice(old_i));
+        }
+      });
+      var p = new DOMParser();
+      fixed_text.forEach(t => {
+        if(talk_cell.innerHTML.length > 0) {
           var br = document.createElement('br');
-          talk_cell.appendChild(br);
-        });
+          talk_cell.appendChild(br);  
+        }
+        var span = document.createElement('span');
+        span.textContent = p.parseFromString('<html><body><span>' + t + '</span></body></html>', 'text/html').body.textContent;
+        talk_cell.appendChild(span);
       });
     }
   });
