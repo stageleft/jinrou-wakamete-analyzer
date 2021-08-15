@@ -30,6 +30,7 @@ function updateCommentLog(arg, param) {
   function createLogTableRow(l) {
     // 以下のログの形式（コピペ後）を再現できるように。
     // <tr><td valign="top" width="160"><font color="#ff9999">◆</font><b>五十嵐響子</b>さん</td><td>「えへへっ　PCS！いぇーい♪」</td></tr>
+    var p = new DOMParser();
     var tr = document.createElement('tr');
 
     var td1 = document.createElement('td');
@@ -37,7 +38,7 @@ function updateCommentLog(arg, param) {
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
-    td2.innerText = l.comment.join('\n');
+    td2.textContent = p.parseFromString('<html><body><td>' + l.comment.join('\n') + '</td></body></html>', 'text/html').body.textContent;
     if (l.type == 'Strong'){
       td2.setAttribute('style', 'font-size: large;');
     } else if (l.type == 'WithColor'){
@@ -47,7 +48,7 @@ function updateCommentLog(arg, param) {
 
     var td3 = document.createElement('td');
     td3.setAttribute('style', 'display:none;visibility:hidden;width:0px;');
-    td3.innerText = '◆' + l.speaker + 'さん' + "\t" + '「' + l.comment.join('\n') + '」'
+    td3.textContent = p.parseFromString('<td>◆' + l.speaker + 'さん' + "\t" + '「'  + l.comment.join('\n') + '」</td>', 'text/html').body.textContent;
     tr.insertAdjacentElement('beforeend', td3);
 
     return tr;
