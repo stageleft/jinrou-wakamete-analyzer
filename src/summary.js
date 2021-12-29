@@ -381,5 +381,21 @@ function updateSummary(arg) {
   summary_table.insertAdjacentElement('beforeend', ret);
   document.getElementById('deduce-summary').innerHTML = '';
   document.getElementById('deduce-summary').insertAdjacentElement('beforeend', summary_table);
+
+  var summary_area_width = parseInt(document.getElementById("link").offsetWidth) - 25; // size of scroll bar = 17
+  ret.childNodes.forEach(tr => {
+    var td = tr.childNodes[0];
+    var text = td.innerHTML.split("\n");
+    td.innerHTML = "";
+    var fixed_text = [];
+    text.forEach(t => {
+      fixed_text = fixed_text.concat(slice_string_by_visualLength(t, summary_area_width, false));
+    });
+    
+    var p = new DOMParser();
+    var span = p.parseFromString('<html><body><span>' + fixed_text.join('<br>') + '</span></body></html>', 'text/html').body.childNodes[0];
+    td.appendChild(span);
+  });
+
   return;
 };
