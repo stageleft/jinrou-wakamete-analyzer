@@ -2,12 +2,14 @@ var recvLog_lock = false;
 var comment_id   = null;
 var village_number = null;
 
+var update_summary_flag_data = null;
+
 // memory area to store values
 var stored_value   = {};
 var stored_raw_log = {};
 
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
-function recvLog_proc(request, sender, sendResponse) {
+function recvLog_proc(request) {
 // input  : JSON
 //          style : { html_log: village_log_html, text_log: village_log_text, txtc_log: village_log_txtC }
 //          see onLogLoad() in wakamete-plugins.js
@@ -16,7 +18,6 @@ function recvLog_proc(request, sender, sendResponse) {
   if (recvLog_lock == false) {
    recvLog_lock = true;
   } else {
-    sendResponse({response: "OK"});
     return;
   };
 
@@ -101,7 +102,11 @@ function recvLog_proc(request, sender, sendResponse) {
 
   // update
   try {
-    updateSummary(value[village_number]);    // deduce-summary
+    var update_summary_flag_data_now = JSON.stringify(value[village_number]);
+    if (update_summary_flag_data != update_summary_flag_data_now) {
+      updateSummary(value[village_number]);    // deduce-summary
+      update_summary_flag_data = update_summary_flag_data_now;
+    }
   } catch(e) {
     // exception case
     console.log(e.name + ':' + e.message);
@@ -155,7 +160,7 @@ function recvLog_proc(request, sender, sendResponse) {
   }
 
   recvLog_lock = false;
-  sendResponse({response: "OK"});
+  return;
 };
 
 // ref. https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener

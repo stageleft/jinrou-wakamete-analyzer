@@ -286,66 +286,6 @@ function makeGrayVillagerList(arg) {
   return ret;
 }
 
-function updateInput(arg) {
-// functional input  : JSON from Web Storage API
-// Another input     : inner table of <div id="deduce" />
-// functional output : JSON
-//     'input' key of Web Storage API style
-  var ret = {};
-
-  var datearray;
-  var base_date;
-  [datearray, base_date] = createDateArray(arg);
-  if (arg.log[base_date] == null) {
-    return;
-  }
-
-  // 村全体の情報
-  ret.player_count     = Object.keys(arg.log[base_date].players).length;
-  ret.seer_count       = Number(document.getElementById('seer').value);
-  ret.medium_count     = Number(document.getElementById('medium').value);
-  ret.bodyguard_count  = Number(document.getElementById('bodyguard').value);
-  ret.freemason_count  = Number(document.getElementById('freemason').value);
-  ret.werecat_count    = Number(document.getElementById('werecat').value);
-  ret.werewolf_count   = Number(document.getElementById('werewolf').value);
-  ret.posessed_count   = Number(document.getElementById('posessed').value);
-  ret.werefox_count    = Number(document.getElementById('werefox').value);
-  ret.minifox_count    = Number(document.getElementById('minifox').value);
-  ret.villager_count   = ret.player_count - ( ret.seer_count + 
-                                              ret.medium_count + 
-                                              ret.bodyguard_count + 
-                                              ret.freemason_count + 
-                                              ret.werecat_count + 
-                                              ret.werewolf_count + 
-                                              ret.posessed_count + 
-                                              ret.werefox_count + 
-                                              ret.minifox_count);
-
-  ret.each_player = {};
-  Object.keys(arg.log[base_date].players).forEach(function(k){
-    // 参加者別の情報
-    var job = document.getElementById('job-' + k); // deduced Job
-    var mrk = document.getElementById('mrk-' + k); // Monster Mark
-    if ((job == null) || (mrk == null)) {
-      return null;
-    }
-    ret.each_player[k] = {};
-    ret.each_player[k].comingout = job.value;
-    ret.each_player[k].enemymark = mrk.value;
-    // 参加者別×日別の情報
-    for (var i = 2; i <= datearray.length; i++) {
-      var datestr = String(i) + "日目の朝となりました。"
-      ret.each_player[k][datestr] = {};
-      var target_obj = document.getElementById('stat-' + k + '-' + String(i) + '-target')
-      ret.each_player[k][datestr].target      = (target_obj == null) ? null : target_obj.value;
-      var result_obj = document.getElementById('stat-' + k + '-' + String(i) + '-result')
-      ret.each_player[k][datestr].result      = (result_obj == null) ? null : result_obj.value;;
-    }
-  });
-
-  return ret;
-};
-
 function get_visualLength(str, isLarge) {
   var p = new DOMParser();
   var ret;
