@@ -2,6 +2,8 @@ var recvLog_lock = false;
 var comment_id   = null;
 var village_number = null;
 
+var update_summary_flag_data = null;
+
 // memory area to store values
 var stored_value   = {};
 var stored_raw_log = {};
@@ -100,7 +102,11 @@ function recvLog_proc(request) {
 
   // update
   try {
-    updateSummary(value[village_number]);    // deduce-summary
+    var update_summary_flag_data_now = JSON.stringify(value[village_number]);
+    if (update_summary_flag_data != update_summary_flag_data_now) {
+      updateSummary(value[village_number]);    // deduce-summary
+      update_summary_flag_data = update_summary_flag_data_now;
+    }
   } catch(e) {
     // exception case
     console.log(e.name + ':' + e.message);
