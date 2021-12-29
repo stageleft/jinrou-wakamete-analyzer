@@ -87,10 +87,9 @@ function updateVotes(arg) {
       return ret;
     }
     // 表示用セル作成
-    function proc_set_vote_result(f, vote_count){
+    function proc_set_vote_result(f, vote_count, p){
       var from_person = f.from_villager.trim();
       var to_person = f.to_villager.trim();
-      // TODO: replace元の文字クラスを特定する。 issue #104 クローズ後の残件であり、１文字ごとにissue化する。
       var tr = body.querySelector('#vote-from-' + from_person.replace(/([\ -\/\:-\@\[-\`\{-\~])/g, '\\$1'));
 
       // <td><b>ｽｺﾞｲｶﾀｲｱｲｽ</b>さん</td><td>0 票</td><td>投票先 → <b>結城蜜柑</b>さん</td>
@@ -104,19 +103,33 @@ function updateVotes(arg) {
       td.innerText = "(" + vote_count[from_person] + "票)→" + f.to_villager + "(" + vote_count[to_person] + "票)";
       td.className = setColorClass(arg.input.each_player[from_person]);
       if (vote_count.is_gray_random == true) {
+        var is_gray_person = false;
         // グレランの場合に、セルに色をつける
         if (td.className === '' && vote_count[to_person] == vote_count['voted_count_max'] && vote_count[from_person] == 0){
           // 役職CO者以外、かつ、吊られ者に投票した人、かつ、得票0票者
           td.className = 'gray_random_voted_killer_with_no_voted';
+          is_gray_person = true;
         } else if (td.className === '' && vote_count[to_person] == vote_count['voted_count_max']){
           // 役職CO者以外、かつ、吊られ者に投票した人
           td.className = 'gray_random_voted_killer';
+          is_gray_person = true;
         } else if (td.className === '' && vote_count[from_person] == 0) {
           // 役職CO者以外、かつ、得票0票者
           td.className = 'gray_random_no_voted';
+          is_gray_person = true;
         } else {
           // その他
+          if (td.className == '') {
+            is_gray_person = true;
+          }
           td.className = td.className + ' gray_random';
+        }
+        // ２回連続グレラン、かつ、非役職の場合、票変えを検出する。（※本アプリの条件では、投票が決まらないケースは必ずグレラン扱い）
+        if ((p != null) && (is_gray_person == true)) {
+          if ((from_person == p.from_villager.trim()) &&
+              (to_person   != p.to_villager.trim())) {
+            td.className = td.className + ' gray_random_change_vote_target';
+          }
         }
       }
       tr.insertAdjacentElement('beforeend', td);
@@ -131,8 +144,13 @@ function updateVotes(arg) {
 
       head.insertAdjacentElement('beforeend', proc_set_vote_date(vote_title));
       var vote_count = proc_vote_count(l);
-      l.vote.forEach(function(f){
-        body.insertAdjacentElement('beforeend', proc_set_vote_result(f, vote_count));
+      l.vote.forEach(function(f, k){
+        if (j == 0) {
+          body.insertAdjacentElement('beforeend', proc_set_vote_result(f, vote_count, null));
+        } else {
+          p = arg.log[datestr].vote_log[j-1].vote[k]; // f of previous vote
+          body.insertAdjacentElement('beforeend', proc_set_vote_result(f, vote_count, p));          
+        }
       });
     });
   }
