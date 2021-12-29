@@ -7,7 +7,7 @@ var stored_value   = {};
 var stored_raw_log = {};
 
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
-function recvLog_proc(request, sender, sendResponse) {
+function recvLog_proc(request) {
 // input  : JSON
 //          style : { html_log: village_log_html, text_log: village_log_text, txtc_log: village_log_txtC }
 //          see onLogLoad() in wakamete-plugins.js
@@ -16,7 +16,6 @@ function recvLog_proc(request, sender, sendResponse) {
   if (recvLog_lock == false) {
    recvLog_lock = true;
   } else {
-    sendResponse({response: "OK"});
     return;
   };
 
@@ -155,7 +154,7 @@ function recvLog_proc(request, sender, sendResponse) {
   }
 
   recvLog_lock = false;
-  sendResponse({response: "OK"});
+  return;
 };
 
 // ref. https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener
