@@ -40,6 +40,9 @@ function updateInput(arg) {
   if ((datearray == null) || (datearray.length == 0)){
     return;
   }
+  if (arg.log[base_date] == null) {
+    return;
+  }
 
   var ret = {};
 
