@@ -107,6 +107,10 @@ td{
 .gray_random_voted_killer_with_no_voted{
   background-color: #ffe4cc;
 }
+.gray_random_change_vote_target{
+  font-weight: bolder;
+  font-family: monospace;
+}
 
 p {
   margin: 0px;
