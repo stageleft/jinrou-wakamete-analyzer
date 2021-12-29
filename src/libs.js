@@ -370,15 +370,28 @@ function slice_string_by_visualLength(str, max_cell_size, isLarge) {
   var t_visualLengthOld = 0;
   var t_visualLength;
   var old_i = 0;
+  var prev_i = 0;
   for (var i = 0; i < str.length; i++) {
+    // skip tag from '<' to '>'
+    if (str[i] == '<') {
+      i = str.indexOf('>', i);
+      if (i == -1){
+        throw new Error('slice_string_by_visualLength : string has tag open < but not have tag close >. string=' + str);
+      } else if (i < old_i || str.length < i) {
+        throw new Error('slice_string_by_visualLength : str.indexOf() has some error. string=' + str + ' i=' + i.toString()+ ' old_i=' + old_i.toString()+ ' str.lentgh=' + str.length.toString());
+      }
+      continue;
+    }
+    // check length and split line if length is over
     t_visualLength = get_visualLength(str.slice(old_i, i), isLarge);
     if ((t_visualLength > t_visualLengthOld) && (t_visualLength >= max_cell_size)) {
-      ret.push(str.slice(old_i, i - 1));
-      old_i = i - 1;
+      ret.push(str.slice(old_i, prev_i));
+      old_i = prev_i;
       t_visualLengthOld = 0;
     } else {
       t_visualLengthOld = t_visualLength;
     }
+    prev_i = i;
   }
   if ((old_i < i) || (i == 0)) {
     ret.push(str.slice(old_i));
