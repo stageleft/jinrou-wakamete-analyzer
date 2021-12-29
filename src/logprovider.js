@@ -35,6 +35,7 @@ function updateCommentLog(arg, param) {
 
     var td1 = document.createElement('td');
     td1.innerText = l.speaker
+    td1.className = setColorClass(arg.input.each_player[l.speaker]);
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
