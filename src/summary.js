@@ -262,6 +262,7 @@ function updateSummary(arg) {
   function calcSubSummary(parent_element, index_str, index_class, max_count, menber_list, force_empty = false) {
     var summary = document.createElement('tr');
     var summary_text = document.createElement('td');
+    var summary_alt_text = '';
     summary.insertAdjacentElement('beforeend', summary_text);
 
     if (index_str.indexOf('(x/y)') != -1) {
@@ -273,6 +274,7 @@ function updateSummary(arg) {
       tmp.className = index_class;
       tmp.innerText = index_str.replace('(x/', '(' + menber_list.length + '/').replace('/y)', '/' + max_count + ')');
       summary_text.insertAdjacentElement('beforeend', tmp);
+      summary_alt_text = tmp.innerText;
     } else if (index_str.indexOf('(x)') != -1) {
       // index_str has "(x)"   letters : x -> max_count
       if (max_count <= 0) {
@@ -282,11 +284,13 @@ function updateSummary(arg) {
       tmp.className = index_class;
       tmp.innerText = index_str.replace('(x)', '(' + max_count + ')');
       summary_text.insertAdjacentElement('beforeend', tmp);
+      summary_alt_text = tmp.innerText;
     } else {
       var tmp = document.createElement('span');
       tmp.className = index_class;
       tmp.innerText = index_str;
       summary_text.insertAdjacentElement('beforeend', tmp);
+      summary_alt_text = tmp.innerText;
     }
     var seer_list   = [];
     var medium_list = [];
@@ -321,18 +325,21 @@ function updateSummary(arg) {
       var c = 0;
       other_list.forEach(function(f){
         if (f.tagName === 'span' || f.tagName === 'SPAN') {
-          summary_text.insertAdjacentElement('beforeend', f);  
+          summary_text.insertAdjacentElement('beforeend', f);
+          summary_alt_text = summary_alt_text + f.innerText;
         } else {
           var tmp = document.createElement('span');
           tmp.className = setColorClass(arg.input.each_player[f]);
           tmp.innerText = f;
-          summary_text.insertAdjacentElement('beforeend', tmp);  
+          summary_text.insertAdjacentElement('beforeend', tmp);
+          summary_alt_text = summary_alt_text + tmp.innerText;
         }
         c = c + 1;
         if (c < other_list.length) {
           var sep = document.createElement('span');
           sep.innerText = "、";
-          summary_text.insertAdjacentElement('beforeend', sep);  
+          summary_text.insertAdjacentElement('beforeend', sep);
+          summary_alt_text = summary_alt_text + sep.innerText;
         }
       })
     }
@@ -340,14 +347,17 @@ function updateSummary(arg) {
       seer_list.forEach(function(f){
         summary_text.insertAdjacentElement('beforeend', document.createElement('br'));  
         summary_text.insertAdjacentElement('beforeend', f);
+        summary_alt_text = summary_alt_text + "\n";
       })
     }
     if (medium_list.length >= 1) {
       medium_list.forEach(function(f){
         summary_text.insertAdjacentElement('beforeend', document.createElement('br'));  
         summary_text.insertAdjacentElement('beforeend', f);
+        summary_alt_text = summary_alt_text + "\n";
       })
     }
+    summary_text.setAttribute('alt', summary_alt_text);
 
     parent_element.insertAdjacentElement('beforeend', summary);
     return;
