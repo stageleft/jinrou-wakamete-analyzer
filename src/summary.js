@@ -2,7 +2,11 @@ function updateSummary(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : -
   // Another output    : innerText of <div id="deduce-summary" />
+  var summary_table = document.createElement('table');
+  document.getElementById('deduce-summary').innerHTML = '';
+  document.getElementById('deduce-summary').insertAdjacentElement('beforeend', summary_table);
   var ret = document.createElement('tbody');
+  summary_table.insertAdjacentElement('beforeend', ret);
 
   // 本日（最新日）の日付
   var datearray;
@@ -261,8 +265,11 @@ function updateSummary(arg) {
   //            Object form: { comingout:"xxxx", enemymark:"xxxx" }
   function calcSubSummary(parent_element, index_str, index_class, max_count, menber_list, force_empty = false) {
     var summary = document.createElement('tr');
+    parent_element.insertAdjacentElement('beforeend', summary);
+
     var summary_text = document.createElement('td');
     summary.insertAdjacentElement('beforeend', summary_text);
+
 
     if (index_str.indexOf('(x/y)') != -1) {
       // index_str has "(x/y)" letters : x -> member_list.length, y -> max_count
@@ -321,18 +328,18 @@ function updateSummary(arg) {
       var c = 0;
       other_list.forEach(function(f){
         if (f.tagName === 'span' || f.tagName === 'SPAN') {
-          summary_text.insertAdjacentElement('beforeend', f);  
+          summary_text.insertAdjacentElement('beforeend', f);
         } else {
           var tmp = document.createElement('span');
           tmp.className = setColorClass(arg.input.each_player[f]);
           tmp.innerText = f;
-          summary_text.insertAdjacentElement('beforeend', tmp);  
+          summary_text.insertAdjacentElement('beforeend', tmp);
         }
         c = c + 1;
         if (c < other_list.length) {
           var sep = document.createElement('span');
           sep.innerText = "、";
-          summary_text.insertAdjacentElement('beforeend', sep);  
+          summary_text.insertAdjacentElement('beforeend', sep);
         }
       })
     }
@@ -349,7 +356,8 @@ function updateSummary(arg) {
       })
     }
 
-    parent_element.insertAdjacentElement('beforeend', summary);
+    var summary_alt_text = summary_text.innerText;
+    summary_text.setAttribute('alt', summary_alt_text);
     return;
   }
 
@@ -377,9 +385,21 @@ function updateSummary(arg) {
   calcSubSummary(ret, "【死体 (x)】", "", dnoted_count,  dnoted,  true);
   calcSubSummary(ret, "【復活 (x)】", "", revived_count, revived, true);
 
-  var summary_table = document.createElement('table');
-  summary_table.insertAdjacentElement('beforeend', ret);
-  document.getElementById('deduce-summary').innerHTML = '';
-  document.getElementById('deduce-summary').insertAdjacentElement('beforeend', summary_table);
+  // #139 整形を追加する。
+  var summary_area_width = parseInt(document.getElementById("link").offsetWidth) - 25; // size of scroll bar = 17
+  ret.childNodes.forEach(tr => {
+    var td = tr.childNodes[0];
+    var text = td.innerHTML.split('<br>');
+    var fixed_text = [];
+    text.forEach(t => {
+      fixed_text = fixed_text.concat(slice_string_by_visualLength(t, summary_area_width, false));
+    });
+    
+    var p = new DOMParser();
+    var span = p.parseFromString('<html><body><span>' + fixed_text.join('<br>') + '</span></body></html>', 'text/html').body.childNodes[0];
+    td.innerHTML = '';
+    td.appendChild(span);
+  });
+
   return;
 };

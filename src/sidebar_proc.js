@@ -205,19 +205,14 @@ function event_click_deduce(arg) {
   }
   return;
 }
-function event_click_votes(arg) {
+function event_click_td_alt(arg) {
   if (arg != null) {
     var o = arg.srcElement;
     while (( o.tagName.toLowerCase() != "td") && (o.tagName.toLowerCase() != "div")) {
       o = o.parentElement;
     }
     if (o.tagName.toLowerCase() == "td") {
-      // copy dayX,from,to if "to" clicked.
-      // assumed HTML is style is below.
-      //     <tr><td>----</td><td>...</td><td                      >dayX</td><td>...</td></tr>
-      //     <tr><td>....</td><td>...</td><td alt="dayX:....->....">....</td><td>...</td></tr>
-      //     <tr><td>from</td><td>...</td><td alt="dayX:from-> to "> to </td><td>...</td></tr>
-      //     <tr><td>....</td><td>...</td><td alt="dayX:....->....">....</td><td>...</td></tr>
+      // <tr><td alt="Copy-message-to-freememo">....</td></tr>
       if (o.getAttribute('alt') != null) {
         var v = document.getElementById("freememo").value;
         v = v + "\n" + o.getAttribute('alt');
@@ -239,16 +234,6 @@ function event_click_comments(arg) {
       v = v + "\n" + o.childNodes[2].textContent;
       document.getElementById("freememo").value = v;
     }
-  }
-  return;
-}
-function event_click_summary(arg) {
-  if (arg != null) {
-    var o = document.getElementById("deduce-summary");
-    // copy result
-    var v = document.getElementById("freememo").value;
-    v = v + "\n" + o.innerText;
-    document.getElementById("freememo").value = v;
   }
   return;
 }
@@ -275,9 +260,9 @@ function output_memo_template(arg) {
 // 余計な addEventListener() コールを最小化したい。
 document.getElementById("deduce"         ).addEventListener("click", function(e){ event_click_deduce(e); }, true);
 document.getElementById("control"        ).addEventListener("click", function(e){ event_click_deduce(e); }, true);
-document.getElementById("vote-summary"   ).addEventListener("click", function(e){ event_click_votes(e); }, true);
+document.getElementById("vote-summary"   ).addEventListener("click", function(e){ event_click_td_alt(e); }, true);
 document.getElementById("comment-summary").addEventListener("click", function(e){ event_click_comments(e); }, true);
-document.getElementById("deduce-summary" ).addEventListener("click", function(e){ event_click_summary(e); }, true);
+document.getElementById("deduce-summary" ).addEventListener("click", function(e){ event_click_td_alt(e); }, true);
 
 document.getElementById("is_dead"        ).addEventListener("change", function(e){ checkbox_change(e); }, true);
 document.getElementById("is_talented"    ).addEventListener("change", function(e){ checkbox_change(e); }, true);

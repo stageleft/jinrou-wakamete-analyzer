@@ -345,3 +345,56 @@ function updateInput(arg) {
 
   return ret;
 };
+
+function get_visualLength(str, isLarge) {
+  var p = new DOMParser();
+  var ret;
+  if (isLarge == false){
+    // case if Normal font
+    var normal_talk_cell_ruler = document.getElementById("normal-ruler");
+    normal_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
+    ret = normal_talk_cell_ruler.offsetWidth;
+    normal_talk_cell_ruler.textContent = "";
+  } else {
+    // case if Large font
+    var large_talk_cell_ruler = document.getElementById("large-ruler");
+    large_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
+    ret = large_talk_cell_ruler.offsetWidth;
+    large_talk_cell_ruler.textContent = "";
+  }
+  return ret;
+}
+function slice_string_by_visualLength(str, max_cell_size, isLarge) {
+  var ret = [];
+  // calcurate offsetWidth of each t
+  var t_visualLengthOld = 0;
+  var t_visualLength;
+  var old_i = 0;
+  var prev_i = 0;
+  for (var i = 0; i < str.length; i++) {
+    // skip tag from '<' to '>'
+    if (str[i] == '<') {
+      i = str.indexOf('>', i);
+      if (i == -1){
+        throw new Error('slice_string_by_visualLength : string has tag open < but not have tag close >. string=' + str);
+      } else if (i < old_i || str.length < i) {
+        throw new Error('slice_string_by_visualLength : str.indexOf() has some error. string=' + str + ' i=' + i.toString()+ ' old_i=' + old_i.toString()+ ' str.lentgh=' + str.length.toString());
+      }
+      continue;
+    }
+    // check length and split line if length is over
+    t_visualLength = get_visualLength(str.slice(old_i, i), isLarge);
+    if ((t_visualLength > t_visualLengthOld) && (t_visualLength >= max_cell_size)) {
+      ret.push(str.slice(old_i, prev_i));
+      old_i = prev_i;
+      t_visualLengthOld = 0;
+    } else {
+      t_visualLengthOld = t_visualLength;
+    }
+    prev_i = i;
+  }
+  if ((old_i < i) || (i == 0)) {
+    ret.push(str.slice(old_i));
+  }
+  return ret;
+}

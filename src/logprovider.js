@@ -124,48 +124,14 @@ function updateCommentLog(arg, param) {
     }
   }
   var table_talk_cell_size = table_row_max_size - table_name_cell_size - 25; // size of scroll bar = 17
-  var normal_talk_cell_ruler = document.getElementById("normal-ruler");
-  var large_talk_cell_ruler = document.getElementById("large-ruler");
   ret.childNodes.forEach(tr => {
-    function get_visualLength(str, isLarge) {
-      var p = new DOMParser();
-      var ret;
-      if (isLarge == false){
-        // case if Normal font
-        normal_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
-        ret = normal_talk_cell_ruler.offsetWidth;
-        normal_talk_cell_ruler.textContent = "";
-      } else {
-        // case if Large font
-        large_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
-        ret = large_talk_cell_ruler.offsetWidth;
-        large_talk_cell_ruler.textContent = "";
-      }
-      return ret;
-    }
     if (tr.childNodes.length != 1) {
       var talk_cell = tr.childNodes[1];
       var text = talk_cell.innerHTML.split("\n");
       talk_cell.innerHTML = "";
       var fixed_text = [];
       text.forEach(t => {
-        // calcurate offsetWidth of each t
-        var t_visualLengthOld = 0;
-        var t_visualLength;
-        var old_i = 0;
-        for (i = 0; i < t.length; i++) {
-          t_visualLength = get_visualLength(t.slice(old_i, i), talk_cell.style.fontSize != "");
-          if ((t_visualLength > t_visualLengthOld) && (t_visualLength >= table_talk_cell_size)) {
-            fixed_text.push(t.slice(old_i, i - 1));
-            old_i = i - 1;
-            t_visualLengthOld = 0;
-          } else {
-            t_visualLengthOld = t_visualLength;
-          }
-        }
-        if ((old_i < i) || (i == 0)) {
-          fixed_text.push(t.slice(old_i));
-        }
+        fixed_text = fixed_text.concat(slice_string_by_visualLength(t, table_talk_cell_size, talk_cell.style.fontSize != ""));
       });
       var p = new DOMParser();
       fixed_text.forEach(t => {
