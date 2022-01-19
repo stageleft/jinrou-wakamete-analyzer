@@ -39,8 +39,8 @@ npm install --save-dev jest
 npm run test
 ```
 
-カバレッジの出力
+カバレッジの出力（出力先： coverage ディレクトリ）
 
 ```bash
-npm test -- --coverage
+npm run coverage
 ```
