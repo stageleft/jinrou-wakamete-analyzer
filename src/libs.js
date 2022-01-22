@@ -41,20 +41,8 @@ export function createDateArray(arg, log_days) {
       // nop : String(i+1) + "日目の相当ログはありません。"
     }
   }
-  // afterplay
-  if (ret.length == 0) {
-    if (arg.log["「村　人」の勝利です！"] != null) {
-      ret.push("「村　人」の勝利です！");
-    } else if (arg.log["「人　狼」の勝利です！"] != null) {
-      ret.push("「人　狼」の勝利です！");
-    } else if (arg.log["「妖　狐」の勝利です！"] != null) {
-      ret.push("「妖　狐」の勝利です！");
-    } else if (arg.log["「猫　又」の勝利です！"] != null) {
-      ret.push("「猫　又」の勝利です！");
-    } else if (arg.log["「引き分け」です！"] != null) {
-      ret.push("「引き分け」です！");
-    }
-  }
+  // ignore afterplay log
+
   // 過去ログ日数制限
   var date_limit = log_days;
   if ((date_limit != 0) && (date_count > date_limit)) {
@@ -133,26 +121,28 @@ export function setColorClass(player_info){
   return '';
 }
 
-export function makeComingOutList(arg) {
-// input  : JSON from Web Storage API
-// output : Object {
-//             seer_co:{
-//                 "character-name": { ... },
-//                 "character-name": { ... },
-//                 ...
-//               },
-//             medium_co:     { ... },
-//             bodyguard_co:  { ... },
-//             freemason_co:  { ... },
-//             werecat_co:    { ... },
-//             werewolf_mark: { ... },
-//             posessed_mark: { ... },
-//             werefox_mark:  { ... },
-//             minifox_mark:  { ... },
-//             enemy_mark:    { ... },
-//             villager_live: { ... },
-//             villager_co:   { ... },
-//          },
+export function makeComingOutList(arg, log_days) {
+  // input
+  //   arg : JSON from Web Storage API
+  //   log_days : integer value (0-) from document.getElementById('datelimit_passed_log').value;
+  // output : Object {
+  //             seer_co:{
+  //                 "character-name": { ... },
+  //                 "character-name": { ... },
+  //                 ...
+  //               },
+  //             medium_co:     { ... },
+  //             bodyguard_co:  { ... },
+  //             freemason_co:  { ... },
+  //             werecat_co:    { ... },
+  //             werewolf_mark: { ... },
+  //             posessed_mark: { ... },
+  //             werefox_mark:  { ... },
+  //             minifox_mark:  { ... },
+  //             enemy_mark:    { ... },
+  //             villager_live: { ... },
+  //             villager_co:   { ... },
+  //          },
   // 村全体の情報 -> arg.input.<job>_count
   var ret = {};
   ret.seer_co       = {};
@@ -175,7 +165,7 @@ export function makeComingOutList(arg) {
 
   var datearray;
   var base_date;
-  [datearray, base_date] = createDateArray(arg);
+  [datearray, base_date] = createDateArray(arg, log_days);
   var datestr   = datearray[datearray.length - 1];
 
   Object.keys(arg.input.each_player).forEach(function(k){
@@ -215,31 +205,33 @@ export function makeComingOutList(arg) {
   return ret;
 }
 
-export function makeGrayVillagerList(arg) {
-// input  : JSON from Web Storage API
-// output : Object {
-//             villager_gray:{
-//                 "character-name": { ... },
-//                 "character-name": { ... },
-//                 ...
-//               },
-//             villager_white: { ... },
-//             villager_panda: { ... },
-//             villager_black: { ... },
-//             // merge makeComingOutList() results below.
-//             seer_co:       { ... },
-//             medium_co:     { ... },
-//             bodyguard_co:  { ... },
-//             freemason_co:  { ... },
-//             werecat_co:    { ... },
-//             werewolf_mark: { ... },
-//             posessed_mark: { ... },
-//             werefox_mark:  { ... },
-//             minifox_mark:  { ... },
-//             enemy_mark:    { ... },
-//             villager_live: { ... },
-//             villager_co:   { ... },
-//          },
+export function makeGrayVillagerList(arg, log_days) {
+  // input
+  //   arg : JSON from Web Storage API
+  //   log_days : integer value (0-) from document.getElementById('datelimit_passed_log').value;
+  // output : Object {
+  //             villager_gray:{
+  //                 "character-name": { ... },
+  //                 "character-name": { ... },
+  //                 ...
+  //               },
+  //             villager_white: { ... },
+  //             villager_panda: { ... },
+  //             villager_black: { ... },
+  //             // merge makeComingOutList() results below.
+  //             seer_co:       { ... },
+  //             medium_co:     { ... },
+  //             bodyguard_co:  { ... },
+  //             freemason_co:  { ... },
+  //             werecat_co:    { ... },
+  //             werewolf_mark: { ... },
+  //             posessed_mark: { ... },
+  //             werefox_mark:  { ... },
+  //             minifox_mark:  { ... },
+  //             enemy_mark:    { ... },
+  //             villager_live: { ... },
+  //             villager_co:   { ... },
+  //          },
   var ret = makeComingOutList(arg);
   ret.villager_gray  = {};
   ret.villager_white = {};
@@ -253,7 +245,7 @@ export function makeGrayVillagerList(arg) {
 
   var datearray;
   var base_date;
-  [datearray, base_date] = createDateArray(arg);
+  [datearray, base_date] = createDateArray(arg, log_days);
   var datestr   = datearray[datearray.length - 1];
 
   Object.keys(ret.seer_co).forEach(function(k){

@@ -78,7 +78,7 @@ describe('test suite of createDateArray', () => {
         const log_days = 0;
         expect(createDateArray(arg, log_days)).toStrictEqual([["１日目の朝となりました。", "2日目の朝となりました。", "3日目の朝となりました。", "3日目の夜となりました。"],"１日目の夜となりました。"]);
     });
-    test('createDateArray : after play log (villager)', () => {
+    test('createDateArray : ignore after play log (villager)', () => {
         const arg = {
             log: {
                 "１日目の朝となりました。": {},
@@ -93,7 +93,7 @@ describe('test suite of createDateArray', () => {
         const log_days = 0;
         expect(createDateArray(arg, log_days)).toStrictEqual([["１日目の朝となりました。", "2日目の朝となりました。", "3日目の朝となりました。", "3日目の夜となりました。"],"１日目の夜となりました。"]);
     });
-    test('createDateArray : after play log (werecat))', () => {
+    test('createDateArray : ignore after play log (werecat))', () => {
         const arg = {
             log: {
                 "１日目の朝となりました。": {},
@@ -108,7 +108,7 @@ describe('test suite of createDateArray', () => {
         const log_days = 0;
         expect(createDateArray(arg, log_days)).toStrictEqual([["１日目の朝となりました。", "2日目の朝となりました。", "3日目の朝となりました。", "3日目の夜となりました。"],"１日目の夜となりました。"]);
     });
-    test('createDateArray : after play log (werewolf)', () => {
+    test('createDateArray : ignore after play log (werewolf)', () => {
         const arg = {
             log: {
                 "１日目の朝となりました。": {},
@@ -123,7 +123,7 @@ describe('test suite of createDateArray', () => {
         const log_days = 0;
         expect(createDateArray(arg, log_days)).toStrictEqual([["１日目の朝となりました。", "2日目の朝となりました。", "3日目の朝となりました。", "3日目の夜となりました。"],"１日目の夜となりました。"]);
     });
-    test('createDateArray : after play log (werefox)', () => {
+    test('createDateArray : ignore after play log (werefox)', () => {
         const arg = {
             log: {
                 "１日目の朝となりました。": {},
@@ -138,7 +138,7 @@ describe('test suite of createDateArray', () => {
         const log_days = 0;
         expect(createDateArray(arg, log_days)).toStrictEqual([["１日目の朝となりました。", "2日目の朝となりました。", "3日目の朝となりました。", "3日目の夜となりました。"],"１日目の夜となりました。"]);
     });
-    test('createDateArray : after play log (werefox)', () => {
+    test('createDateArray : ignore after play log (draw)', () => {
         const arg = {
             log: {
                 "１日目の朝となりました。": {},
