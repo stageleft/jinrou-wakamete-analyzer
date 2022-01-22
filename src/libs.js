@@ -1,10 +1,14 @@
-export function createDateArray(arg) {
-  // usage : [datearray, base_date] = createDateArray(arg);
-  //         datearray.length : dates
-  //         datearray[0]  : date-string of day1
-  //         datearray[N-1]: date-string of dayN
-  // input  : JSON from Web Storage API
-  // output : [Array ["date-string(day1)", "date-string(day2)", ..., "date-string(current day)"], "date-string(night1)"]
+export function createDateArray(arg, log_days) {
+  // usage
+  //   [datearray, base_date] = createDateArray(arg, log_days);
+  //     datearray.length : dates
+  //     datearray[0]  : date-string of day1
+  //     datearray[N-1]: date-string of dayN
+  // input
+  //   arg : JSON from Web Storage API
+  //   log_days : integer value (0-) from document.getElementById('datelimit_passed_log').value;
+  // output
+  //   Array [["date-string(day1)", "date-string(day2)", ..., "date-string(current day)"], "date-string(night1)"]
   var ret = [];
   var base_date;
 
@@ -52,7 +56,7 @@ export function createDateArray(arg) {
     }
   }
   // 過去ログ日数制限
-  var date_limit = document.getElementById('datelimit_passed_log').value;
+  var date_limit = log_days;
   if ((date_limit != 0) && (date_count > date_limit)) {
     date_count = date_limit;
     while(ret.length > date_count) {
