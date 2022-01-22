@@ -1,2 +1,7 @@
+# node.js
 node_modules/
+package-lock.json
+
+# jest
 coverage/
+junit.xml

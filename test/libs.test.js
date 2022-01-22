@@ -1,4 +1,6 @@
-const logTag_d2n = require('../src/lib_logTag_d2n');
+'use strict';
+
+import { logTag_d2n } from '../src/libs.js';
 
 test('previous day1 PM -> day1 PM', () => { // Any other than dayX AM : same letter.
     expect(logTag_d2n("１日目の夜となりました。")).toBe("１日目の夜となりました。");
