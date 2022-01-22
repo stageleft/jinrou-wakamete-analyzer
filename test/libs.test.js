@@ -238,3 +238,43 @@ describe('test suite of logTag_d2n', () => {
         expect(logTag_d2n("3日目の夜となりました。")).toBe("3日目の夜となりました。");
     });
 });
+
+import { setColorClass } from '../src/libs.js';
+describe('test suite of setColorClass', () => {
+    const job_map = {
+        "村人":"",
+        "占い":"seer",
+        "霊能":"medium",
+        "狩人":"bodyguard",
+        "共有":"freemason",
+        "猫又":"werecat"
+    };
+    const mob_map = {
+        "村人":"villager",
+        "人外":"enemy",
+        "人狼":"werewolf",
+        "狂人":"posessed",
+        "妖狐":"werefox",
+        "子狐":"minifox"
+    };
+    Object.keys(job_map).forEach((comingout_info) => {
+        Object.keys(mob_map).forEach((enemymark_info) => {
+            test('setColorClass : co[' + comingout_info + '] and mark[' +  enemymark_info + ']', () => {
+                // input  : JSON Object : arg.input.each_player['target player']
+                const player_info = {
+                    comingout: comingout_info,
+                    enemymark: enemymark_info
+                };
+                if (enemymark_info === "村人") {
+                    expect(setColorClass(player_info)).toBe(job_map[comingout_info]);
+                } else {
+                    expect(setColorClass(player_info)).toBe(mob_map[enemymark_info]);
+                }
+            });        
+        });
+    });
+    test('setColorClass : illegal case', () => {
+        expect(setColorClass(undefined)).toBe(undefined);
+        expect(setColorClass(null)).toBe(undefined);
+    });
+});
