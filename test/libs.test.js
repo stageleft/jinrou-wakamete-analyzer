@@ -1,5 +1,6 @@
 'use strict';
 
+/*
 import { createDateArray } from '../src/libs.js';
 describe('test suite of createDateArray', () => {
     test('createDateArray : empty log', () => {
@@ -214,6 +215,7 @@ describe('test suite of createDateArray', () => {
         expect(createDateArray(arg, log_days)).toStrictEqual([["１日目の朝となりました。", "2日目の朝となりました。", "3日目の朝となりました。", "3日目の夜となりました。"],"１日目の夜となりました。"]);
     });
 });
+*/
 
 import { logTag_d2n } from '../src/libs.js';
 describe('test suite of logTag_d2n', () => {
