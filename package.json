@@ -1,0 +1,42 @@
+{
+  "name": "jinrou-wakamete-analyzer",
+  "version": "2.4.1",
+  "description": "Support tool for online [\"Are You a Werewolf?\" game in Wakamete Server](http://jinrou.aa0.netvolante.jp/~jinrou/).\r You get easier to correct and analyze Chat Log.\r It is Sidebar Plugins for Mozilla Firefox.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "ci": "",
+    "build": "zip jinrou-wakamete-analyzer.xpi src/*",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+  },
+  "jest": {
+    "verbose": true,
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
+    "coverageReporters": [
+      "clover",
+      "json",
+      "lcov",
+      "text",
+      "cobertura"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stageleft/jinrou-wakamete-analyzer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stageleft/jinrou-wakamete-analyzer/issues"
+  },
+  "homepage": "https://github.com/stageleft/jinrou-wakamete-analyzer#readme",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^27.4.7",
+    "jest-junit": "^13.0.0"
+  }
+}
