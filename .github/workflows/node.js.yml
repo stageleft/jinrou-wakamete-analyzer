@@ -29,16 +29,26 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test
+    - name: Upload Unit Test Results
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: Unit test Results
+        path: *.xml
 
   build:
 
     runs-on: ubuntu-latest
 
     steps:
+
     - name: Run zip
-    - uses: actions/checkout@v2
-    - run: zip jinrou-wakamete-analyzer.xpi src/*
-    - uses: actions/upload-artifact@v2
+      uses: actions/checkout@v2
+      run: zip jinrou-wakamete-analyzer.xpi src/*
+
+    - name: Upload zip
+      uses: actions/upload-artifact@v2
+      if: success()
       with:
         name: jinrou-wakamete-analyzer.xpi
         path: jinrou-wakamete-analyzer.xpi
