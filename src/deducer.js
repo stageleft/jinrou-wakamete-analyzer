@@ -1,3 +1,5 @@
+import { createDateArray,makeGrayVillagerList } from './libs.js';
+
 var job_list = ["村人","占い","霊能","狩人","共有","猫又"];
 var mob_list = ["村人","人外","人狼","狂人","妖狐","子狐"];
 var seer_result = ["","○","●"];
@@ -28,7 +30,7 @@ var cast_list = [
   {seer:2, medium:1, bodyguard:2, freemason:3, werecat:1, werewolf:7, posessed:2, werefox:3, minifox:0}, // 30 villager with werecat
 ];
 
-function updateInput(arg) {
+export function updateInput(arg) {
 // functional input  : JSON from Web Storage API
 //     'log' key of Web Storage API style
 // Another input     : inner table of <div id="deduce" />
@@ -104,7 +106,7 @@ function updateInput(arg) {
   return ret;
 };
 
-function updateInputField(arg) {
+export function updateInputField(arg) {
 // functional input  : JSON from Web Storage API
 //     'log' key of Web Storage API style
 // functional output : -
@@ -399,7 +401,7 @@ function updateInputField(arg) {
   return;
 }
 
-function refreshInputField(arg) {
+export function refreshInputField(arg) {
 // 表そのものを初期化する場合の処理（変更を含む）。
 // 保証するものは、タグ、IDまで。中身の保持はコール元で実施する。
 // functional input  : JSON from Web Storage API (input key must be refreshed)
@@ -443,7 +445,7 @@ function refreshInputField(arg) {
   var tr_title     = document.createElement('tr');
   tr_title.setAttribute('id', 'deducer-title');
 
-  td_day0title = document.createElement('td');
+  var td_day0title = document.createElement('td');
   td_day0title.innerText = '';
 
   tr_title.insertAdjacentElement('beforeend', td_day0title);

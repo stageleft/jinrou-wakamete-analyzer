@@ -1,4 +1,6 @@
-function template_seer(arg) {
+import { createDateArray } from './libs.js';
+
+export function template_seer(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
   var ret = [];
@@ -18,7 +20,7 @@ function template_seer(arg) {
   });
   return(ret.join("\n"));
 }
-function template_medium(arg) {
+export function template_medium(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
   var ret = [];
@@ -36,7 +38,7 @@ function template_medium(arg) {
   ret.push("霊能CO");
   return(ret.reverse().join("\n"));
 }
-function template_bodyguard(arg) {
+export function template_bodyguard(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
   var ret = [];
@@ -55,7 +57,7 @@ function template_bodyguard(arg) {
   ret.push("狩人CO");
   return(ret.reverse().join("\n"));
 }
-function template_freemason(arg) {
+export function template_freemason(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
   var ret = [];

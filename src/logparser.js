@@ -1,11 +1,12 @@
+import { createDateArray, logTag_d2n } from './libs.js';
+
 // function.js 関数群
 // style:
 //   json_data = function(text_data)
 //   html_data = function(json_data)
 //   json_data = function(json_data)
 
-
-function html2json_village_log(arg) {
+export function html2json_village_log(arg) {
 // input  : HTMLCollction
 //          <table width="770" cellspacing="5"><tbody> ... </tbody></table>
 // output : Hash

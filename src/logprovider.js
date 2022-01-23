@@ -1,4 +1,6 @@
-function updateCommentLog(arg, param) {
+import { createDateArray, logTag_d2n, setColorClass, slice_string_by_visualLength } from './libs.js';
+
+export function updateCommentLog(arg, param) {
 // functional input  : JSON from Web Storage API
 // functional output : -
 // Another output    : innerHtml of <div id="comment-summary" />

@@ -1,4 +1,6 @@
-function updateVotes(arg) {
+import { createDateArray, setColorClass } from './libs.js';
+
+export function updateVotes(arg) {
 // Another output : HTML for <div id="vote-summary" /> tag
 //    <thead>
 //     <tr id="vote-day"      ><td>----</td><td>...</td><td                       >dayX(1)</td><td>...</td></tr>
@@ -148,7 +150,7 @@ function updateVotes(arg) {
         if (j == 0) {
           body.insertAdjacentElement('beforeend', proc_set_vote_result(f, vote_count, null));
         } else {
-          p = arg.log[datestr].vote_log[j-1].vote[k]; // f of previous vote
+          var p = arg.log[datestr].vote_log[j-1].vote[k]; // f of previous vote
           body.insertAdjacentElement('beforeend', proc_set_vote_result(f, vote_count, p));          
         }
       });
