@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-    "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "ci": "",
+    "build": "zip jinrou-wakamete-analyzer.xpi src/*",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
   },
   "jest": {
     "verbose": true,
