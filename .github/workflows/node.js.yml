@@ -33,6 +33,7 @@ jobs:
       if: always()
       with:
         path: '*/*coverage.xml'
+        minimum_coverage: 0
         repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
