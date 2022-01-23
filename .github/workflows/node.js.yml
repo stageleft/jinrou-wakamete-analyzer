@@ -29,12 +29,11 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test
-    - name: Upload Unit Test Results
-      uses: actions/upload-artifact@v2
+    - uses: 5monkeys/cobertura-action@master
       if: always()
       with:
-        name: 'Unit test Results'
-        path: '*.xml'
+        path: '*/*coverage.xml'
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
 
