@@ -52,7 +52,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run zip
-      run: zip jinrou-wakamete-analyzer.xpi src/*
+      run: cd src && zip ../jinrou-wakamete-analyzer.xpi * && cd ..
 
     - name: Upload zip
       uses: actions/upload-artifact@v2
