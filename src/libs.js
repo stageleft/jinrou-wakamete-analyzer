@@ -1,10 +1,10 @@
-// usage : [datearray, base_date] = createDateArray(arg);
-//         datearray.length : dates
-//         datearray[0]  : date-string of day1
-//         datearray[N-1]: date-string of dayN
-function createDateArray(arg) {
-// input  : JSON from Web Storage API
-// output : [Array ["date-string(day1)", "date-string(day2)", ..., "date-string(current day)"], "date-string(night1)"]
+export function createDateArray(arg) {
+  // usage : [datearray, base_date] = createDateArray(arg);
+  //         datearray.length : dates
+  //         datearray[0]  : date-string of day1
+  //         datearray[N-1]: date-string of dayN
+  // input  : JSON from Web Storage API
+  // output : [Array ["date-string(day1)", "date-string(day2)", ..., "date-string(current day)"], "date-string(night1)"]
   var ret = [];
   var base_date;
 
@@ -70,9 +70,9 @@ function createDateArray(arg) {
   return [ret, base_date];
 }
 
-function logTag_d2n(key_day) {
-// input  : String "n日目の朝となりました。"(n>=2) or other
-// output : String "(n-1)日目の夜となりました。" or input
+export function logTag_d2n(key_day) {
+  // input  : String "n日目の朝となりました。"(n>=2) or other
+  // output : String "(n-1)日目の夜となりました。" or input
   var d = parseInt(key_day);
 
   // day 2..N -> night 1..(N-1)
@@ -88,9 +88,9 @@ function logTag_d2n(key_day) {
   return key_day;
 }
 
-function setColorClass(player_info){
-// input  : JSON Object : arg.input.each_player['target player']
-// output : String : CSS Class name. see sidebar.css
+export function setColorClass(player_info){
+  // input  : JSON Object : arg.input.each_player['target player']
+  // output : String : CSS Class name. see sidebar.css
   if (player_info === undefined || player_info === null) {
     return;
   }
@@ -129,26 +129,26 @@ function setColorClass(player_info){
   return '';
 }
 
-function makeComingOutList(arg) {
-// input  : JSON from Web Storage API
-// output : Object {
-//             seer_co:{
-//                 "character-name": { ... },
-//                 "character-name": { ... },
-//                 ...
-//               },
-//             medium_co:     { ... },
-//             bodyguard_co:  { ... },
-//             freemason_co:  { ... },
-//             werecat_co:    { ... },
-//             werewolf_mark: { ... },
-//             posessed_mark: { ... },
-//             werefox_mark:  { ... },
-//             minifox_mark:  { ... },
-//             enemy_mark:    { ... },
-//             villager_live: { ... },
-//             villager_co:   { ... },
-//          },
+export function makeComingOutList(arg) {
+  // input  : JSON from Web Storage API
+  // output : Object {
+  //             seer_co:{
+  //                 "character-name": { ... },
+  //                 "character-name": { ... },
+  //                 ...
+  //               },
+  //             medium_co:     { ... },
+  //             bodyguard_co:  { ... },
+  //             freemason_co:  { ... },
+  //             werecat_co:    { ... },
+  //             werewolf_mark: { ... },
+  //             posessed_mark: { ... },
+  //             werefox_mark:  { ... },
+  //             minifox_mark:  { ... },
+  //             enemy_mark:    { ... },
+  //             villager_live: { ... },
+  //             villager_co:   { ... },
+  //          },
   // 村全体の情報 -> arg.input.<job>_count
   var ret = {};
   ret.seer_co       = {};
@@ -211,31 +211,31 @@ function makeComingOutList(arg) {
   return ret;
 }
 
-function makeGrayVillagerList(arg) {
-// input  : JSON from Web Storage API
-// output : Object {
-//             villager_gray:{
-//                 "character-name": { ... },
-//                 "character-name": { ... },
-//                 ...
-//               },
-//             villager_white: { ... },
-//             villager_panda: { ... },
-//             villager_black: { ... },
-//             // merge makeComingOutList() results below.
-//             seer_co:       { ... },
-//             medium_co:     { ... },
-//             bodyguard_co:  { ... },
-//             freemason_co:  { ... },
-//             werecat_co:    { ... },
-//             werewolf_mark: { ... },
-//             posessed_mark: { ... },
-//             werefox_mark:  { ... },
-//             minifox_mark:  { ... },
-//             enemy_mark:    { ... },
-//             villager_live: { ... },
-//             villager_co:   { ... },
-//          },
+export function makeGrayVillagerList(arg) {
+  // input  : JSON from Web Storage API
+  // output : Object {
+  //             villager_gray:{
+  //                 "character-name": { ... },
+  //                 "character-name": { ... },
+  //                 ...
+  //               },
+  //             villager_white: { ... },
+  //             villager_panda: { ... },
+  //             villager_black: { ... },
+  //             // merge makeComingOutList() results below.
+  //             seer_co:       { ... },
+  //             medium_co:     { ... },
+  //             bodyguard_co:  { ... },
+  //             freemason_co:  { ... },
+  //             werecat_co:    { ... },
+  //             werewolf_mark: { ... },
+  //             posessed_mark: { ... },
+  //             werefox_mark:  { ... },
+  //             minifox_mark:  { ... },
+  //             enemy_mark:    { ... },
+  //             villager_live: { ... },
+  //             villager_co:   { ... },
+  //          },
   var ret = makeComingOutList(arg);
   ret.villager_gray  = {};
   ret.villager_white = {};
@@ -286,7 +286,7 @@ function makeGrayVillagerList(arg) {
   return ret;
 }
 
-function get_visualLength(str, isLarge) {
+export function get_visualLength(str, isLarge) {
   var p = new DOMParser();
   var ret;
   if (isLarge == false){
@@ -304,7 +304,8 @@ function get_visualLength(str, isLarge) {
   }
   return ret;
 }
-function slice_string_by_visualLength(str, max_cell_size, isLarge) {
+
+export function slice_string_by_visualLength(str, max_cell_size, isLarge) {
   var ret = [];
   // calcurate offsetWidth of each t
   var t_visualLengthOld = 0;
