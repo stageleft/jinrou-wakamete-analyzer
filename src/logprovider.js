@@ -34,8 +34,8 @@ function updateCommentLog(arg, param) {
     var tr = document.createElement('tr');
 
     var td1 = document.createElement('td');
-    td1.innerText = l.speaker
-    td1.className = setColorClass(arg.input.each_player[l.speaker]);
+    td1.innerText = l.speaker.trim();
+    td1.className = setColorClass(arg.input.each_player[l.speaker.trim()]);
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
@@ -49,7 +49,7 @@ function updateCommentLog(arg, param) {
 
     var td3 = document.createElement('td');
     td3.setAttribute('style', 'display:none;visibility:hidden;width:0px;');
-    td3.textContent = p.parseFromString('◆' + l.speaker + 'さん' + "\t" + '「'  + l.comment.join('\n') + '」</td></body></html>', 'text/html').body.textContent;
+    td3.textContent = p.parseFromString('◆' + l.speaker.trim() + 'さん' + "\t" + '「'  + l.comment.join('\n') + '」</td></body></html>', 'text/html').body.textContent;
     tr.insertAdjacentElement('beforeend', td3);
 
     return tr;
