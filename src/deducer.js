@@ -169,7 +169,7 @@ function updateInputField(arg) {
         var datekey = datearray[i-1];
         var c = 0;
         arg.log[datekey].comments.forEach(function(h){
-          if ( k == h.speaker ) {
+          if ( k == h.speaker.trim() ) {
             c = c + 1;
           }
         });
