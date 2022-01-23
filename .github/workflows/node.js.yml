@@ -42,8 +42,10 @@ jobs:
 
     steps:
 
-    - name: Run zip
+    - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Run zip
       run: zip jinrou-wakamete-analyzer.xpi src/*
 
     - name: Upload zip
