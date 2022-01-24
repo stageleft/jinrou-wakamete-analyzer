@@ -1,3 +1,5 @@
+"use strict";
+
 import { createDateArray,makeGrayVillagerList } from './libs.js';
 
 var job_list = ["村人","占い","霊能","狩人","共有","猫又"];
@@ -99,12 +101,12 @@ export function updateInput(arg) {
       var target_obj = document.getElementById('stat-' + k + '-' + String(i) + '-target')
       ret.each_player[k][datestr].target      = (target_obj == null) ? null : target_obj.value;
       var result_obj = document.getElementById('stat-' + k + '-' + String(i) + '-result')
-      ret.each_player[k][datestr].result      = (result_obj == null) ? null : result_obj.value;;
+      ret.each_player[k][datestr].result      = (result_obj == null) ? null : result_obj.value;
     }
   });
 
   return ret;
-};
+}
 
 export function updateInputField(arg) {
 // functional input  : JSON from Web Storage API
@@ -158,7 +160,7 @@ export function updateInputField(arg) {
 
   if (is_initialize == true) {
     refreshInputField(arg);
-  };
+  }
 
   //// process 1 : add info from 'log'
   var player_list = Object.keys(arg.log[base_date].players);
@@ -185,10 +187,10 @@ export function updateInputField(arg) {
       } else {
         // if dead
         var target = document.getElementById('stat-' + k + '-' + String(i) + '-target');
-        if (target != null) { target.remove(); };
+        if (target != null) { target.remove(); }
 
         var result = document.getElementById('stat-' + k + '-' + String(i) + '-result');
-        if (result != null) { result.remove(); };
+        if (result != null) { result.remove(); }
 
         if ((i <= 2) ||
             (arg.log[datearray[i-2]].players[k].stat == "（生存中）")) {
@@ -277,9 +279,7 @@ export function updateInputField(arg) {
     }
 
     player_list.forEach(function(k){
-      var tr = document.getElementById('villager-list-'+k);
       var job = document.getElementById('job-' + k).value; // deduced Job
-      var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
 
       for (var i = 2 ; i <= datearray.length ; i++) {
         var datestring   = datearray[i-1];
@@ -467,11 +467,11 @@ export function refreshInputField(arg) {
     td.setAttribute('id', 'deducer-title-' + String(i));
     td.setAttribute('colspan', '3');
 
-    var a  = document.createElement('a');
-    a.setAttribute('id', 'date-log-' + String(i));
-    a.setAttribute('href', '#');
-    a.innerText = String(i) + "日目";
-    td.insertAdjacentElement('afterbegin', a);
+    var a_day  = document.createElement('a');
+    a_day.setAttribute('id', 'date-log-' + String(i));
+    a_day.setAttribute('href', '#');
+    a_day.innerText = String(i) + "日目";
+    td.insertAdjacentElement('afterbegin', a_day);
 
     tr_title.insertAdjacentElement('beforeend', td);
   }
@@ -525,17 +525,13 @@ export function refreshInputField(arg) {
     img.setAttribute("src", arg.log[base_date].players[k].icon);
     td_villager.insertAdjacentElement('afterbegin', img);
 
-    // villager_list: count comments in forEach loop
-    var comments = 0;
-    var stat = "（生存中）";
-
     tr.insertAdjacentElement('beforeend', td_villager);
 
     //// process 2: add job and mob deducer field into 2nd to 4th col
 
     // deducer: deduced Job
-    var td_b = document.createElement('td');
-    td_b.innerText="ＣＯ"
+    var td_co = document.createElement('td');
+    td_co.innerText="ＣＯ"
     var deduced_job = document.createElement('select');
     deduced_job.setAttribute('id', 'job-' + k);
     job_list.forEach(function(v){
@@ -544,13 +540,13 @@ export function refreshInputField(arg) {
       o.innerText = v;
       deduced_job.insertAdjacentElement('beforeend', o);
     });
-    td_b.insertAdjacentElement('beforeend', document.createElement('br'));
-    td_b.insertAdjacentElement('beforeend', deduced_job);
-    tr.insertAdjacentElement('beforeend', td_b);
+    td_co.insertAdjacentElement('beforeend', document.createElement('br'));
+    td_co.insertAdjacentElement('beforeend', deduced_job);
+    tr.insertAdjacentElement('beforeend', td_co);
 
     // deducer: Monster Mark
-    var td_c = document.createElement('td');
-    td_c.innerText="推理"
+    var td_mm = document.createElement('td');
+    td_mm.innerText="推理"
     var monster_mark = document.createElement('select');
     monster_mark.setAttribute('id', 'mrk-' + k);
     mob_list.forEach(function(v){
@@ -559,9 +555,9 @@ export function refreshInputField(arg) {
       o.innerText = v;
       monster_mark.insertAdjacentElement('beforeend', o);
     });
-    td_c.insertAdjacentElement('beforeend', document.createElement('br'));
-    td_c.insertAdjacentElement('beforeend', monster_mark);
-    tr.insertAdjacentElement('beforeend', td_c);
+    td_mm.insertAdjacentElement('beforeend', document.createElement('br'));
+    td_mm.insertAdjacentElement('beforeend', monster_mark);
+    tr.insertAdjacentElement('beforeend', td_mm);
 
     //// process 3 : add <td> cell for day 2..N
     for (var i = datearray.length ; i >= 2 ; i--) {
@@ -606,4 +602,4 @@ export function refreshInputField(arg) {
   document.getElementById("deduce").insertAdjacentElement('afterbegin', ret);
 
   return;
-};
+}

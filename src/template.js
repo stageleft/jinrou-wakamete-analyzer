@@ -1,3 +1,5 @@
+"use strict";
+
 import { createDateArray } from './libs.js';
 
 export function template_seer(arg) {
@@ -6,11 +8,8 @@ export function template_seer(arg) {
   var ret = [];
 
   // 本日（最新日）の日付
-  var datearray;
-  var base_date; // unused
-  var today;
-  [datearray, base_date] = createDateArray(arg);
-  today = datearray[datearray.length - 1];
+  var datearray = createDateArray(arg)[0];
+  var today = datearray[datearray.length - 1];
 
   var player_list = Object.keys(arg.log[today].players);
   player_list.forEach(function(k){
@@ -26,9 +25,7 @@ export function template_medium(arg) {
   var ret = [];
 
   // 日付情報
-  var datearray;
-  var base_date; // unused
-  [datearray, base_date] = createDateArray(arg);
+  var datearray = createDateArray(arg)[0];
 
   datearray.forEach(function(d){
     arg.log[d].list_voted.forEach(function(k){
@@ -44,10 +41,7 @@ export function template_bodyguard(arg) {
   var ret = [];
 
   // 日付情報
-  var datearray;
-  var base_date; // unused
-  [datearray, base_date] = createDateArray(arg);
-  today = datearray[datearray.length - 1];
+  var datearray = createDateArray(arg)[0];
 
   datearray.forEach(function(d){
     arg.log[d].list_bitten.forEach(function(k){
@@ -63,11 +57,8 @@ export function template_freemason(arg) {
   var ret = [];
 
   // 本日（最新日）の日付
-  var datearray;
-  var base_date; // unused
-  var today;
-  [datearray, base_date] = createDateArray(arg);
-  today = datearray[datearray.length - 1];
+  var datearray = createDateArray(arg)[0];
+  var today = datearray[datearray.length - 1];
   var player_list = Object.keys(arg.log[today].players);
 
   player_list.forEach(function(k){

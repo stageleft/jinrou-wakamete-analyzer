@@ -1,3 +1,6 @@
+/* eslint-disable no-irregular-whitespace */
+"use strict";
+
 import { createDateArray, logTag_d2n } from './libs.js';
 
 // function.js 関数群
@@ -79,11 +82,11 @@ export function html2json_village_log(arg) {
   }
 
   var base_input_list = base_table.querySelectorAll("input");
-  for (var i = 0 ; i < base_input_list.length ; i++) {
-    if (base_input_list.item(i).name == "VILLAGENO") {
+  for (var j = 0 ; j < base_input_list.length ; j++) {
+    if (base_input_list.item(j).name == "VILLAGENO") {
       // get village number from below tag.
       //   <input type="hidden" name="VILLAGENO" value="153063">
-      ret.village_number = base_input_list.item(i).value;
+      ret.village_number = base_input_list.item(j).value;
     } else {
       // nop : information to system.
       //    <input type="hidden" name="TXTPNO" value="60">
@@ -99,9 +102,7 @@ export function html2json_village_log(arg) {
     Object.assign(ret.log[Object.keys(ret.log)[0]].players, player_list);
   } else {
     // multi days log
-    var datearray;
-    var base_date;
-    [datearray, base_date] = createDateArray(ret);
+    var datearray = createDateArray(ret)[0];
     if ((datearray == null) || (datearray.length == 0)){
       return;
     }
@@ -109,12 +110,13 @@ export function html2json_village_log(arg) {
       player_list[k].stat = "（生存中）";
     });
     datearray.forEach(function(d){
+      var p; // datearray[datearray.indexOf(d) - 1] if d > (day1 AM)
       if (d == "１日目の朝となりました。") {
         ret.log[d].players = {};
         Object.assign(ret.log[d].players, player_list);
         return;
       } else if ((d != logTag_d2n(d)) && (ret.log[logTag_d2n(d)] != null)) {
-        var p = datearray[datearray.indexOf(d) - 1];
+        p = datearray[datearray.indexOf(d) - 1];
         // set player_list into current log
         // (n-1)th Nighttime: calc player_list of 1 day ago from ret.log[l].list_*
         var n = logTag_d2n(d);
@@ -158,7 +160,7 @@ export function html2json_village_log(arg) {
           }
         });
       } else {
-        var p = datearray[datearray.indexOf(d) - 1];
+        p = datearray[datearray.indexOf(d) - 1];
         ret.log[d].players = {};
         Object.keys(player_list).forEach(function(k){
           ret.log[d].players[k] = {icon:ret.log[p].players[k].icon, stat:""};
@@ -182,7 +184,7 @@ export function html2json_village_log(arg) {
     });
   }
   return ret;
-};
+}
 
 function html2json_villager_list(arg) {
 // input  : HTMLCollction
@@ -195,7 +197,7 @@ function html2json_villager_list(arg) {
 //            }
 //           stat:value : "（生存中）" or "（死　亡）"
   var ret = {};
-  var re = new RegExp('^\.\/', '');
+  var re = new RegExp(/^\.\//, '');
 
 //  console.log(arg.innerHTML); // debug
 
@@ -252,7 +254,7 @@ function html2log(arg) {
 //          "date-string":{},
 //          ...
 //   type:value : "Normal" or "Strong" or "WithColor"
-  var re = new RegExp('^\.\/', '');
+  var re = new RegExp(/^\.\//, '');
 
   function init_ret(){
     var o = { msg_date:     null,
@@ -266,8 +268,7 @@ function html2log(arg) {
               vote_log:     []
             };
     return o;
-  };
-  var msg_date = null;
+  }
   var datearray = [];
   var ret = {};
   var current_day_log = init_ret();
@@ -394,17 +395,17 @@ function html2log(arg) {
         ret[d].vote_log = ret[d].vote_log.reverse();
       } catch(e) {
         // nop : d is other than msg_date;
-      };
+      }
     });
     // shift all list 1 day.
-    for (var i = 0; i < datearray.length - 2; i++){
-      ret[datearray[i]].list_bitten  = ret[datearray[i+1]].list_bitten;  // (n-1) night -> n day
-      ret[datearray[i]].list_voted   = ret[datearray[i+2]].list_voted;   // (n-1) day   -> n day
-      ret[datearray[i]].list_revived = ret[datearray[i+1]].list_revived; // (n-1) night -> n day
-      ret[datearray[i]].list_cursed  = ret[datearray[i+2]].list_cursed;  // (n-1) day   -> n day
-      ret[datearray[i]].list_dnoted  = ret[datearray[i+1]].list_dnoted;  // (n-1) night -> n day
-      ret[datearray[i]].list_sudden  = ret[datearray[i+1]].list_sudden;
-      ret[datearray[i]].list_sudden.concat(ret[datearray[i+2]].list_sudden);  // (n-1) day + (n-1) night -> n day
+    for (var j = 0; j < datearray.length - 2; j++){
+      ret[datearray[j]].list_bitten  = ret[datearray[j+1]].list_bitten;  // (n-1) night -> n day
+      ret[datearray[j]].list_voted   = ret[datearray[j+2]].list_voted;   // (n-1) day   -> n day
+      ret[datearray[j]].list_revived = ret[datearray[j+1]].list_revived; // (n-1) night -> n day
+      ret[datearray[j]].list_cursed  = ret[datearray[j+2]].list_cursed;  // (n-1) day   -> n day
+      ret[datearray[j]].list_dnoted  = ret[datearray[j+1]].list_dnoted;  // (n-1) night -> n day
+      ret[datearray[j]].list_sudden  = ret[datearray[j+1]].list_sudden;
+      ret[datearray[j]].list_sudden.concat(ret[datearray[j+2]].list_sudden);  // (n-1) day + (n-1) night -> n day
     }
     if (datearray >= 2) {
       ret[datearray[datearray.length - 2]].list_bitten  = ret[datearray[datearray.length - 1]].list_bitten;

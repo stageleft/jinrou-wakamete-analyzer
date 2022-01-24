@@ -1,3 +1,5 @@
+"use strict";
+
 import { createDateArray, setColorClass, makeGrayVillagerList, slice_string_by_visualLength } from './libs.js';
 
 export function updateSummary(arg) {
@@ -11,9 +13,7 @@ export function updateSummary(arg) {
   summary_table.insertAdjacentElement('beforeend', ret);
 
   // 本日（最新日）の日付
-  var datearray;
-  var base_date; // unused
-  [datearray, base_date] = createDateArray(arg);
+  var datearray = createDateArray(arg)[0];
 
   // 参加者の、推理情報による振り分け情報
   var list = makeGrayVillagerList(arg);
@@ -404,4 +404,4 @@ export function updateSummary(arg) {
   });
 
   return;
-};
+}
