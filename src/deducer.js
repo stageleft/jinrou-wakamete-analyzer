@@ -332,7 +332,7 @@ export function updateInputField(arg) {
                 target_label.innerText = '吊り先';
                 target.setAttribute('disabled', 'disabled');
                 target.style.visibility = 'visible';
-                voted_player = arg.log[datestring].list_voted[0];
+                var voted_player = arg.log[datestring].list_voted[0];
                 var o = document.createElement('option');
                 o.setAttribute("value", voted_player);
                 o.innerText = voted_player;
