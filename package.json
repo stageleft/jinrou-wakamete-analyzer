@@ -38,6 +38,7 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^8.7.0",
+    "eslint-plugin-jest": "^26.0.0",
     "jest": "^27.4.7",
     "jest-junit": "^13.0.0"
   }
