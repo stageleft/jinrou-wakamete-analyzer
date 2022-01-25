@@ -1,4 +1,9 @@
-function updateCommentLog(arg, param) {
+/* eslint-disable no-irregular-whitespace */
+"use strict";
+
+import { createDateArray, logTag_d2n, setColorClass, slice_string_by_visualLength } from './libs.js';
+
+export function updateCommentLog(arg, param) {
 // functional input  : JSON from Web Storage API
 // functional output : -
 // Another output    : innerHtml of <div id="comment-summary" />
@@ -56,14 +61,14 @@ function updateCommentLog(arg, param) {
   }
 
   // 本日（最新日）の日付
-  var datearray;
-  var base_date; // unused
-  [datearray, base_date] = createDateArray(arg);
+  var datearray= createDateArray(arg)[0];
   var date_count = datearray.length;
+  var datestr;
+  var datestr_night;
 
   if (param.indexOf('date-log-') == 0) {
     // create day log by date
-    var datestr = datearray[Number(param.replace('date-log-','')) - 1];
+    datestr = datearray[Number(param.replace('date-log-','')) - 1];
     if (arg.log[datestr] != null) {
       ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr));
       arg.log[datestr].comments.forEach(function(l){
@@ -71,7 +76,7 @@ function updateCommentLog(arg, param) {
       });
     }
     // create previous night log by date (if day2..N)
-    var datestr_night = logTag_d2n(datestr);
+    datestr_night = logTag_d2n(datestr);
     if ((datestr_night != datestr) && (arg.log[datestr_night] != null)) {
       ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr_night));
       arg.log[datestr_night].comments.forEach(function(l){
@@ -82,7 +87,7 @@ function updateCommentLog(arg, param) {
     var villager_str = param.replace('all-day-log-','');
     // create log by villager
     for (var i = date_count ; i >= 1 ; i-- ) {
-      var datestr = datearray[i-1];
+      datestr = datearray[i-1];
       // create day log by date
       if (arg.log[datestr] != null) {
         ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr));
@@ -93,7 +98,7 @@ function updateCommentLog(arg, param) {
         });
       }
       // create previous night log by date (if day2..N)
-      var datestr_night = logTag_d2n(datestr);
+      datestr_night = logTag_d2n(datestr);
       if ((datestr_night != datestr) && (arg.log[datestr_night] != null)) {
         ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr_night));
         arg.log[datestr_night].comments.forEach(function(l){
@@ -148,4 +153,4 @@ function updateCommentLog(arg, param) {
   });
   
   return;
-};
+}

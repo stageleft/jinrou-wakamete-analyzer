@@ -1,3 +1,6 @@
+/* eslint-disable no-irregular-whitespace */
+"use strict";
+
 // value
 const URL_TOP_literal = /^http:\/\/.*\/~jinrou\/(|index.html)$/g;
 
@@ -30,7 +33,7 @@ try {
 } catch(e) {
   console.log(e.name + ':' + e.message);
   console.log(e.stack);
-};
+}
 
 // onLogLoad
 function handleResponse(message){
@@ -142,7 +145,8 @@ try {
 } catch(e) {
   console.log(e.name + ':' + e.message);
   console.log(e.stack);
-};
+}
+
 setTimeout(onRefreshView, 10000);
 
 setInterval(onLogLoad, 300);

@@ -1,3 +1,5 @@
+"use strict";
+
 export function createDateArray(arg) {
   // usage : [datearray, base_date] = createDateArray(arg);
   //         datearray.length : dates
@@ -165,13 +167,11 @@ export function makeComingOutList(arg) {
   ret.villager_co   = {};
 
   // preprocess : check arg has input.
-  if (arg.log               == null) { return ret; };
-  if (arg.input             == null) { return ret; };
-  if (arg.input.each_player == null) { return ret; };
+  if (arg.log               == null) { return ret; }
+  if (arg.input             == null) { return ret; }
+  if (arg.input.each_player == null) { return ret; }
 
-  var datearray;
-  var base_date;
-  [datearray, base_date] = createDateArray(arg);
+  var datearray = createDateArray(arg)[0];
   var datestr   = datearray[datearray.length - 1];
 
   Object.keys(arg.input.each_player).forEach(function(k){
@@ -244,13 +244,10 @@ export function makeGrayVillagerList(arg) {
   Object.assign(ret.villager_gray, ret.villager_co);
 
   // preprocess : check arg has input.
-  if (arg.log   == null) { return ret; };
-  if (arg.input == null) { return ret; };
+  if (arg.log   == null) { return ret; }
+  if (arg.input == null) { return ret; }
 
-  var datearray;
-  var base_date;
-  [datearray, base_date] = createDateArray(arg);
-  var datestr   = datearray[datearray.length - 1];
+  var datearray = createDateArray(arg)[0];
 
   Object.keys(ret.seer_co).forEach(function(k){
     datearray.forEach(function(d){

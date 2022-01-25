@@ -1,14 +1,15 @@
-function template_seer(arg) {
+"use strict";
+
+import { createDateArray } from './libs.js';
+
+export function template_seer(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
   var ret = [];
 
   // 本日（最新日）の日付
-  var datearray;
-  var base_date; // unused
-  var today;
-  [datearray, base_date] = createDateArray(arg);
-  today = datearray[datearray.length - 1];
+  var datearray = createDateArray(arg)[0];
+  var today = datearray[datearray.length - 1];
 
   var player_list = Object.keys(arg.log[today].players);
   player_list.forEach(function(k){
@@ -18,15 +19,13 @@ function template_seer(arg) {
   });
   return(ret.join("\n"));
 }
-function template_medium(arg) {
+export function template_medium(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
   var ret = [];
 
   // 日付情報
-  var datearray;
-  var base_date; // unused
-  [datearray, base_date] = createDateArray(arg);
+  var datearray = createDateArray(arg)[0];
 
   datearray.forEach(function(d){
     arg.log[d].list_voted.forEach(function(k){
@@ -36,16 +35,13 @@ function template_medium(arg) {
   ret.push("霊能CO");
   return(ret.reverse().join("\n"));
 }
-function template_bodyguard(arg) {
+export function template_bodyguard(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
   var ret = [];
 
   // 日付情報
-  var datearray;
-  var base_date; // unused
-  [datearray, base_date] = createDateArray(arg);
-  today = datearray[datearray.length - 1];
+  var datearray = createDateArray(arg)[0];
 
   datearray.forEach(function(d){
     arg.log[d].list_bitten.forEach(function(k){
@@ -55,17 +51,14 @@ function template_bodyguard(arg) {
   ret.push("狩人CO");
   return(ret.reverse().join("\n"));
 }
-function template_freemason(arg) {
+export function template_freemason(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
   var ret = [];
 
   // 本日（最新日）の日付
-  var datearray;
-  var base_date; // unused
-  var today;
-  [datearray, base_date] = createDateArray(arg);
-  today = datearray[datearray.length - 1];
+  var datearray = createDateArray(arg)[0];
+  var today = datearray[datearray.length - 1];
   var player_list = Object.keys(arg.log[today].players);
 
   player_list.forEach(function(k){

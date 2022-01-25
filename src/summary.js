@@ -1,4 +1,8 @@
-function updateSummary(arg) {
+"use strict";
+
+import { createDateArray, setColorClass, makeGrayVillagerList, slice_string_by_visualLength } from './libs.js';
+
+export function updateSummary(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : -
   // Another output    : innerText of <div id="deduce-summary" />
@@ -9,9 +13,7 @@ function updateSummary(arg) {
   summary_table.insertAdjacentElement('beforeend', ret);
 
   // 本日（最新日）の日付
-  var datearray;
-  var base_date; // unused
-  [datearray, base_date] = createDateArray(arg);
+  var datearray = createDateArray(arg)[0];
 
   // 参加者の、推理情報による振り分け情報
   var list = makeGrayVillagerList(arg);
@@ -150,7 +152,7 @@ function updateSummary(arg) {
     delete seer_gray_list[player_name];
 
     var ret = document.createElement('span');
-    ret_init = '　' + player_name + separator;
+    var ret_init = '　' + player_name + separator;
     ret.innerText = ret_init;
     datearray.forEach(function(d){
       var date_info = player_info[d];
@@ -221,7 +223,7 @@ function updateSummary(arg) {
       var gray_prefix  = document.createElement('span');
       gray_prefix.innerText  = '　（視点グレー：';
       ret.insertAdjacentElement('beforeend', gray_prefix);
-      c = 0;
+      var c = 0;
       Object.keys(seer_gray_list).forEach(function(f){
         var tmp = document.createElement('span');
         tmp.className = setColorClass(arg.input.each_player[f]);
@@ -402,4 +404,4 @@ function updateSummary(arg) {
   });
 
   return;
-};
+}

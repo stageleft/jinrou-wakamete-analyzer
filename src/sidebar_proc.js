@@ -1,38 +1,38 @@
-var recvLog_lock = false;
-var comment_id   = null;
-var village_number = null;
+"use strict";
 
-var update_summary_flag_data = null;
+import { html2json_village_log } from './logparser.js';
+import { refreshInputField, updateInput, updateInputField } from './deducer.js';
+import { updateCommentLog } from './logprovider.js';
+import { updateSummary } from './summary.js';
+import { updateVotes } from './votes.js';
 
-// memory area to store values
-var stored_value   = {};
-var stored_raw_log = {};
+export var village_number = null;
 
 // ref. https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
-function recvLog_proc(request) {
+export function recvLog_proc(request) {
 // input  : JSON
 //          style : { html_log: village_log_html, text_log: village_log_text, txtc_log: village_log_txtC }
 //          see onLogLoad() in wakamete-plugins.js
 // output : JSON (fixed value)
 //          {response: "OK"}
-  if (recvLog_lock == false) {
-   recvLog_lock = true;
+  if ((recvLog_proc.lock == undefined) || (recvLog_proc.lock == false)) {
+    recvLog_proc.lock = true;
   } else {
     return;
-  };
+  }
 
   // Load from memory area or Web Storaget API
-  if (stored_value === {}) {
-    stored_value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info"))) || {};
+  if (recvLog_proc.stored_value == undefined || recvLog_proc.stored_value === {}) {
+    recvLog_proc.stored_value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info"))) || {};
   }
-  var value             = JSON.parse(JSON.stringify(stored_value)); // deep copy
-  var stored_value_prev = JSON.parse(JSON.stringify(stored_value)); // deep copy
+  var value             = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
+  var stored_value_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
 
-  if (stored_raw_log === {}) {
-    stored_raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_raw_log"))) || {};
+  if (recvLog_proc.stored_raw_log == undefined || recvLog_proc.stored_raw_log === {}) {
+    recvLog_proc.stored_raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_raw_log"))) || {};
   }
-  var raw_log             = JSON.parse(JSON.stringify(stored_raw_log)); // deep copy
-  var stored_raw_log_prev = JSON.parse(JSON.stringify(stored_raw_log)); // deep copy
+  var raw_log             = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
+  var stored_raw_log_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
 
   // Parse and Update wakamete village log
   var is_same_village = true;
@@ -74,7 +74,7 @@ function recvLog_proc(request) {
     //   (1) no log
     console.log(e.name + ':' + e.message);
     console.log(e.stack);  
-  };
+  }
   try {
     updateInputField(value[village_number]);
   } catch(e) {
@@ -88,7 +88,7 @@ function recvLog_proc(request) {
       //   (1) no log
       console.log(e.name + ':' + e.message);
       console.log(e.stack);  
-    };
+    }
   }
   try {
     value[village_number].input = updateInput(value[village_number]);
@@ -103,9 +103,9 @@ function recvLog_proc(request) {
   // update
   try {
     var update_summary_flag_data_now = JSON.stringify(value[village_number]);
-    if (update_summary_flag_data != update_summary_flag_data_now) {
+    if (recvLog_proc.update_summary_flag_data != update_summary_flag_data_now) {
       updateSummary(value[village_number]);    // deduce-summary
-      update_summary_flag_data = update_summary_flag_data_now;
+      recvLog_proc.update_summary_flag_data = update_summary_flag_data_now;
     }
   } catch(e) {
     // exception case
@@ -114,59 +114,56 @@ function recvLog_proc(request) {
   }
 
   // save to memory area
-  stored_value   = JSON.parse(JSON.stringify(value));   // deep copy
-  stored_raw_log = JSON.parse(JSON.stringify(raw_log)); // deep copy
+  recvLog_proc.stored_value   = JSON.parse(JSON.stringify(value));   // deep copy
+  recvLog_proc.stored_raw_log = JSON.parse(JSON.stringify(raw_log)); // deep copy
 
   // save raw_log to Web Storaget API
-  if (Object.keys(stored_raw_log).length > 8) { // preserve log : newest 8 villages by Village ID
+  if ((Object.keys(recvLog_proc.stored_raw_log).length > 8)
+   || (Object.keys(recvLog_proc.stored_value).length > 8)) { // preserve log : newest 8 villages by Village ID
     var minimum_key = null;
-    Object.keys(stored_raw_log).forEach(function(v){
+    Object.keys(recvLog_proc.stored_raw_log).forEach(function(v){
+      if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
+        minimum_key = v;
+      }
+    });
+    Object.keys(recvLog_proc.stored_value).forEach(function(v){
       if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
         minimum_key = v;
       }
     });
     if (minimum_key != village_number) {
-      delete stored_raw_log[minimum_key];
+      delete recvLog_proc.stored_raw_log[minimum_key];
+      delete recvLog_proc.stored_value[minimum_key];
       delete stored_raw_log_prev[minimum_key];
+      delete stored_value_prev[minimum_key];
     }
   }
+  // save raw_log to Web Storaget API
   try {
-    if (JSON.stringify(stored_raw_log).length > JSON.stringify(stored_raw_log_prev).length) {
-      window.localStorage.setItem("wakamete_village_raw_log", encodeURIComponent(JSON.stringify(stored_raw_log)));
+    if (JSON.stringify(recvLog_proc.stored_raw_log).length > JSON.stringify(stored_raw_log_prev).length) {
+      window.localStorage.setItem("wakamete_village_raw_log", encodeURIComponent(JSON.stringify(recvLog_proc.stored_raw_log)));
     }
   } catch (e) {
     console.log ('raw_log save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack);
     // nop : ignore disk write error
   }
   // save value to Web Storaget API
-  if (Object.keys(stored_value).length > 8) { // preserve log : newest 8 villages by Village ID
-    var minimum_key = null;
-    Object.keys(stored_value).forEach(function(v){
-      if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
-        minimum_key = v;
-      }
-    });
-    if (minimum_key != village_number) {
-      delete stored_value[minimum_key];
-    }
-  }
   try {
-    if (JSON.stringify(stored_value) !== JSON.stringify(stored_value_prev)) {
-      window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(stored_value)));
+    if (JSON.stringify(recvLog_proc.stored_value) !== JSON.stringify(stored_value_prev)) {
+      window.localStorage.setItem("wakamete_village_info", encodeURIComponent(JSON.stringify(recvLog_proc.stored_value)));
     }
-  } catch {
-    console.log ('raw_log save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack);
+  } catch (e) {
+    console.log ('value save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack);
     // nop : ignore disk write error
   }
 
-  recvLog_lock = false;
+  recvLog_proc.lock = false;
   return;
-};
+}
 
 // ref. https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener
-function event_click_deduce(arg) {
-  var v = document.getElementById("freememo").value;
-
+export function event_click_deduce(arg) {
+  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
   if (arg != null) {
     var o = arg.srcElement;
     if ( o.tagName.toLowerCase() == "a" ) {
@@ -174,9 +171,7 @@ function event_click_deduce(arg) {
 
       if (id.indexOf('log') != -1){
         //// create comment-summary
-        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
         updateCommentLog(value, id);
-        comment_id = id;
 
         //// show comment-summary
         // <a id="date-log-2" href="#">2日目</a>
@@ -188,7 +183,6 @@ function event_click_deduce(arg) {
         document.getElementById("summary-field").scrollLeft = 0;
       } else if(id.indexOf('vote') != -1) {
         //// create vote-summary
-        var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
         updateVotes(value);
 
         //// show vote-summary
@@ -210,7 +204,7 @@ function event_click_deduce(arg) {
   }
   return;
 }
-function event_click_td_alt(arg) {
+export function event_click_td_alt(arg) {
   if (arg != null) {
     var o = arg.srcElement;
     while (( o.tagName.toLowerCase() != "td") && (o.tagName.toLowerCase() != "div")) {
@@ -227,7 +221,7 @@ function event_click_td_alt(arg) {
   }
   return;
 }
-function event_click_comments(arg) {
+export function event_click_comments(arg) {
   if (arg != null) {
     var o = arg.srcElement;
     while (( o.tagName.toLowerCase() != "tr") && (o.tagName.toLowerCase() != "div")) {
@@ -242,11 +236,13 @@ function event_click_comments(arg) {
   }
   return;
 }
-function checkbox_change(arg) {
+export function checkbox_change() {
   document.getElementById("deduce").scrollTop  = 0;
   document.getElementById("deduce").scrollLeft = 0;
 }
-function output_memo_template(arg) {
+
+import {template_seer, template_medium, template_bodyguard, template_freemason} from './template.js';
+export function output_memo_template(arg) {
   var value = JSON.parse(decodeURIComponent(window.localStorage.getItem("wakamete_village_info")))[village_number];
   var id = arg.srcElement.getAttribute('id');
   var v = document.getElementById("freememo").value;
@@ -260,18 +256,3 @@ function output_memo_template(arg) {
     document.getElementById("freememo").value = v + "\n" + template_freemason(value);
   }
 }
-
-// 性能チューニング：コールバック関数を追加はコードの最後の方で。
-// 余計な addEventListener() コールを最小化したい。
-document.getElementById("deduce"         ).addEventListener("click", function(e){ event_click_deduce(e); }, true);
-document.getElementById("control"        ).addEventListener("click", function(e){ event_click_deduce(e); }, true);
-document.getElementById("vote-summary"   ).addEventListener("click", function(e){ event_click_td_alt(e); }, true);
-document.getElementById("comment-summary").addEventListener("click", function(e){ event_click_comments(e); }, true);
-document.getElementById("deduce-summary" ).addEventListener("click", function(e){ event_click_td_alt(e); }, true);
-
-document.getElementById("is_dead"        ).addEventListener("change", function(e){ checkbox_change(e); }, true);
-document.getElementById("is_talented"    ).addEventListener("change", function(e){ checkbox_change(e); }, true);
-document.getElementById("is_villager"    ).addEventListener("change", function(e){ checkbox_change(e); }, true);
-document.getElementById("is_enemy"       ).addEventListener("change", function(e){ checkbox_change(e); }, true);
-
-document.getElementById("villagers-template").addEventListener("click", function(e){ output_memo_template(e); }, true);
