@@ -1,15 +1,16 @@
 'use strict';
 
-/*
 import { createDateArray } from '../src/libs.js';
-describe('test suite of createDateArray', () => {
-    test('createDateArray : empty log', () => {
+describe('createDateArray', () => {
+    it('empty log', () => {
+        expect.assertions(1);
         const arg = {
             log: null
         };
-        const log_days = 0;
-        expect(createDateArray(arg, log_days)).toStrictEqual([]);
+        expect(createDateArray(arg)).toStrictEqual([]);
     });
+
+    /*
     test('createDateArray : start-day (day1 AM) log', () => {
         const arg = {
             log: {
@@ -214,29 +215,34 @@ describe('test suite of createDateArray', () => {
         const log_days = 4;
         expect(createDateArray(arg, log_days)).toStrictEqual([["１日目の朝となりました。", "2日目の朝となりました。", "3日目の朝となりました。", "3日目の夜となりました。"],"１日目の夜となりました。"]);
     });
+    */
 });
-*/
 
 import { logTag_d2n } from '../src/libs.js';
 describe('test suite of logTag_d2n', () => {
 
-    test('logTag_d2n : previous day1 PM -> day1 PM', () => { // Any other than dayX AM : same letter.
+    it('previous day1 PM -> day1 PM as same letter', () => {
+        expect.assertions(1);
         expect(logTag_d2n("１日目の夜となりました。")).toBe("１日目の夜となりました。");
     });
 
-    test('logTag_d2n : previous day2 AM -> day1 PM', () => { // day 2 AM : day 1 PM has wide letter "１"
+    it('previous day2 AM -> day1 PM as wide １ letter', () => {
+        expect.assertions(1);
         expect(logTag_d2n("2日目の朝となりました。")).toBe("１日目の夜となりました。");
     });
 
-    test('logTag_d2n : previous day2 PM -> day2 PM', () => { // Any other than dayX AM : same letter.
+    it('previous day2 PM -> day2 PM as same letter', () => {
+        expect.assertions(1);
         expect(logTag_d2n("2日目の夜となりました。")).toBe("2日目の夜となりました。");
     });
 
-    test('logTag_d2n : previous day3 AM -> day2 PM', () => { // day X(X>=3) AM : day (X-1) PM.
+    it('previous day3 AM -> day2 PM as standard (X-1) letter', () => {
+        expect.assertions(1);
         expect(logTag_d2n("3日目の朝となりました。")).toBe("2日目の夜となりました。");
     });
 
-    test('logTag_d2n : previous day3 PM -> day3 PM', () => { // Any other than dayX AM : same letter.
+    it('previous day3 PM -> day3 PM as same letter', () => {
+        expect.assertions(1);
         expect(logTag_d2n("3日目の夜となりました。")).toBe("3日目の夜となりました。");
     });
 });
@@ -261,7 +267,8 @@ describe('test suite of setColorClass', () => {
     };
     Object.keys(job_map).forEach((comingout_info) => {
         Object.keys(mob_map).forEach((enemymark_info) => {
-            test('setColorClass : co[' + comingout_info + '] and mark[' +  enemymark_info + ']', () => {
+            it('co[' + comingout_info + '] and mark[' +  enemymark_info + ']', () => {
+                expect.assertions(1);
                 // input  : JSON Object : arg.input.each_player['target player']
                 const player_info = {
                     comingout: comingout_info,
@@ -275,8 +282,10 @@ describe('test suite of setColorClass', () => {
             });        
         });
     });
-    test('setColorClass : illegal case', () => {
-        expect(setColorClass(undefined)).toBe(undefined);
-        expect(setColorClass(null)).toBe(undefined);
+
+    it('illegal case', () => {
+        expect.assertions(2);
+        expect(setColorClass(undefined)).toBeUndefined();
+        expect(setColorClass(null)).toBeUndefined();
     });
 });
