@@ -303,19 +303,13 @@ export function get_visualLength(str, isLarge) {
   if (isLarge == false) {
     // case if Normal font
     var normal_talk_cell_ruler = document.getElementById('normal-ruler');
-    normal_talk_cell_ruler.textContent = p.parseFromString(
-      '<html><body><td>' + str + '</td></body></html>',
-      'text/html'
-    ).body.textContent;
+    normal_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
     ret = normal_talk_cell_ruler.offsetWidth;
     normal_talk_cell_ruler.textContent = '';
   } else {
     // case if Large font
     var large_talk_cell_ruler = document.getElementById('large-ruler');
-    large_talk_cell_ruler.textContent = p.parseFromString(
-      '<html><body><td>' + str + '</td></body></html>',
-      'text/html'
-    ).body.textContent;
+    large_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
     ret = large_talk_cell_ruler.offsetWidth;
     large_talk_cell_ruler.textContent = '';
   }
@@ -334,21 +328,9 @@ export function slice_string_by_visualLength(str, max_cell_size, isLarge) {
     if (str[i] == '<') {
       i = str.indexOf('>', i);
       if (i == -1) {
-        throw new Error(
-          'slice_string_by_visualLength : string has tag open < but not have tag close >. string=' +
-            str
-        );
+        throw new Error('slice_string_by_visualLength : string has tag open < but not have tag close >. string=' + str);
       } else if (i < old_i || str.length < i) {
-        throw new Error(
-          'slice_string_by_visualLength : str.indexOf() has some error. string=' +
-            str +
-            ' i=' +
-            i.toString() +
-            ' old_i=' +
-            old_i.toString() +
-            ' str.lentgh=' +
-            str.length.toString()
-        );
+        throw new Error('slice_string_by_visualLength : str.indexOf() has some error. string=' + str + ' i=' + i.toString() + ' old_i=' + old_i.toString() + ' str.lentgh=' + str.length.toString());
       }
       continue;
     }

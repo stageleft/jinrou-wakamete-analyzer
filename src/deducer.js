@@ -282,11 +282,7 @@ export function updateInput(arg) {
 
   // 村全体の情報
   ret.player_count = Object.keys(arg.log[base_date].players).length;
-  if (
-    ret.player_count >= 8 &&
-    ret.player_count !=
-      Number(document.getElementById('all_villager_old').value)
-  ) {
+  if (ret.player_count >= 8 && ret.player_count != Number(document.getElementById('all_villager_old').value)) {
     ret.seer_count = cast_list[ret.player_count - 8].seer;
     ret.medium_count = cast_list[ret.player_count - 8].medium;
     ret.bodyguard_count = cast_list[ret.player_count - 8].bodyguard;
@@ -309,15 +305,7 @@ export function updateInput(arg) {
   }
   ret.villager_count =
     ret.player_count -
-    (ret.seer_count +
-      ret.medium_count +
-      ret.bodyguard_count +
-      ret.freemason_count +
-      ret.werecat_count +
-      ret.werewolf_count +
-      ret.posessed_count +
-      ret.werefox_count +
-      ret.minifox_count);
+    (ret.seer_count + ret.medium_count + ret.bodyguard_count + ret.freemason_count + ret.werecat_count + ret.werewolf_count + ret.posessed_count + ret.werefox_count + ret.minifox_count);
 
   ret.each_player = {};
   Object.keys(arg.log[base_date].players).forEach(function (k) {
@@ -334,16 +322,10 @@ export function updateInput(arg) {
     for (var i = 2; i <= datearray.length; i++) {
       var datestr = String(i) + '日目の朝となりました。';
       ret.each_player[k][datestr] = {};
-      var target_obj = document.getElementById(
-        'stat-' + k + '-' + String(i) + '-target'
-      );
-      ret.each_player[k][datestr].target =
-        target_obj == null ? null : target_obj.value;
-      var result_obj = document.getElementById(
-        'stat-' + k + '-' + String(i) + '-result'
-      );
-      ret.each_player[k][datestr].result =
-        result_obj == null ? null : result_obj.value;
+      var target_obj = document.getElementById('stat-' + k + '-' + String(i) + '-target');
+      ret.each_player[k][datestr].target = target_obj == null ? null : target_obj.value;
+      var result_obj = document.getElementById('stat-' + k + '-' + String(i) + '-result');
+      ret.each_player[k][datestr].result = result_obj == null ? null : result_obj.value;
     }
   });
 
@@ -373,15 +355,10 @@ export function updateInputField(arg) {
   }
 
   // check <div id="deduce" /> as internal state
-  if (
-    document.getElementById('deduce').textContent == '' ||
-    document.getElementById('deducer-title') == null
-  ) {
+  if (document.getElementById('deduce').textContent == '' || document.getElementById('deducer-title') == null) {
     is_initialize = true;
   } else {
-    var tds_title = document
-      .getElementById('deducer-title')
-      .querySelectorAll('td');
+    var tds_title = document.getElementById('deducer-title').querySelectorAll('td');
     if (tds_title.length - 1 != datearray.length) {
       // refresh Input Field if change datearray
       is_initialize = true;
@@ -392,20 +369,14 @@ export function updateInputField(arg) {
   if (arg.input == null || arg.input.each_player == null) {
     is_initialize = true;
     no_input_key = true;
-  } else if (
-    Object.keys(arg.log[base_date].players).length !=
-    Object.keys(arg.input.each_player).length
-  ) {
+  } else if (Object.keys(arg.log[base_date].players).length != Object.keys(arg.input.each_player).length) {
     // refresh Input Field and saved date of Input Field if change player count
     is_initialize = true;
     no_input_key = true;
   }
 
   // check villager count change
-  if (
-    arg.input.player_count !=
-    Number(document.getElementById('all_villager_old').value)
-  ) {
+  if (arg.input.player_count != Number(document.getElementById('all_villager_old').value)) {
     is_initialize = true;
   }
 
@@ -428,54 +399,34 @@ export function updateInputField(arg) {
             c = c + 1;
           }
         });
-        document.getElementById(
-          'stat-' + k + '-' + String(i) + '-count'
-        ).innerText = '発言 ' + String(c);
-        if (
-          i > 2 &&
-          arg.log[datearray[i - 2]].players[k].stat == '（死　亡）'
-        ) {
-          document.getElementById(
-            'stat-' + k + '-' + String(i) + '-dead_reason'
-          ).innerText = '復活';
+        document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText = '発言 ' + String(c);
+        if (i > 2 && arg.log[datearray[i - 2]].players[k].stat == '（死　亡）') {
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = '復活';
         } else {
-          document.getElementById(
-            'stat-' + k + '-' + String(i) + '-dead_reason'
-          ).innerText = '';
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = '';
         }
       } else {
         // if dead
-        var target = document.getElementById(
-          'stat-' + k + '-' + String(i) + '-target'
-        );
+        var target = document.getElementById('stat-' + k + '-' + String(i) + '-target');
         if (target != null) {
           target.remove();
         }
 
-        var result = document.getElementById(
-          'stat-' + k + '-' + String(i) + '-result'
-        );
+        var result = document.getElementById('stat-' + k + '-' + String(i) + '-result');
         if (result != null) {
           result.remove();
         }
 
-        if (
-          i <= 2 ||
-          arg.log[datearray[i - 2]].players[k].stat == '（生存中）'
-        ) {
+        if (i <= 2 || arg.log[datearray[i - 2]].players[k].stat == '（生存中）') {
           // if dead in this day
           var datestring = datearray[i - 1];
 
           // deducer: set background color or set display-none if Dead
           if (document.getElementById('is_dead').checked) {
-            document
-              .getElementById('villager-' + k)
-              .setAttribute('class', 'dead');
-            document.getElementById('villager-list-' + k).style.visibility =
-              'visible';
+            document.getElementById('villager-' + k).setAttribute('class', 'dead');
+            document.getElementById('villager-list-' + k).style.visibility = 'visible';
           } else {
-            document.getElementById('villager-list-' + k).style.visibility =
-              'collapse';
+            document.getElementById('villager-list-' + k).style.visibility = 'collapse';
           }
 
           var dead_reason;
@@ -492,60 +443,42 @@ export function updateInputField(arg) {
           } else {
             dead_reason = '突然死';
           }
-          document.getElementById(
-            'stat-' + k + '-' + String(i) + '-count'
-          ).innerText = '';
-          document.getElementById(
-            'stat-' + k + '-' + String(i) + '-dead_reason'
-          ).innerText = dead_reason;
+          document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText = '';
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = dead_reason;
         } else {
           // if dead in previous days
           // deducer: nop : target and result is disabled with no value
-          document.getElementById(
-            'stat-' + k + '-' + String(i) + '-count'
-          ).innerText = '';
-          document.getElementById(
-            'stat-' + k + '-' + String(i) + '-dead_reason'
-          ).innerText = '';
+          document.getElementById('stat-' + k + '-' + String(i) + '-count').innerText = '';
+          document.getElementById('stat-' + k + '-' + String(i) + '-dead_reason').innerText = '';
         }
       }
     }
 
-    if (
-      document.getElementById('villager-list-' + k).style.visibility !=
-      'collapse'
-    ) {
+    if (document.getElementById('villager-list-' + k).style.visibility != 'collapse') {
       // deducer: set display-none if Checkbox state says it
       var job = document.getElementById('job-' + k).value; // deduced Job
       var mrk = document.getElementById('mrk-' + k).value; // Monster Mark
       if (mrk == '村人') {
         if (job == '占い' || job == '霊能') {
-          document.getElementById('villager-list-' + k).style.visibility =
-            'visible';
+          document.getElementById('villager-list-' + k).style.visibility = 'visible';
         } else if (job == '村人') {
           if (document.getElementById('is_villager').checked) {
-            document.getElementById('villager-list-' + k).style.visibility =
-              'visible';
+            document.getElementById('villager-list-' + k).style.visibility = 'visible';
           } else {
-            document.getElementById('villager-list-' + k).style.visibility =
-              'collapse';
+            document.getElementById('villager-list-' + k).style.visibility = 'collapse';
           }
         } else {
           if (document.getElementById('is_talented').checked) {
-            document.getElementById('villager-list-' + k).style.visibility =
-              'visible';
+            document.getElementById('villager-list-' + k).style.visibility = 'visible';
           } else {
-            document.getElementById('villager-list-' + k).style.visibility =
-              'collapse';
+            document.getElementById('villager-list-' + k).style.visibility = 'collapse';
           }
         }
       } else {
         if (document.getElementById('is_enemy').checked) {
-          document.getElementById('villager-list-' + k).style.visibility =
-            'visible';
+          document.getElementById('villager-list-' + k).style.visibility = 'visible';
         } else {
-          document.getElementById('villager-list-' + k).style.visibility =
-            'collapse';
+          document.getElementById('villager-list-' + k).style.visibility = 'collapse';
         }
       }
     }
@@ -564,10 +497,8 @@ export function updateInputField(arg) {
     if (is_initialize == true) {
       Object.keys(arg.input.each_player).forEach(function (k) {
         // 参加者別の情報
-        document.getElementById('job-' + k).value =
-          arg.input.each_player[k].comingout; // deduced Job
-        document.getElementById('mrk-' + k).value =
-          arg.input.each_player[k].enemymark; // Monster Mark
+        document.getElementById('job-' + k).value = arg.input.each_player[k].comingout; // deduced Job
+        document.getElementById('mrk-' + k).value = arg.input.each_player[k].enemymark; // Monster Mark
       });
     }
 
@@ -577,18 +508,10 @@ export function updateInputField(arg) {
       for (var i = 2; i <= datearray.length; i++) {
         var datestring = datearray[i - 1];
         var alive_status = arg.log[datestring].players[k].stat;
-        var target_label = document.getElementById(
-          'stat-' + k + '-' + String(i) + '-target-label'
-        );
-        var target = document.getElementById(
-          'stat-' + k + '-' + String(i) + '-target'
-        );
-        var result_label = document.getElementById(
-          'stat-' + k + '-' + String(i) + '-result-label'
-        );
-        var result = document.getElementById(
-          'stat-' + k + '-' + String(i) + '-result'
-        );
+        var target_label = document.getElementById('stat-' + k + '-' + String(i) + '-target-label');
+        var target = document.getElementById('stat-' + k + '-' + String(i) + '-target');
+        var result_label = document.getElementById('stat-' + k + '-' + String(i) + '-result-label');
+        var result = document.getElementById('stat-' + k + '-' + String(i) + '-result');
 
         // case 1.
         //   Job-target
@@ -608,10 +531,7 @@ export function updateInputField(arg) {
               target.removeAttribute('disabled');
               target.style.visibility = 'visible';
               player_list.forEach(function (v) {
-                if (
-                  i <= 2 ||
-                  arg.log[datearray[i - 2]].players[v].stat == '（生存中）'
-                ) {
+                if (i <= 2 || arg.log[datearray[i - 2]].players[v].stat == '（生存中）') {
                   var o = document.createElement('option');
                   o.setAttribute('value', v);
                   o.innerText = v;
@@ -682,38 +602,21 @@ export function updateInputField(arg) {
               result.value = '';
             }
 
-            if (
-              job == arg.input.each_player[k].comingout &&
-              arg.input.each_player[k][datestring] != null
-            ) {
+            if (job == arg.input.each_player[k].comingout && arg.input.each_player[k][datestring] != null) {
               target.value = arg.input.each_player[k][datestring].target;
               result.value = arg.input.each_player[k][datestring].result;
             }
           }
 
           // deducer: set background color
-          if (
-            document.getElementById('villager-' + k).getAttribute('class') !=
-            'dead'
-          ) {
-            if (
-              Object.keys(villager_cell_info.villager_gray).indexOf(k) != -1
-            ) {
-              document
-                .getElementById('villager-' + k)
-                .setAttribute('class', 'gray');
-            } else if (
-              Object.keys(villager_cell_info.villager_black).indexOf(k) != -1 ||
-              Object.keys(villager_cell_info.villager_panda).indexOf(k) != -1
-            ) {
-              document
-                .getElementById('villager-' + k)
-                .setAttribute('class', 'black');
+          if (document.getElementById('villager-' + k).getAttribute('class') != 'dead') {
+            if (Object.keys(villager_cell_info.villager_gray).indexOf(k) != -1) {
+              document.getElementById('villager-' + k).setAttribute('class', 'gray');
+            } else if (Object.keys(villager_cell_info.villager_black).indexOf(k) != -1 || Object.keys(villager_cell_info.villager_panda).indexOf(k) != -1) {
+              document.getElementById('villager-' + k).setAttribute('class', 'black');
             } else {
               // white or job ComingOut
-              document
-                .getElementById('villager-' + k)
-                .setAttribute('class', 'white');
+              document.getElementById('villager-' + k).setAttribute('class', 'white');
             }
           }
         }
@@ -739,24 +642,14 @@ export function refreshInputField(arg) {
 
   // update Table
   if (arg.input != null && arg.input.werewolf_count >= 1) {
-    document.getElementById('all_villager_old').value = String(
-      arg.input.player_count
-    );
+    document.getElementById('all_villager_old').value = String(arg.input.player_count);
     document.getElementById('seer').value = String(arg.input.seer_count);
     document.getElementById('medium').value = String(arg.input.medium_count);
-    document.getElementById('bodyguard').value = String(
-      arg.input.bodyguard_count
-    );
-    document.getElementById('freemason').value = String(
-      arg.input.freemason_count
-    );
+    document.getElementById('bodyguard').value = String(arg.input.bodyguard_count);
+    document.getElementById('freemason').value = String(arg.input.freemason_count);
     document.getElementById('werecat').value = String(arg.input.werecat_count);
-    document.getElementById('werewolf').value = String(
-      arg.input.werewolf_count
-    );
-    document.getElementById('posessed').value = String(
-      arg.input.posessed_count
-    );
+    document.getElementById('werewolf').value = String(arg.input.werewolf_count);
+    document.getElementById('posessed').value = String(arg.input.posessed_count);
     document.getElementById('werefox').value = String(arg.input.werefox_count);
     document.getElementById('minifox').value = String(arg.input.minifox_count);
   }
@@ -896,20 +789,14 @@ export function refreshInputField(arg) {
       var count = document.createElement('p');
       var dead_reason = document.createElement('p');
       count.setAttribute('id', 'stat-' + k + '-' + String(i) + '-count');
-      dead_reason.setAttribute(
-        'id',
-        'stat-' + k + '-' + String(i) + '-dead_reason'
-      );
+      dead_reason.setAttribute('id', 'stat-' + k + '-' + String(i) + '-dead_reason');
       td_a.insertAdjacentElement('beforeend', count);
       td_a.insertAdjacentElement('beforeend', dead_reason);
       tr.insertAdjacentElement('beforeend', td_a);
 
       var td_b = document.createElement('td');
       var target_label = document.createElement('p');
-      target_label.setAttribute(
-        'id',
-        'stat-' + k + '-' + String(i) + '-target-label'
-      );
+      target_label.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target-label');
       td_b.insertAdjacentElement('beforeend', target_label);
       var target = document.createElement('select');
       target.setAttribute('id', 'stat-' + k + '-' + String(i) + '-target');
@@ -920,10 +807,7 @@ export function refreshInputField(arg) {
 
       var td_c = document.createElement('td');
       var result_label = document.createElement('p');
-      result_label.setAttribute(
-        'id',
-        'stat-' + k + '-' + String(i) + '-result-label'
-      );
+      result_label.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result-label');
       td_c.insertAdjacentElement('beforeend', result_label);
       var result = document.createElement('select');
       result.setAttribute('id', 'stat-' + k + '-' + String(i) + '-result');

@@ -31,27 +31,17 @@ export function html2json_village_log(arg) {
 
   var base_table = arg.querySelector('table').querySelector('tbody');
   var base_tr_list = base_table.querySelectorAll('tr');
-  if (
-    base_tr_list.item(0).innerText !=
-      'ブラウザの更新ボタンは押さないでください' &&
-    base_tr_list.item(0).innerText != '過去の記録'
-  ) {
+  if (base_tr_list.item(0).innerText != 'ブラウザの更新ボタンは押さないでください' && base_tr_list.item(0).innerText != '過去の記録') {
     return null;
   }
   for (var i = 1; i < base_tr_list.length; i++) {
-    if (
-      base_tr_list.item(i).innerText ==
-        'ブラウザの更新ボタンは押さないでください' ||
-      base_tr_list.item(i).innerText == '過去の記録'
-    ) {
+    if (base_tr_list.item(i).innerText == 'ブラウザの更新ボタンは押さないでください' || base_tr_list.item(i).innerText == '過去の記録') {
       // nop : caution to player
     } else if (base_tr_list.item(i).innerText.match('^◆ 村人たち')) {
       // nop : tag
     } else if (base_tr_list.item(i - 1).innerText.match('^◆ 村人たち')) {
       // parse sub <table> as villager_list
-      player_list = html2json_villager_list(
-        base_tr_list.item(i).querySelector('table')
-      ).players;
+      player_list = html2json_villager_list(base_tr_list.item(i).querySelector('table')).players;
     } else if (base_tr_list.item(i).innerText.match('^◆ 再表示')) {
       // nop : tag
     } else if (base_tr_list.item(i - 1).innerText.match('^◆ 再表示')) {
@@ -241,14 +231,10 @@ function html2json_villager_list(arg) {
     // get info of base_td_list.item(i)
     var img_selector = base_td_list.item(i).querySelector('img');
     if (img_selector != null) {
-      img_src = img_selector
-        .getAttribute('src')
-        .replace(re, 'http://jinrou.aa0.netvolante.jp/~jinrou/');
+      img_src = img_selector.getAttribute('src').replace(re, 'http://jinrou.aa0.netvolante.jp/~jinrou/');
 
       // get info of base_td_list.item(i+1)
-      var character_info = String(base_td_list.item(i + 1).innerHTML).split(
-        '<br>'
-      );
+      var character_info = String(base_td_list.item(i + 1).innerHTML).split('<br>');
       character_name = character_info[0].trim();
       is_alive = character_info[character_info.length - 1];
 
@@ -312,9 +298,7 @@ function html2log(arg) {
           continue;
         }
 
-        var icon_uri = icon_selector
-          .getAttribute('src')
-          .replace(re, 'http://jinrou.aa0.netvolante.jp/~jinrou/');
+        var icon_uri = icon_selector.getAttribute('src').replace(re, 'http://jinrou.aa0.netvolante.jp/~jinrou/');
         var msg_text = base_td_list.item(0).querySelector('font').innerText;
         if (
           icon_uri == 'http://jinrou.aa0.netvolante.jp/~jinrou/img/ampm.gif' ||
@@ -335,48 +319,30 @@ function html2log(arg) {
           current_day_log.msg_date = datearray[datearray.length - 1];
           ret[datearray[datearray.length - 1]] = current_day_log;
           current_day_log = init_ret();
-        } else if (
-          icon_uri == 'http://jinrou.aa0.netvolante.jp/~jinrou/img/dead1.gif'
-        ) {
+        } else if (icon_uri == 'http://jinrou.aa0.netvolante.jp/~jinrou/img/dead1.gif') {
           if (msg_text.match('^処刑されました・・・。$')) {
             // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>安斎都</b>さんは村民協議の結果<font color="#ff0000">処刑されました・・・。</font>
-            current_day_log.list_voted.push(
-              base_td_list.item(0).querySelector('b').innerText
-            );
+            current_day_log.list_voted.push(base_td_list.item(0).querySelector('b').innerText);
           } else {
             // <img src="./img/dead1.gif" width="32" height="32" border="0"> <b>タマトイズ</b>さんは猫又の呪いで<font color="#ff0000">死亡しました・・・。</font>
-            current_day_log.list_cursed.push(
-              base_td_list.item(0).querySelector('b').innerText
-            );
+            current_day_log.list_cursed.push(base_td_list.item(0).querySelector('b').innerText);
           }
-        } else if (
-          icon_uri == 'http://jinrou.aa0.netvolante.jp/~jinrou/img/dead2.gif'
-        ) {
+        } else if (icon_uri == 'http://jinrou.aa0.netvolante.jp/~jinrou/img/dead2.gif') {
           if (msg_text.match('^無残な姿で発見された・・・。$')) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>伊吹翼</b>さんは翌日<font color="#ff0000">無残な姿で発見された・・・。</font>
-            current_day_log.list_bitten.push(
-              base_td_list.item(0).querySelector('b').innerText
-            );
+            current_day_log.list_bitten.push(base_td_list.item(0).querySelector('b').innerText);
           } else if (msg_text.match('^に死体で発見された・・・。$')) {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>久川凪</b>さんは翌日<font color="#ff0000">に死体で発見された・・・。</font>
-            current_day_log.list_dnoted.push(
-              base_td_list.item(0).querySelector('b').innerText
-            );
+            current_day_log.list_dnoted.push(base_td_list.item(0).querySelector('b').innerText);
           } else {
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>八神マキノ</b>さんは都合により<font color="#ff0000">突然死しました・・・。【ペナルティ】</font>
             // <img src="./img/dead2.gif" width="32" height="32" border="0"> <b>海星</b>さんは都合により<font color="#ff0000">突然死しました・・・。</font>
-            current_day_log.list_sudden.push(
-              base_td_list.item(0).querySelector('b').innerText
-            );
+            current_day_log.list_sudden.push(base_td_list.item(0).querySelector('b').innerText);
           }
-        } else if (
-          icon_uri == 'http://jinrou.aa0.netvolante.jp/~jinrou/img/msg.gif'
-        ) {
+        } else if (icon_uri == 'http://jinrou.aa0.netvolante.jp/~jinrou/img/msg.gif') {
           if (msg_text.match('^奇跡的に生き返った。$')) {
             // <img src="./img/msg.gif" width="32" height="32" border="0"> <b>パチュリー</b>さんは<font color="#ff0000">奇跡的に生き返った。</font>
-            current_day_log.list_revived.push(
-              base_td_list.item(0).querySelector('b').innerText
-            );
+            current_day_log.list_revived.push(base_td_list.item(0).querySelector('b').innerText);
           } else {
             // <img src="./img/msg.gif" width="32" height="32" border="0">
             //      <font size="+1">再投票となりました。</font>あと
@@ -446,9 +412,7 @@ function html2log(arg) {
   } else if (datearray.length == 2 && current_day_log.vote_log.length == 0) {
     // nighttime log
     Object.keys(current_day_log).forEach(function (k) {
-      ret[datearray[0]][k] = ret[datearray[0]][k]
-        .concat(ret[datearray[1]][k])
-        .concat(current_day_log[k]);
+      ret[datearray[0]][k] = ret[datearray[0]][k].concat(ret[datearray[1]][k]).concat(current_day_log[k]);
     });
     delete ret[datearray[1]];
     ret[datearray[0]].vote_log = ret[datearray[0]].vote_log.reverse();
@@ -476,16 +440,12 @@ function html2log(arg) {
       ret[datearray[j]].list_sudden.concat(ret[datearray[j + 2]].list_sudden); // (n-1) day + (n-1) night -> n day
     }
     if (datearray >= 2) {
-      ret[datearray[datearray.length - 2]].list_bitten =
-        ret[datearray[datearray.length - 1]].list_bitten;
+      ret[datearray[datearray.length - 2]].list_bitten = ret[datearray[datearray.length - 1]].list_bitten;
       ret[datearray[datearray.length - 2]].list_voted = [];
-      ret[datearray[datearray.length - 2]].list_revived =
-        ret[datearray[datearray.length - 1]].list_revived;
+      ret[datearray[datearray.length - 2]].list_revived = ret[datearray[datearray.length - 1]].list_revived;
       ret[datearray[datearray.length - 2]].list_cursed = [];
-      ret[datearray[datearray.length - 2]].list_dnoted =
-        ret[datearray[datearray.length - 1]].list_dnoted;
-      ret[datearray[datearray.length - 2]].list_sudden =
-        ret[datearray[datearray.length - 1]].list_sudden;
+      ret[datearray[datearray.length - 2]].list_dnoted = ret[datearray[datearray.length - 1]].list_dnoted;
+      ret[datearray[datearray.length - 2]].list_sudden = ret[datearray[datearray.length - 1]].list_sudden;
     }
     ret[datearray[datearray.length - 1]].list_bitten = [];
     ret[datearray[datearray.length - 1]].list_voted = [];

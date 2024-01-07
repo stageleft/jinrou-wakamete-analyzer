@@ -10,7 +10,7 @@ div {
   height: 0%;
   opacity: 0;
   visibility: hidden;
-  transition: .3s;
+  transition: 0.3s;
 }
 .popup-active {
   position: static;
@@ -20,28 +20,28 @@ div {
   height: 100%;
   opacity: 0.9;
   visibility: visible;
-  transition: .3s;
+  transition: 0.3s;
 }
 
-table{
+table {
   border-collapse: collapse;
   margin: 0px;
   padding: 0px;
   vertical-align: middle;
 }
-table.hidden-ruler{
+table.hidden-ruler {
   visibility: hidden;
   position: absolute;
   white-space: nowrap;
 }
-tr{
+tr {
   margin: 0px;
   padding: 0px;
   vertical-align: middle;
 }
-td{
-  font-size : 8pt;
-  border : 1px solid #cccccc;
+td {
+  font-size: 8pt;
+  border: 1px solid #cccccc;
   margin: 0px;
   padding: 0px;
   white-space: nowrap;
@@ -49,65 +49,65 @@ td{
   vertical-align: middle;
 }
 
-.dead{
+.dead {
   background-color: #ffcccc;
 }
-.white{
+.white {
   background-color: #ffffff;
 }
-.gray{
+.gray {
   background-color: #cccccc;
 }
-.black{
+.black {
   background-color: #888888;
 }
 
-.seer{
+.seer {
   color: #00cc33;
 }
-.medium{
+.medium {
   color: #33ccff;
 }
-.bodyguard{
+.bodyguard {
   color: #00ccff;
 }
-.freemason{
+.freemason {
   color: #33dd33;
 }
-.werecat{
+.werecat {
   color: #ff9999;
 }
-.enemy{
+.enemy {
   color: #cc4400;
 }
-.werewolf{
+.werewolf {
   color: #ff0000;
 }
-.posessed{
+.posessed {
   color: #ff0099;
 }
-.largewolf{
+.largewolf {
   color: #ff0000;
 }
-.werefox{
+.werefox {
   color: #ffcc33;
 }
-.minifox{
+.minifox {
   color: #ffcc33;
 }
-.gray_random{
+.gray_random {
   background-color: #cccccc;
 }
-.gray_random_voted_killer{
+.gray_random_voted_killer {
   background-color: #ffcccc;
 }
-.gray_random_no_voted{
+.gray_random_no_voted {
   background-color: #ffffcc;
 }
-.gray_random_voted_killer_with_no_voted{
+.gray_random_voted_killer_with_no_voted {
   background-color: #ffe4cc;
 }
-.gray_random_change_vote_target{
+.gray_random_change_vote_target {
   font-weight: bolder;
   font-family: monospace;
 }
@@ -117,9 +117,18 @@ p {
   padding: 0px;
 }
 
-textarea{ font-size : 9pt; }
+textarea {
+  font-size: 9pt;
+}
 
-input{ height : 15pt; font-size : 8pt; margin: 0px; padding: 0px; vertical-align:middle; }
+input {
+  height: 15pt;
+  font-size: 8pt;
+  margin: 0px;
+  padding: 0px;
+  vertical-align: middle;
+}
 
-select{ font-size : 8pt; }
-
+select {
+  font-size: 8pt;
+}

@@ -44,9 +44,7 @@ function proc_vote_count(list) {
 function proc_set_vote_result(playerlist, f, vote_count, p, table_body) {
   var from_person = f.from_villager.trim();
   var to_person = f.to_villager.trim();
-  var tr = table_body.querySelector(
-    '#vote-from-' + from_person.replace(/([ -/:-@[-`{-~])/g, '\\$1')
-  );
+  var tr = table_body.querySelector('#vote-from-' + from_person.replace(/([ -/:-@[-`{-~])/g, '\\$1'));
 
   // <td><b>ｽｺﾞｲｶﾀｲｱｲｽ</b>さん</td><td>0 票</td><td>投票先 → <b>結城蜜柑</b>さん</td>
   // ｽｺﾞｲｶﾀｲｱｲｽさん	0 票	投票先 → 結城蜜柑さん
@@ -55,39 +53,17 @@ function proc_set_vote_result(playerlist, f, vote_count, p, table_body) {
     vote_count[from_person] = 0;
   }
 
-  td.setAttribute(
-    'alt',
-    from_person +
-      'さん\t' +
-      vote_count[from_person] +
-      ' 票\t投票先 → ' +
-      to_person +
-      'さん'
-  );
-  td.innerText =
-    '(' +
-    vote_count[from_person] +
-    '票)→' +
-    f.to_villager +
-    '(' +
-    vote_count[to_person] +
-    '票)';
+  td.setAttribute('alt', from_person + 'さん\t' + vote_count[from_person] + ' 票\t投票先 → ' + to_person + 'さん');
+  td.innerText = '(' + vote_count[from_person] + '票)→' + f.to_villager + '(' + vote_count[to_person] + '票)';
   td.className = setColorClass(playerlist[from_person]);
   if (vote_count.is_gray_random == true) {
     var is_gray_person = false;
     // グレランの場合に、セルに色をつける
-    if (
-      td.className === '' &&
-      vote_count[to_person] == vote_count['voted_count_max'] &&
-      vote_count[from_person] == 0
-    ) {
+    if (td.className === '' && vote_count[to_person] == vote_count['voted_count_max'] && vote_count[from_person] == 0) {
       // 役職CO者以外、かつ、吊られ者に投票した人、かつ、得票0票者
       td.className = 'gray_random_voted_killer_with_no_voted';
       is_gray_person = true;
-    } else if (
-      td.className === '' &&
-      vote_count[to_person] == vote_count['voted_count_max']
-    ) {
+    } else if (td.className === '' && vote_count[to_person] == vote_count['voted_count_max']) {
       // 役職CO者以外、かつ、吊られ者に投票した人
       td.className = 'gray_random_voted_killer';
       is_gray_person = true;
@@ -104,10 +80,7 @@ function proc_set_vote_result(playerlist, f, vote_count, p, table_body) {
     }
     // ２回連続グレラン、かつ、非役職の場合、票変えを検出する。（※本アプリの条件では、投票が決まらないケースは必ずグレラン扱い）
     if (p != null && is_gray_person == true) {
-      if (
-        from_person == p.from_villager.trim() &&
-        to_person != p.to_villager.trim()
-      ) {
+      if (from_person == p.from_villager.trim() && to_person != p.to_villager.trim()) {
         td.className = td.className + ' gray_random_change_vote_target';
       }
     }
@@ -135,11 +108,7 @@ export function updateVotes(arg) {
   [datearray, base_date] = createDateArray(arg);
   for (var i = 0; i < datearray.length; i++) {
     var datestr = datearray[i];
-    if (
-      arg.log[datestr] == null ||
-      arg.log[datestr].vote_log == null ||
-      arg.log[datestr].vote_log.length == 0
-    ) {
+    if (arg.log[datestr] == null || arg.log[datestr].vote_log == null || arg.log[datestr].vote_log.length == 0) {
       continue;
     }
 
@@ -170,36 +139,20 @@ export function updateVotes(arg) {
     }
 
     arg.log[datestr].vote_log.forEach(function (l, j) {
-      var vote_title =
-        arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）';
+      var vote_title = arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）';
       if (voted_title_list.includes(vote_title) == true) {
         return; // contiune arg.log[datestr].vote_log.forEach()
       }
       voted_title_list.push(vote_title);
 
-      head.insertAdjacentElement(
-        'beforeend',
-        proc_set_vote_date(vote_title, head)
-      );
+      head.insertAdjacentElement('beforeend', proc_set_vote_date(vote_title, head));
       var vote_count = proc_vote_count(l);
       l.vote.forEach(function (f, k) {
         if (j == 0) {
-          body.insertAdjacentElement(
-            'beforeend',
-            proc_set_vote_result(
-              arg.input.each_player,
-              f,
-              vote_count,
-              null,
-              body
-            )
-          );
+          body.insertAdjacentElement('beforeend', proc_set_vote_result(arg.input.each_player, f, vote_count, null, body));
         } else {
           var p = arg.log[datestr].vote_log[j - 1].vote[k]; // f of previous vote
-          body.insertAdjacentElement(
-            'beforeend',
-            proc_set_vote_result(arg.input.each_player, f, vote_count, p, body)
-          );
+          body.insertAdjacentElement('beforeend', proc_set_vote_result(arg.input.each_player, f, vote_count, p, body));
         }
       });
     });
@@ -209,8 +162,6 @@ export function updateVotes(arg) {
   table.insertAdjacentElement('beforeend', head);
   table.insertAdjacentElement('beforeend', body);
   document.getElementById('vote-summary').textContent = '';
-  document
-    .getElementById('vote-summary')
-    .insertAdjacentElement('afterbegin', table);
+  document.getElementById('vote-summary').insertAdjacentElement('afterbegin', table);
   return;
 }

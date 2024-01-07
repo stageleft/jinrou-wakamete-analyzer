@@ -29,9 +29,7 @@ export function template_medium(arg) {
 
   datearray.forEach(function (d) {
     arg.log[d].list_voted.forEach(function (k) {
-      ret.push(
-        d.replace(/^(.*日目).*となりました。/, '$1') + '：' + k + ' ○●△'
-      );
+      ret.push(d.replace(/^(.*日目).*となりました。/, '$1') + '：' + k + ' ○●△');
     });
   });
   ret.push('霊能CO');
@@ -47,9 +45,7 @@ export function template_bodyguard(arg) {
 
   datearray.forEach(function (d) {
     arg.log[d].list_bitten.forEach(function (k) {
-      ret.push(
-        d.replace(/^(.*日目).*となりました。/, '$1') + ' 護衛： 噛み：' + k
-      );
+      ret.push(d.replace(/^(.*日目).*となりました。/, '$1') + ' 護衛： 噛み：' + k);
     });
   });
   ret.push('狩人CO');
@@ -71,11 +67,7 @@ export function template_freemason(arg) {
         ret.push('指定：' + k + ' COありますか？');
       } else if (arg.input.each_player[k].comingout == '占い') {
         ret.push('指定：' + k + ' LWCO|妖狐COありますか？');
-        ret.push(
-          '占い指示：' +
-            k +
-            'は  占いでお願いします。予告は不要|投票|口頭でお願いします。'
-        );
+        ret.push('占い指示：' + k + 'は  占いでお願いします。予告は不要|投票|口頭でお願いします。');
       } else if (arg.input.each_player[k].comingout == '霊能') {
         ret.push('指定：' + k + ' LWCO|妖狐COありますか？');
       } else if (arg.input.each_player[k].comingout == '狩人') {
@@ -86,9 +78,7 @@ export function template_freemason(arg) {
       }
     }
   });
-  ret.push(
-    '占い指示：潜伏占いは  占いでお願いします。予告は不要|投票|口頭でお願いします。'
-  );
+  ret.push('占い指示：潜伏占いは  占いでお願いします。予告は不要|投票|口頭でお願いします。');
   ret.push('護衛指示：潜伏狩人は  護衛でお願いします。');
   return ret.join('\n');
 }

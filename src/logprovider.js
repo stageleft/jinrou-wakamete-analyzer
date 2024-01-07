@@ -1,12 +1,7 @@
 /* eslint-disable no-irregular-whitespace */
 'use strict';
 
-import {
-  createDateArray,
-  logTag_d2n,
-  setColorClass,
-  slice_string_by_visualLength,
-} from './libs.js';
+import { createDateArray, logTag_d2n, setColorClass, slice_string_by_visualLength } from './libs.js';
 
 export function updateCommentLog(arg, param) {
   // functional input  : JSON from Web Storage API
@@ -49,10 +44,7 @@ export function updateCommentLog(arg, param) {
     tr.insertAdjacentElement('beforeend', td1);
 
     var td2 = document.createElement('td');
-    td2.textContent = p.parseFromString(
-      '<html><body><span>' + l.comment.join('\n') + '</span></body></html>',
-      'text/html'
-    ).body.textContent;
+    td2.textContent = p.parseFromString('<html><body><span>' + l.comment.join('\n') + '</span></body></html>', 'text/html').body.textContent;
     if (l.type == 'Strong') {
       td2.setAttribute('style', 'font-size: large;');
     } else if (l.type == 'WithColor') {
@@ -62,16 +54,7 @@ export function updateCommentLog(arg, param) {
 
     var td3 = document.createElement('td');
     td3.setAttribute('style', 'display:none;visibility:hidden;width:0px;');
-    td3.textContent = p.parseFromString(
-      '◆' +
-        l.speaker.trim() +
-        'さん' +
-        '\t' +
-        '「' +
-        l.comment.join('\n') +
-        '」</td></body></html>',
-      'text/html'
-    ).body.textContent;
+    td3.textContent = p.parseFromString('◆' + l.speaker.trim() + 'さん' + '\t' + '「' + l.comment.join('\n') + '」</td></body></html>', 'text/html').body.textContent;
     tr.insertAdjacentElement('beforeend', td3);
 
     return tr;
@@ -95,10 +78,7 @@ export function updateCommentLog(arg, param) {
     // create previous night log by date (if day2..N)
     datestr_night = logTag_d2n(datestr);
     if (datestr_night != datestr && arg.log[datestr_night] != null) {
-      ret.insertAdjacentElement(
-        'beforeend',
-        createLogTableSepalator(datestr_night)
-      );
+      ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr_night));
       arg.log[datestr_night].comments.forEach(function (l) {
         ret.insertAdjacentElement('beforeend', createLogTableRow(l));
       });
@@ -110,10 +90,7 @@ export function updateCommentLog(arg, param) {
       datestr = datearray[i - 1];
       // create day log by date
       if (arg.log[datestr] != null) {
-        ret.insertAdjacentElement(
-          'beforeend',
-          createLogTableSepalator(datestr)
-        );
+        ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr));
         arg.log[datestr].comments.forEach(function (l) {
           if (l.speaker.trim() == villager_str) {
             ret.insertAdjacentElement('beforeend', createLogTableRow(l));
@@ -123,10 +100,7 @@ export function updateCommentLog(arg, param) {
       // create previous night log by date (if day2..N)
       datestr_night = logTag_d2n(datestr);
       if (datestr_night != datestr && arg.log[datestr_night] != null) {
-        ret.insertAdjacentElement(
-          'beforeend',
-          createLogTableSepalator(datestr_night)
-        );
+        ret.insertAdjacentElement('beforeend', createLogTableSepalator(datestr_night));
         arg.log[datestr_night].comments.forEach(function (l) {
           if (l.speaker.trim() == villager_str) {
             ret.insertAdjacentElement('beforeend', createLogTableRow(l));
@@ -139,13 +113,9 @@ export function updateCommentLog(arg, param) {
   var table = document.createElement('table');
   table.insertAdjacentElement('beforeend', ret);
   document.getElementById('comment-summary').textContent = '';
-  document
-    .getElementById('comment-summary')
-    .insertAdjacentElement('afterbegin', table);
+  document.getElementById('comment-summary').insertAdjacentElement('afterbegin', table);
 
-  var table_row_max_size = parseInt(
-    document.getElementById('link').offsetWidth
-  );
+  var table_row_max_size = parseInt(document.getElementById('link').offsetWidth);
   var table_name_cell_size = 0;
   try {
     ret.childNodes.forEach((tr) => {
@@ -167,13 +137,7 @@ export function updateCommentLog(arg, param) {
       talk_cell.innerHTML = '';
       var fixed_text = [];
       text.forEach((t) => {
-        fixed_text = fixed_text.concat(
-          slice_string_by_visualLength(
-            t,
-            table_talk_cell_size,
-            talk_cell.style.fontSize != ''
-          )
-        );
+        fixed_text = fixed_text.concat(slice_string_by_visualLength(t, table_talk_cell_size, talk_cell.style.fontSize != ''));
       });
       var p = new DOMParser();
       fixed_text.forEach((t) => {
@@ -182,10 +146,7 @@ export function updateCommentLog(arg, param) {
           talk_cell.appendChild(br);
         }
         var span = document.createElement('span');
-        span.textContent = p.parseFromString(
-          '<html><body><span>' + t + '</span></body></html>',
-          'text/html'
-        ).body.textContent;
+        span.textContent = p.parseFromString('<html><body><span>' + t + '</span></body></html>', 'text/html').body.textContent;
         talk_cell.appendChild(span);
       });
     }

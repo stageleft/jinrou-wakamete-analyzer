@@ -22,33 +22,17 @@ export function recvLog_proc(request) {
   }
 
   // Load from memory area or Web Storaget API
-  if (
-    recvLog_proc.stored_value == undefined ||
-    recvLog_proc.stored_value === {}
-  ) {
-    recvLog_proc.stored_value =
-      JSON.parse(
-        decodeURIComponent(window.localStorage.getItem('wakamete_village_info'))
-      ) || {};
+  if (recvLog_proc.stored_value == undefined || recvLog_proc.stored_value === {}) {
+    recvLog_proc.stored_value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info'))) || {};
   }
   var value = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
   var stored_value_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
 
-  if (
-    recvLog_proc.stored_raw_log == undefined ||
-    recvLog_proc.stored_raw_log === {}
-  ) {
-    recvLog_proc.stored_raw_log =
-      JSON.parse(
-        decodeURIComponent(
-          window.localStorage.getItem('wakamete_village_raw_log')
-        )
-      ) || {};
+  if (recvLog_proc.stored_raw_log == undefined || recvLog_proc.stored_raw_log === {}) {
+    recvLog_proc.stored_raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_raw_log'))) || {};
   }
   var raw_log = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
-  var stored_raw_log_prev = JSON.parse(
-    JSON.stringify(recvLog_proc.stored_raw_log)
-  ); // deep copy
+  var stored_raw_log_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
 
   // Parse and Update wakamete village log
   var is_same_village = true;
@@ -70,8 +54,7 @@ export function recvLog_proc(request) {
         if (raw_log[parsedLog.village_number] == null) {
           raw_log[parsedLog.village_number] = { log: {} };
         }
-        raw_log[parsedLog.village_number].log[Object.keys(parsedLog.log)[0]] =
-          request.html_log;
+        raw_log[parsedLog.village_number].log[Object.keys(parsedLog.log)[0]] = request.html_log;
       }
     }
   } catch (e) {
@@ -135,10 +118,7 @@ export function recvLog_proc(request) {
   recvLog_proc.stored_raw_log = JSON.parse(JSON.stringify(raw_log)); // deep copy
 
   // save raw_log to Web Storaget API
-  if (
-    Object.keys(recvLog_proc.stored_raw_log).length > 8 ||
-    Object.keys(recvLog_proc.stored_value).length > 8
-  ) {
+  if (Object.keys(recvLog_proc.stored_raw_log).length > 8 || Object.keys(recvLog_proc.stored_value).length > 8) {
     // preserve log : newest 8 villages by Village ID
     var minimum_key = null;
     Object.keys(recvLog_proc.stored_raw_log).forEach(function (v) {
@@ -160,36 +140,20 @@ export function recvLog_proc(request) {
   }
   // save raw_log to Web Storaget API
   try {
-    if (
-      JSON.stringify(recvLog_proc.stored_raw_log).length >
-      JSON.stringify(stored_raw_log_prev).length
-    ) {
-      window.localStorage.setItem(
-        'wakamete_village_raw_log',
-        encodeURIComponent(JSON.stringify(recvLog_proc.stored_raw_log))
-      );
+    if (JSON.stringify(recvLog_proc.stored_raw_log).length > JSON.stringify(stored_raw_log_prev).length) {
+      window.localStorage.setItem('wakamete_village_raw_log', encodeURIComponent(JSON.stringify(recvLog_proc.stored_raw_log)));
     }
   } catch (e) {
-    console.log(
-      'raw_log save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack
-    );
+    console.log('raw_log save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack);
     // nop : ignore disk write error
   }
   // save value to Web Storaget API
   try {
-    if (
-      JSON.stringify(recvLog_proc.stored_value) !==
-      JSON.stringify(stored_value_prev)
-    ) {
-      window.localStorage.setItem(
-        'wakamete_village_info',
-        encodeURIComponent(JSON.stringify(recvLog_proc.stored_value))
-      );
+    if (JSON.stringify(recvLog_proc.stored_value) !== JSON.stringify(stored_value_prev)) {
+      window.localStorage.setItem('wakamete_village_info', encodeURIComponent(JSON.stringify(recvLog_proc.stored_value)));
     }
   } catch (e) {
-    console.log(
-      'value save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack
-    );
+    console.log('value save error : ' + e.name + ' : ' + e.message + ' : ' + e.stack);
     // nop : ignore disk write error
   }
 
@@ -199,9 +163,7 @@ export function recvLog_proc(request) {
 
 // ref. https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener
 export function event_click_deduce(arg) {
-  var value = JSON.parse(
-    decodeURIComponent(window.localStorage.getItem('wakamete_village_info'))
-  )[village_number];
+  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info')))[village_number];
   if (arg != null) {
     var o = arg.srcElement;
     if (o.tagName.toLowerCase() == 'a') {
@@ -214,15 +176,9 @@ export function event_click_deduce(arg) {
         //// show comment-summary
         // <a id="date-log-2" href="#">2日目</a>
         // <a id="all-day-log-依田芳乃 " href="#">依田芳乃 </a>
-        document
-          .getElementById('vote-summary')
-          .setAttribute('class', 'popup-standby');
-        document
-          .getElementById('comment-summary')
-          .setAttribute('class', 'popup-active');
-        document
-          .getElementById('deduce-summary')
-          .setAttribute('class', 'popup-standby');
+        document.getElementById('vote-summary').setAttribute('class', 'popup-standby');
+        document.getElementById('comment-summary').setAttribute('class', 'popup-active');
+        document.getElementById('deduce-summary').setAttribute('class', 'popup-standby');
         document.getElementById('summary-field').scrollTop = 0;
         document.getElementById('summary-field').scrollLeft = 0;
       } else if (id.indexOf('vote') != -1) {
@@ -231,28 +187,16 @@ export function event_click_deduce(arg) {
 
         //// show vote-summary
         // <a id="vote" href="#">投票結果</a>
-        document
-          .getElementById('vote-summary')
-          .setAttribute('class', 'popup-active');
-        document
-          .getElementById('comment-summary')
-          .setAttribute('class', 'popup-standby');
-        document
-          .getElementById('deduce-summary')
-          .setAttribute('class', 'popup-standby');
+        document.getElementById('vote-summary').setAttribute('class', 'popup-active');
+        document.getElementById('comment-summary').setAttribute('class', 'popup-standby');
+        document.getElementById('deduce-summary').setAttribute('class', 'popup-standby');
         document.getElementById('summary-field').scrollTop = 0;
         document.getElementById('summary-field').scrollLeft = 0;
       } else if (id.indexOf('summary') != -1) {
         //// show deduce-summary
-        document
-          .getElementById('vote-summary')
-          .setAttribute('class', 'popup-standby');
-        document
-          .getElementById('comment-summary')
-          .setAttribute('class', 'popup-standby');
-        document
-          .getElementById('deduce-summary')
-          .setAttribute('class', 'popup-active');
+        document.getElementById('vote-summary').setAttribute('class', 'popup-standby');
+        document.getElementById('comment-summary').setAttribute('class', 'popup-standby');
+        document.getElementById('deduce-summary').setAttribute('class', 'popup-active');
         document.getElementById('summary-field').scrollTop = 0;
         document.getElementById('summary-field').scrollLeft = 0;
       } // else nop
@@ -263,10 +207,7 @@ export function event_click_deduce(arg) {
 export function event_click_td_alt(arg) {
   if (arg != null) {
     var o = arg.srcElement;
-    while (
-      o.tagName.toLowerCase() != 'td' &&
-      o.tagName.toLowerCase() != 'div'
-    ) {
+    while (o.tagName.toLowerCase() != 'td' && o.tagName.toLowerCase() != 'div') {
       o = o.parentElement;
     }
     if (o.tagName.toLowerCase() == 'td') {
@@ -283,10 +224,7 @@ export function event_click_td_alt(arg) {
 export function event_click_comments(arg) {
   if (arg != null) {
     var o = arg.srcElement;
-    while (
-      o.tagName.toLowerCase() != 'tr' &&
-      o.tagName.toLowerCase() != 'div'
-    ) {
+    while (o.tagName.toLowerCase() != 'tr' && o.tagName.toLowerCase() != 'div') {
       o = o.parentElement;
     }
     if (o.tagName.toLowerCase() == 'tr' && o.childElementCount == 3) {
@@ -303,28 +241,18 @@ export function checkbox_change() {
   document.getElementById('deduce').scrollLeft = 0;
 }
 
-import {
-  template_seer,
-  template_medium,
-  template_bodyguard,
-  template_freemason,
-} from './template.js';
+import { template_seer, template_medium, template_bodyguard, template_freemason } from './template.js';
 export function output_memo_template(arg) {
-  var value = JSON.parse(
-    decodeURIComponent(window.localStorage.getItem('wakamete_village_info'))
-  )[village_number];
+  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info')))[village_number];
   var id = arg.srcElement.getAttribute('id');
   var v = document.getElementById('freememo').value;
   if (id.indexOf('template-seer') != -1) {
     document.getElementById('freememo').value = v + '\n' + template_seer(value);
   } else if (id.indexOf('template-medium') != -1) {
-    document.getElementById('freememo').value =
-      v + '\n' + template_medium(value);
+    document.getElementById('freememo').value = v + '\n' + template_medium(value);
   } else if (id.indexOf('template-bodyguard') != -1) {
-    document.getElementById('freememo').value =
-      v + '\n' + template_bodyguard(value);
+    document.getElementById('freememo').value = v + '\n' + template_bodyguard(value);
   } else if (id.indexOf('template-freemason') != -1) {
-    document.getElementById('freememo').value =
-      v + '\n' + template_freemason(value);
+    document.getElementById('freememo').value = v + '\n' + template_freemason(value);
   }
 }

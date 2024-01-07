@@ -22,15 +22,7 @@ function recvLog(request, sender, sendResponse) {
   var time_elapsed = time_end - time_start;
   if (time_elapsed > recv_cycle) {
     skip_count = parseInt((time_elapsed + 1) / recv_cycle);
-    console.log(
-      'Process delayed, set skip_count=' +
-        skip_count +
-        '. ' +
-        time_elapsed +
-        '[ms] is over data receive cycle ' +
-        recv_cycle +
-        '[ms].'
-    );
+    console.log('Process delayed, set skip_count=' + skip_count + '. ' + time_elapsed + '[ms] is over data receive cycle ' + recv_cycle + '[ms].');
   }
 
   sendResponse({ response: 'OK' });

@@ -131,18 +131,11 @@ log_document.onscroll = function () {
         'page_ypos',
         JSON.stringify({
           from: 'end',
-          pos: String(
-            log_window.innerHeight +
-              log_window.scrollMaxY -
-              log_window.pageYOffset
-          ),
+          pos: String(log_window.innerHeight + log_window.scrollMaxY - log_window.pageYOffset),
         })
       );
     } else {
-      log_window.localStorage.setItem(
-        'page_ypos',
-        JSON.stringify({ from: 'start', pos: String(log_window.pageYOffset) })
-      );
+      log_window.localStorage.setItem('page_ypos', JSON.stringify({ from: 'start', pos: String(log_window.pageYOffset) }));
     }
   } catch (e) {
     localStorage.removeItem('page_ypos');
