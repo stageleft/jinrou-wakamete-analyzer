@@ -67,7 +67,7 @@ function onTargetChanged(event){
     submit.setAttribute("style", "color:#ff0000");
     console.log ('onTargetChanged. disable submit.');
   } else {
-    submit.removeAttribute("disabled", "disabled");
+    submit.removeAttribute("disabled");
     submit.removeAttribute("style");
     console.log ('onTargetChanged. enable submit.');
   }
