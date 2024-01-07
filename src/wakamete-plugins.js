@@ -33,7 +33,7 @@ try {
     text = log_document.getElementsByName('TXTMSG')[0];
   } else {
     text = null;
-  };
+  }
   form    = log_document.querySelector('form');
 } catch(e) {
   console.log(e.name + ':' + e.message);
@@ -61,7 +61,7 @@ if (text != null) {
 }
 
 // target.onChanged
-function onTargetChanged(event){
+function onTargetChanged(){
   if ((command.value == 'MSG') && (target.value != '')) {
     submit.setAttribute("disabled", "disabled");
     submit.setAttribute("style", "color:#ff0000");
@@ -80,13 +80,13 @@ if (target != null) {
 }
 
 // onLogLoad
-function handleResponse(message){
+function handleResponse(){
   // nop.
 }
-function handleError(error){
+function handleError(){
   // nop.
 }
-function onLogLoad(event) {
+function onLogLoad() {
   var target = log_document.getElementsByTagName("form").item(0);
 
   var village_log_html = JSON.parse(JSON.stringify(target.innerHTML));
@@ -96,7 +96,7 @@ function onLogLoad(event) {
 }
 
 // onRefreshView
-function onRefreshView(event) {
+function onRefreshView() {
   try {
     if (text.value.length >= 1) {
       console.log ('Ignore refresh. TXTMSG has any messsage.');

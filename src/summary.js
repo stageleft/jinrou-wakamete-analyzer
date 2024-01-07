@@ -116,23 +116,24 @@ export function updateSummary(arg) {
   var enemy_count       = enemy_found_count + Object.keys(list.enemy_mark).length;
   var enemy_other_count = enemy_all_count - enemy_found_count;
   var enemy_over_count  = 0;
-  for (var i = arg.input.seer_count;      i < Object.keys(list.seer_co).length;      i++) {
+  var i;
+  for (i = arg.input.seer_count;      i < Object.keys(list.seer_co).length;      i++) {
     list.enemy_mark[String("偽占い師" + String(i))] = { comingout:"村人", enemymark:"人外" };
     enemy_over_count = enemy_over_count + 1;
   }
-  for (var i = arg.input.medium_count;    i < Object.keys(list.medium_co).length;    i++) {
+  for (i = arg.input.medium_count;    i < Object.keys(list.medium_co).length;    i++) {
     list.enemy_mark[String("偽霊能者" + String(i))] = { comingout:"村人", enemymark:"人外" };
     enemy_over_count = enemy_over_count + 1;
   }
-  for (var i = arg.input.freemason_count; i < Object.keys(list.freemason_co).length; i++) {
+  for (i = arg.input.freemason_count; i < Object.keys(list.freemason_co).length; i++) {
     list.enemy_mark[String("偽共有者" + String(i))] = { comingout:"村人", enemymark:"人外" };
     enemy_over_count = enemy_over_count + 1;
   }
-  for (var i = arg.input.werecat_count;   i < Object.keys(list.werecat_co).length;   i++) {
+  for (i = arg.input.werecat_count;   i < Object.keys(list.werecat_co).length;   i++) {
     list.enemy_mark[String("偽猫又" + String(i))]   = { comingout:"村人", enemymark:"人外" };
     enemy_over_count = enemy_over_count + 1;
   }
-  for (var i = arg.input.bodyguard_count; i < Object.keys(list.bodyguard_co).length; i++) {
+  for (i = arg.input.bodyguard_count; i < Object.keys(list.bodyguard_co).length; i++) {
     list.enemy_mark[String("偽狩人" + String(i))]   = { comingout:"村人", enemymark:"人外" };
     enemy_over_count = enemy_over_count + 1;
   }
@@ -272,13 +273,13 @@ export function updateSummary(arg) {
     var summary_text = document.createElement('td');
     summary.insertAdjacentElement('beforeend', summary_text);
 
-
+    var tmp;
     if (index_str.indexOf('(x/y)') != -1) {
       // index_str has "(x/y)" letters : x -> member_list.length, y -> max_count
       if (max_count <= 0) {
         return;
       }
-      var tmp = document.createElement('span');
+      tmp = document.createElement('span');
       tmp.className = index_class;
       tmp.innerText = index_str.replace('(x/', '(' + menber_list.length + '/').replace('/y)', '/' + max_count + ')');
       summary_text.insertAdjacentElement('beforeend', tmp);
@@ -287,12 +288,12 @@ export function updateSummary(arg) {
       if (max_count <= 0) {
         return;
       }
-      var tmp = document.createElement('span');
+      tmp = document.createElement('span');
       tmp.className = index_class;
       tmp.innerText = index_str.replace('(x)', '(' + max_count + ')');
       summary_text.insertAdjacentElement('beforeend', tmp);
     } else {
-      var tmp = document.createElement('span');
+      tmp = document.createElement('span');
       tmp.className = index_class;
       tmp.innerText = index_str;
       summary_text.insertAdjacentElement('beforeend', tmp);
