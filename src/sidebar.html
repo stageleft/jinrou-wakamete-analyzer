@@ -1,70 +1,77 @@
 <!DOCTYPE html>
-<html lang="ja" style="width:100%;height:100%">
-<head>
-  <meta charset="utf-8" />
-  <title>Sidebar Interface of Jinrou Wakamete Analyzer</title>
-  <link rel="stylesheet" type="text/css" href="sidebar.css">
-</head>
-<body style="width:100%;height:100%;">
-  <div id="link"        style="width:100%;height:20px;overflow:hidden;">
-    Go To <a href="http://jinrou.aa0.netvolante.jp/~jinrou/">「汝は人狼なりや？」続わかめてエディション</a>　<a href="http://jinrou.aa0.netvolante.jp/~jinrou/index2.html">（フレームなし版）</a>
-  </div>
-  <div id="casts"       style="width:100%;height:45px;overflow:hidden;">
-    <table><tbody>
-      <tr>
-        <td colspan="2">参加者<input id="all_villager" type="text" value="3" style="width:32px;" disabled="disabled"><input id="all_villager_old" value="0" style="display:none"></td>
-        <td>人狼<input id="werewolf"     type="number" value="1" min="1" style="width:32px;"></td>
-        <td>狂人<input id="posessed"     type="number" value="0" min="0" style="width:32px;"></td>
-        <td>妖狐<input id="werefox"      type="number" value="0" min="0" style="width:32px;"></td>
-        <td>子狐<input id="minifox"      type="number" value="0" min="0" style="width:32px;"></td>
-        <td rowspan="2" style="width:16px;"></td>
-        <td rowspan="2">過去ログ日数制限<br /><input id="datelimit_passed_log" type="number" value="0"  min="0" style="width:32px;"></td>
-      </tr>
-      <tr>
-        <td>村人<input id="job_villager" type="text"   value="2" style="width:32px;" disabled="disabled"></td>
-        <td>占い<input id="seer"         type="number" value="0" min="0" style="width:32px;"></td>
-        <td>霊能<input id="medium"       type="number" value="0" min="0" style="width:32px;"></td>
-        <td>狩人<input id="bodyguard"    type="number" value="0" min="0" style="width:32px;"></td>
-        <td>共有<input id="freemason"    type="number" value="0" min="0" style="width:32px;"></td>
-        <td>猫又<input id="werecat"      type="number" value="0" min="0" style="width:32px;"></td>
-      </tr>
-      <tr>
-      </tr>
-    </tbody></table>
-  </div>
-  <div id="control"        style="width:100%;height:18px;overflow:hidden;">
-    <a href="#" id="summary">状況</a>　
-    <a href="#" id="vote">投票</a>　
-    <input type="checkbox" id="is_dead"     checked="checked">死者表示
-    <input type="checkbox" id="is_talented" checked="checked">猫狩表示
-    <input type="checkbox" id="is_villager" checked="checked">素村表示
-    <input type="checkbox" id="is_enemy"    checked="checked">人外表示
-  </div>
-  <div id="deduce"          style="width:100%;height:30%;overflow:scroll;"></div>
-  <div id="summary-field"  style="width:100%;height:40%;overflow:auto;">
-    <div id="vote-summary"    class="popup-standby"></div>
-    <div id="comment-summary" class="popup-standby"></div>
-    <div id="deduce-summary"  class="popup-active" ></div>
-    <table class="hidden-ruler"><tr><td id="normal-ruler"></td></tr></table>
-    <table class="hidden-ruler"><tr><td id="large-ruler" style="font-size: large;"></td></tr></table>
-  </div>
-  <div id="usermemo"    style="width:100%;height:calc( 30% - 85px );overflow:hidden;">
-    <textarea id="freememo" style="width:100%;height:100%" placeholder="メモをどうぞ"></textarea>
-  </div>
-  <div id="villagers-template" style="width:100%;height:20px;overflow:hidden;">
-    <a href="#" id="template-seer">占いテンプレ</a>
-    <a href="#" id="template-medium">霊能テンプレ</a>
-    <a href="#" id="template-bodyguard">狩人テンプレ</a>
-    <a href="#" id="template-freemason">共有テンプレ</a>
-  </div>
-  <script type="module" language="JavaScript" src="logparser.js"></script>
-  <script type="module" language="JavaScript" src="libs.js"></script>
-  <script type="module" language="JavaScript" src="deducer.js"></script>
-  <script type="module" language="JavaScript" src="summary.js"></script>
-  <script type="module" language="JavaScript" src="logprovider.js"></script>
-  <script type="module" language="JavaScript" src="votes.js"></script>
-  <script type="module" language="JavaScript" src="template.js"></script>
-  <script type="module" language="JavaScript" src="sidebar_proc.js"></script>
-  <script type="module" language="JavaScript" src="sidebar.js"></script>
-</body>
+<html lang="ja" style="width: 100%; height: 100%">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sidebar Interface of Jinrou Wakamete Analyzer</title>
+    <link rel="stylesheet" type="text/css" href="sidebar.css" />
+  </head>
+  <body style="width: 100%; height: 100%">
+    <div id="link" style="width: 100%; height: 20px; overflow: hidden">
+      Go To
+      <a href="http://jinrou.aa0.netvolante.jp/~jinrou/">「汝は人狼なりや？」続わかめてエディション</a>　<a href="http://jinrou.aa0.netvolante.jp/~jinrou/index2.html">（フレームなし版）</a>
+    </div>
+    <div id="casts" style="width: 100%; height: 45px; overflow: hidden">
+      <table>
+        <tbody>
+          <tr>
+            <td colspan="2">参加者<input id="all_villager" type="text" value="3" style="width: 32px" disabled="disabled" /><input id="all_villager_old" value="0" style="display: none" /></td>
+            <td>人狼<input id="werewolf" type="number" value="1" min="1" style="width: 32px" /></td>
+            <td>狂人<input id="posessed" type="number" value="0" min="0" style="width: 32px" /></td>
+            <td>妖狐<input id="werefox" type="number" value="0" min="0" style="width: 32px" /></td>
+            <td>子狐<input id="minifox" type="number" value="0" min="0" style="width: 32px" /></td>
+            <td rowspan="2" style="width: 16px"></td>
+            <td rowspan="2">過去ログ日数制限<br /><input id="datelimit_passed_log" type="number" value="0" min="0" style="width: 32px" /></td>
+          </tr>
+          <tr>
+            <td>村人<input id="job_villager" type="text" value="2" style="width: 32px" disabled="disabled" /></td>
+            <td>占い<input id="seer" type="number" value="0" min="0" style="width: 32px" /></td>
+            <td>霊能<input id="medium" type="number" value="0" min="0" style="width: 32px" /></td>
+            <td>狩人<input id="bodyguard" type="number" value="0" min="0" style="width: 32px" /></td>
+            <td>共有<input id="freemason" type="number" value="0" min="0" style="width: 32px" /></td>
+            <td>猫又<input id="werecat" type="number" value="0" min="0" style="width: 32px" /></td>
+          </tr>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="control" style="width: 100%; height: 18px; overflow: hidden">
+      <a href="#" id="summary">状況</a>　 <a href="#" id="vote">投票</a>　 <input type="checkbox" id="is_dead" checked="checked" />死者表示
+      <input type="checkbox" id="is_talented" checked="checked" />猫狩表示 <input type="checkbox" id="is_villager" checked="checked" />素村表示
+      <input type="checkbox" id="is_enemy" checked="checked" />人外表示
+    </div>
+    <div id="deduce" style="width: 100%; height: 30%; overflow: scroll"></div>
+    <div id="summary-field" style="width: 100%; height: 40%; overflow: auto">
+      <div id="vote-summary" class="popup-standby"></div>
+      <div id="comment-summary" class="popup-standby"></div>
+      <div id="deduce-summary" class="popup-active"></div>
+      <table class="hidden-ruler">
+        <tr>
+          <td id="normal-ruler"></td>
+        </tr>
+      </table>
+      <table class="hidden-ruler">
+        <tr>
+          <td id="large-ruler" style="font-size: large"></td>
+        </tr>
+      </table>
+    </div>
+    <div id="usermemo" style="width: 100%; height: calc(30% - 85px); overflow: hidden">
+      <textarea id="freememo" style="width: 100%; height: 100%" placeholder="メモをどうぞ"></textarea>
+    </div>
+    <div id="villagers-template" style="width: 100%; height: 20px; overflow: hidden">
+      <a href="#" id="template-seer">占いテンプレ</a>
+      <a href="#" id="template-medium">霊能テンプレ</a>
+      <a href="#" id="template-bodyguard">狩人テンプレ</a>
+      <a href="#" id="template-freemason">共有テンプレ</a>
+    </div>
+    <script type="module" language="JavaScript" src="logparser.js"></script>
+    <script type="module" language="JavaScript" src="libs.js"></script>
+    <script type="module" language="JavaScript" src="deducer.js"></script>
+    <script type="module" language="JavaScript" src="summary.js"></script>
+    <script type="module" language="JavaScript" src="logprovider.js"></script>
+    <script type="module" language="JavaScript" src="votes.js"></script>
+    <script type="module" language="JavaScript" src="template.js"></script>
+    <script type="module" language="JavaScript" src="sidebar_proc.js"></script>
+    <script type="module" language="JavaScript" src="sidebar.js"></script>
+  </body>
 </html>
