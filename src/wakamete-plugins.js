@@ -3,6 +3,42 @@
 
 // value
 const URL_TOP_literal = /^http:\/\/.*\/~jinrou\/(|index.html)$/g;
+var log_document;
+var log_window;
+var command;
+var target;
+var submit;
+var text;
+var form;
+try {
+  if (document.URL.match(URL_TOP_literal)) {
+    log_document = top[1].document;
+  } else {
+    log_document = top.document;
+  }
+  if (window.location.href.match(URL_TOP_literal)) {
+    log_window = top[1].window;
+  } else {
+    log_window = top.window;
+  }
+  command = log_document.getElementsByName('COMMAND')[0];
+  target  = log_document.getElementsByName('CMBPLAYER')[0];
+  submit  = null;
+  target.parentNode.childNodes.forEach(x => {
+    if(x.value == "行動/更新") {
+      submit = x;
+    }
+  });
+  if (log_document.getElementsByName('TXTMSG').length == 1) {
+    text = log_document.getElementsByName('TXTMSG')[0];
+  } else {
+    text = null;
+  };
+  form    = log_document.querySelector('form');
+} catch(e) {
+  console.log(e.name + ':' + e.message);
+  console.log(e.stack);
+}
 
 // setTextAreaAlertColor
 function setTextAreaAlertColor(text){
@@ -18,21 +54,29 @@ function setTextAreaAlertColor(text){
     text.removeAttribute("style");
   }
 }
-try {
-  var log_document;
-  if (document.URL.match(URL_TOP_literal)) {
-    log_document = top[1].document;
+if (text != null) {
+  text.oninput = function() {
+    setTextAreaAlertColor(text);
+  }  
+}
+
+// target.onChanged
+function onTargetChanged(event){
+  if ((command.value == 'MSG') && (target.value != '')) {
+    submit.setAttribute("disabled", "disabled");
+    submit.setAttribute("style", "color:#ff0000");
+    console.log ('onTargetChanged. disable submit.');
   } else {
-    log_document = top.document;
+    submit.removeAttribute("disabled", "disabled");
+    submit.removeAttribute("style");
+    console.log ('onTargetChanged. enable submit.');
   }
-  if (log_document.getElementsByName('TXTMSG').length == 1) {
-    log_document.getElementsByName('TXTMSG')[0].oninput = function() {
-      setTextAreaAlertColor(log_document.getElementsByName('TXTMSG')[0]);
-    }  
-  }
-} catch(e) {
-  console.log(e.name + ':' + e.message);
-  console.log(e.stack);
+}
+if (command != null) {
+  command.onchange = onTargetChanged;
+}
+if (target != null) {
+  target.onchange = onTargetChanged;
 }
 
 // onLogLoad
@@ -43,12 +87,6 @@ function handleError(error){
   // nop.
 }
 function onLogLoad(event) {
-  var log_document;
-  if (document.URL.match(URL_TOP_literal)) {
-    log_document = top[1].document;
-  } else {
-    log_document = top.document;
-  }
   var target = log_document.getElementsByTagName("form").item(0);
 
   var village_log_html = JSON.parse(JSON.stringify(target.innerHTML));
@@ -60,17 +98,6 @@ function onLogLoad(event) {
 // onRefreshView
 function onRefreshView(event) {
   try {
-    var log_document;
-    if (document.URL.match(URL_TOP_literal)) {
-      log_document = top[1].document;
-    } else {
-      log_document = top.document;
-    }
-    var command = log_document.getElementsByName('COMMAND')[0];
-    var target  = log_document.getElementsByName('CMBPLAYER')[0];
-    var text    = log_document.getElementsByName('TXTMSG')[0];
-    var form    = log_document.querySelector('form');
-
     if (text.value.length >= 1) {
       console.log ('Ignore refresh. TXTMSG has any messsage.');
     } else if ((command.value != 'MSG') &&     // 発　言（昼）
@@ -94,22 +121,8 @@ function onRefreshView(event) {
     // ignore e.
   }
 }
-var log_document;
-if (document.URL.match(URL_TOP_literal)) {
-  log_document = top[1].document;
-} else {
-  log_document = top.document;
-}
 log_document.onscroll = function(){
-  var log_window;
-  if (window.location.href.match(URL_TOP_literal)) {
-    log.console(top.window)
-    log_window = top[1].window;
-  } else {
-    log_window = top.window;
-  }
   try {
-    var text = log_document.getElementsByName('TXTMSG')[0];
     if (text.getBoundingClientRect()['y'] < 0) {
       log_window.localStorage.setItem("page_ypos",
                                   JSON.stringify({from:"end",
@@ -126,12 +139,6 @@ log_document.onscroll = function(){
   }
 };
 try {
-  var log_window;
-  if (window.location.href.match(URL_TOP_literal)) {
-    log_window = top[1].window;
-  } else {
-    log_window = top.window;
-  }
   var y = JSON.parse(log_window.localStorage.getItem("page_ypos"));
   var f = (y != null) ? y.from : "";
   var s = (y != null) ? y.pos  : "";
