@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 export function createDateArray(arg) {
   // usage : [datearray, base_date] = createDateArray(arg);
@@ -11,60 +11,62 @@ export function createDateArray(arg) {
   var base_date;
 
   // preprocess : check arg has log.
-  if (arg.log == null) { return ret; }
+  if (arg.log == null) {
+    return ret;
+  }
 
   var date_count = 0;
-  Object.keys(arg.log).forEach(function(d){
-    if (d.match("朝となりました。$")) {
+  Object.keys(arg.log).forEach(function (d) {
+    if (d.match('朝となりました。$')) {
       date_count = date_count + 1;
     }
   });
   // day 1
-  if (arg.log["１日目の朝となりました。"] != null) {
-    ret.push("１日目の朝となりました。");
+  if (arg.log['１日目の朝となりました。'] != null) {
+    ret.push('１日目の朝となりました。');
   }
   // day 2
-  if (arg.log["2日目の朝となりました。"] != null) {
-    ret.push("2日目の朝となりました。");
-  } else if (arg.log["１日目の夜となりました。"] != null) {
-    ret.push("１日目の夜となりました。");
+  if (arg.log['2日目の朝となりました。'] != null) {
+    ret.push('2日目の朝となりました。');
+  } else if (arg.log['１日目の夜となりました。'] != null) {
+    ret.push('１日目の夜となりました。');
   }
   // day 3..N
-  for (var i = 2 ; i < (date_count + 1) ; i++ ) {
-    if (arg.log[String(i+1) + "日目の朝となりました。"] != null) {
-      ret.push(String(i+1) + "日目の朝となりました。");
-    } else if (arg.log[String(i) + "日目の夜となりました。"] != null) {
-      ret.push(String(i) + "日目の夜となりました。");
+  for (var i = 2; i < date_count + 1; i++) {
+    if (arg.log[String(i + 1) + '日目の朝となりました。'] != null) {
+      ret.push(String(i + 1) + '日目の朝となりました。');
+    } else if (arg.log[String(i) + '日目の夜となりました。'] != null) {
+      ret.push(String(i) + '日目の夜となりました。');
     } else {
       // nop : String(i+1) + "日目の相当ログはありません。"
     }
   }
   // afterplay
   if (ret.length == 0) {
-    if (arg.log["「村　人」の勝利です！"] != null) {
-      ret.push("「村　人」の勝利です！");
-    } else if (arg.log["「人　狼」の勝利です！"] != null) {
-      ret.push("「人　狼」の勝利です！");
-    } else if (arg.log["「妖　狐」の勝利です！"] != null) {
-      ret.push("「妖　狐」の勝利です！");
-    } else if (arg.log["「猫　又」の勝利です！"] != null) {
-      ret.push("「猫　又」の勝利です！");
-    } else if (arg.log["「引き分け」です！"] != null) {
-      ret.push("「引き分け」です！");
+    if (arg.log['「村　人」の勝利です！'] != null) {
+      ret.push('「村　人」の勝利です！');
+    } else if (arg.log['「人　狼」の勝利です！'] != null) {
+      ret.push('「人　狼」の勝利です！');
+    } else if (arg.log['「妖　狐」の勝利です！'] != null) {
+      ret.push('「妖　狐」の勝利です！');
+    } else if (arg.log['「猫　又」の勝利です！'] != null) {
+      ret.push('「猫　又」の勝利です！');
+    } else if (arg.log['「引き分け」です！'] != null) {
+      ret.push('「引き分け」です！');
     }
   }
   // 過去ログ日数制限
   var date_limit = document.getElementById('datelimit_passed_log').value;
-  if ((date_limit != 0) && (date_count > date_limit)) {
+  if (date_limit != 0 && date_count > date_limit) {
     date_count = date_limit;
-    while(ret.length > date_count) {
+    while (ret.length > date_count) {
       ret.pop();
     }
   }
 
   // calc base_date
-  if (arg.log["１日目の夜となりました。"] != null) {
-    base_date = "１日目の夜となりました。";
+  if (arg.log['１日目の夜となりました。'] != null) {
+    base_date = '１日目の夜となりました。';
   } else {
     base_date = ret[0];
   }
@@ -79,10 +81,10 @@ export function logTag_d2n(key_day) {
 
   // day 2..N -> night 1..(N-1)
   if (d >= 2) {
-    if (key_day == "2日目の朝となりました。") {
-      return ("１日目の夜となりました。");
-    } else if (key_day.match("朝となりました。$")) {
-      return (String(d-1) + "日目の夜となりました。");
+    if (key_day == '2日目の朝となりました。') {
+      return '１日目の夜となりました。';
+    } else if (key_day.match('朝となりました。$')) {
+      return String(d - 1) + '日目の夜となりました。';
     }
   }
 
@@ -90,42 +92,42 @@ export function logTag_d2n(key_day) {
   return key_day;
 }
 
-export function setColorClass(player_info){
+export function setColorClass(player_info) {
   // input  : JSON Object : arg.input.each_player['target player']
   // output : String : CSS Class name. see sidebar.css
   if (player_info === undefined || player_info === null) {
     return;
   }
   // 人外被推理者の名前に色をつける
-  if (player_info.enemymark == "人外") {
+  if (player_info.enemymark == '人外') {
     return 'enemy';
   }
-  if (player_info.enemymark == "人狼") {
+  if (player_info.enemymark == '人狼') {
     return 'werewolf';
   }
-  if (player_info.enemymark == "狂人") {
+  if (player_info.enemymark == '狂人') {
     return 'posessed';
   }
-  if (player_info.enemymark == "妖狐") {
+  if (player_info.enemymark == '妖狐') {
     return 'werefox';
   }
-  if (player_info.enemymark == "子狐") {
+  if (player_info.enemymark == '子狐') {
     return 'minifox';
   }
   // 役職CO者の名前に色をつける
-  if (player_info.comingout == "占い") {
+  if (player_info.comingout == '占い') {
     return 'seer';
   }
-  if (player_info.comingout == "霊能") {
+  if (player_info.comingout == '霊能') {
     return 'medium';
   }
-  if (player_info.comingout == "狩人") {
+  if (player_info.comingout == '狩人') {
     return 'bodyguard';
   }
-  if (player_info.comingout == "共有") {
+  if (player_info.comingout == '共有') {
     return 'freemason';
   }
-  if (player_info.comingout == "猫又") {
+  if (player_info.comingout == '猫又') {
     return 'werecat';
   }
   return '';
@@ -153,58 +155,65 @@ export function makeComingOutList(arg) {
   //          },
   // 村全体の情報 -> arg.input.<job>_count
   var ret = {};
-  ret.seer_co       = {};
-  ret.medium_co     = {};
-  ret.bodyguard_co  = {};
-  ret.freemason_co  = {};
-  ret.werecat_co    = {};
+  ret.seer_co = {};
+  ret.medium_co = {};
+  ret.bodyguard_co = {};
+  ret.freemason_co = {};
+  ret.werecat_co = {};
   ret.werewolf_mark = {};
   ret.posessed_mark = {};
-  ret.werefox_mark  = {};
-  ret.minifox_mark  = {};
-  ret.enemy_mark    = {};
+  ret.werefox_mark = {};
+  ret.minifox_mark = {};
+  ret.enemy_mark = {};
   ret.villager_live = {};
-  ret.villager_co   = {};
+  ret.villager_co = {};
 
   // preprocess : check arg has input.
-  if (arg.log               == null) { return ret; }
-  if (arg.input             == null) { return ret; }
-  if (arg.input.each_player == null) { return ret; }
+  if (arg.log == null) {
+    return ret;
+  }
+  if (arg.input == null) {
+    return ret;
+  }
+  if (arg.input.each_player == null) {
+    return ret;
+  }
 
   var datearray = createDateArray(arg)[0];
-  var datestr   = datearray[datearray.length - 1];
+  var datestr = datearray[datearray.length - 1];
 
-  Object.keys(arg.input.each_player).forEach(function(k){
+  Object.keys(arg.input.each_player).forEach(function (k) {
     var stat = arg.log[datestr].players[k].stat;
-    var mrk  = arg.input.each_player[k].enemymark;
-    var job  = arg.input.each_player[k].comingout;
+    var mrk = arg.input.each_player[k].enemymark;
+    var job = arg.input.each_player[k].comingout;
 
-    if (stat == "（生存中）") {
+    if (stat == '（生存中）') {
       ret.villager_live[k] = arg.input.each_player[k];
     }
 
-    if        (mrk == "人狼") {
+    if (mrk == '人狼') {
       ret.werewolf_mark[k] = arg.input.each_player[k];
-    } else if (mrk == "狂人") {
+    } else if (mrk == '狂人') {
       ret.posessed_mark[k] = arg.input.each_player[k];
-    } else if (mrk == "妖狐") {
-      ret.werefox_mark[k]  = arg.input.each_player[k];
-    } else if (mrk == "子狐") {
-      ret.minifox_mark[k]  = arg.input.each_player[k];
-    } else if (mrk == "人外") {
-      ret.enemy_mark[k]    = arg.input.each_player[k];
-    } else if (job == "占い") {
-      ret.seer_co[k]       = arg.input.each_player[k];
-    } else if (job == "霊能") {
-      ret.medium_co[k]     = arg.input.each_player[k];
-    } else if (job == "狩人") {
-      ret.bodyguard_co[k]  = arg.input.each_player[k];
-    } else if (job == "共有") {
-      ret.freemason_co[k]  = arg.input.each_player[k];
-    } else if (job == "猫又") {
-      ret.werecat_co[k]    = arg.input.each_player[k];
-    } else if (stat == "（生存中）") { // (mrk == "村人") && (job == "村人")
-        ret.villager_co[k] = arg.input.each_player[k];
+    } else if (mrk == '妖狐') {
+      ret.werefox_mark[k] = arg.input.each_player[k];
+    } else if (mrk == '子狐') {
+      ret.minifox_mark[k] = arg.input.each_player[k];
+    } else if (mrk == '人外') {
+      ret.enemy_mark[k] = arg.input.each_player[k];
+    } else if (job == '占い') {
+      ret.seer_co[k] = arg.input.each_player[k];
+    } else if (job == '霊能') {
+      ret.medium_co[k] = arg.input.each_player[k];
+    } else if (job == '狩人') {
+      ret.bodyguard_co[k] = arg.input.each_player[k];
+    } else if (job == '共有') {
+      ret.freemason_co[k] = arg.input.each_player[k];
+    } else if (job == '猫又') {
+      ret.werecat_co[k] = arg.input.each_player[k];
+    } else if (stat == '（生存中）') {
+      // (mrk == "村人") && (job == "村人")
+      ret.villager_co[k] = arg.input.each_player[k];
     }
   });
 
@@ -237,20 +246,24 @@ export function makeGrayVillagerList(arg) {
   //             villager_co:   { ... },
   //          },
   var ret = makeComingOutList(arg);
-  ret.villager_gray  = {};
+  ret.villager_gray = {};
   ret.villager_white = {};
   ret.villager_panda = {};
   ret.villager_black = {};
   Object.assign(ret.villager_gray, ret.villager_co);
 
   // preprocess : check arg has input.
-  if (arg.log   == null) { return ret; }
-  if (arg.input == null) { return ret; }
+  if (arg.log == null) {
+    return ret;
+  }
+  if (arg.input == null) {
+    return ret;
+  }
 
   var datearray = createDateArray(arg)[0];
 
-  Object.keys(ret.seer_co).forEach(function(k){
-    datearray.forEach(function(d){
+  Object.keys(ret.seer_co).forEach(function (k) {
+    datearray.forEach(function (d) {
       if (arg.input.each_player[k][d] == null) {
         return;
       }
@@ -258,7 +271,7 @@ export function makeGrayVillagerList(arg) {
       var target = arg.input.each_player[k][d].target;
       var result = arg.input.each_player[k][d].result;
 
-      if (result == "○") {
+      if (result == '○') {
         if (Object.keys(ret.villager_gray).indexOf(target) != -1) {
           delete ret.villager_gray[target];
           ret.villager_white[target] = arg.input.each_player[k];
@@ -266,7 +279,7 @@ export function makeGrayVillagerList(arg) {
           delete ret.villager_black[target];
           ret.villager_panda[target] = arg.input.each_player[k];
         }
-      } else if (result == "●") {
+      } else if (result == '●') {
         if (Object.keys(ret.villager_gray).indexOf(target) != -1) {
           delete ret.villager_gray[target];
           ret.villager_black[target] = arg.input.each_player[k];
@@ -274,7 +287,8 @@ export function makeGrayVillagerList(arg) {
           delete ret.villager_white[target];
           ret.villager_panda[target] = arg.input.each_player[k];
         }
-      } else { // if (result == "")
+      } else {
+        // if (result == "")
         // nop
       }
     });
@@ -286,18 +300,24 @@ export function makeGrayVillagerList(arg) {
 export function get_visualLength(str, isLarge) {
   var p = new DOMParser();
   var ret;
-  if (isLarge == false){
+  if (isLarge == false) {
     // case if Normal font
-    var normal_talk_cell_ruler = document.getElementById("normal-ruler");
-    normal_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
+    var normal_talk_cell_ruler = document.getElementById('normal-ruler');
+    normal_talk_cell_ruler.textContent = p.parseFromString(
+      '<html><body><td>' + str + '</td></body></html>',
+      'text/html'
+    ).body.textContent;
     ret = normal_talk_cell_ruler.offsetWidth;
-    normal_talk_cell_ruler.textContent = "";
+    normal_talk_cell_ruler.textContent = '';
   } else {
     // case if Large font
-    var large_talk_cell_ruler = document.getElementById("large-ruler");
-    large_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
+    var large_talk_cell_ruler = document.getElementById('large-ruler');
+    large_talk_cell_ruler.textContent = p.parseFromString(
+      '<html><body><td>' + str + '</td></body></html>',
+      'text/html'
+    ).body.textContent;
     ret = large_talk_cell_ruler.offsetWidth;
-    large_talk_cell_ruler.textContent = "";
+    large_talk_cell_ruler.textContent = '';
   }
   return ret;
 }
@@ -313,16 +333,28 @@ export function slice_string_by_visualLength(str, max_cell_size, isLarge) {
     // skip tag from '<' to '>'
     if (str[i] == '<') {
       i = str.indexOf('>', i);
-      if (i == -1){
-        throw new Error('slice_string_by_visualLength : string has tag open < but not have tag close >. string=' + str);
+      if (i == -1) {
+        throw new Error(
+          'slice_string_by_visualLength : string has tag open < but not have tag close >. string=' +
+            str
+        );
       } else if (i < old_i || str.length < i) {
-        throw new Error('slice_string_by_visualLength : str.indexOf() has some error. string=' + str + ' i=' + i.toString()+ ' old_i=' + old_i.toString()+ ' str.lentgh=' + str.length.toString());
+        throw new Error(
+          'slice_string_by_visualLength : str.indexOf() has some error. string=' +
+            str +
+            ' i=' +
+            i.toString() +
+            ' old_i=' +
+            old_i.toString() +
+            ' str.lentgh=' +
+            str.length.toString()
+        );
       }
       continue;
     }
     // check length and split line if length is over
     t_visualLength = get_visualLength(str.slice(old_i, i), isLarge);
-    if ((t_visualLength > t_visualLengthOld) && (t_visualLength >= max_cell_size)) {
+    if (t_visualLength > t_visualLengthOld && t_visualLength >= max_cell_size) {
       ret.push(str.slice(old_i, prev_i));
       old_i = prev_i;
       t_visualLengthOld = 0;
@@ -331,7 +363,7 @@ export function slice_string_by_visualLength(str, max_cell_size, isLarge) {
     }
     prev_i = i;
   }
-  if ((old_i < i) || (i == 0)) {
+  if (old_i < i || i == 0) {
     ret.push(str.slice(old_i));
   }
   return ret;
