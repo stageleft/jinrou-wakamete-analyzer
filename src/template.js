@@ -58,7 +58,7 @@ export function template_medium(arg) {
 
   datearray.forEach(function (d) {
     arg.log[d].list_voted.forEach(function (k) {
-      ret.push(d.replace(/^(.*日目).*となりました。/, '$1') + '：' + k + ' ○●△');
+      ret.push(d.replace(/^(.*日目).*となりました。/, '$1') + '：' + k + ' ○●△■');
     });
   });
   ret.push('霊能CO');
