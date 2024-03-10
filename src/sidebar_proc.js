@@ -22,13 +22,13 @@ export function recvLog_proc(request) {
   }
 
   // Load from memory area or Web Storaget API
-  if (recvLog_proc.stored_value == undefined || recvLog_proc.stored_value === {}) {
+  if (recvLog_proc.stored_value == undefined || recvLog_proc.stored_value == {}) {
     recvLog_proc.stored_value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info'))) || {};
   }
   var value = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
   var stored_value_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
 
-  if (recvLog_proc.stored_raw_log == undefined || recvLog_proc.stored_raw_log === {}) {
+  if (recvLog_proc.stored_raw_log == undefined || recvLog_proc.stored_raw_log == {}) {
     recvLog_proc.stored_raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_raw_log'))) || {};
   }
   var raw_log = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
@@ -241,12 +241,14 @@ export function checkbox_change() {
   document.getElementById('deduce').scrollLeft = 0;
 }
 
-import { template_seer, template_medium, template_bodyguard, template_freemason } from './template.js';
+import { template_initial, template_seer, template_medium, template_bodyguard, template_freemason } from './template.js';
 export function output_memo_template(arg) {
   var value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info')))[village_number];
   var id = arg.srcElement.getAttribute('id');
   var v = document.getElementById('freememo').value;
-  if (id.indexOf('template-seer') != -1) {
+  if (id.indexOf('template-initial') != -1) {
+    document.getElementById('freememo').value = v + '\n' + template_initial(value);
+  } else if (id.indexOf('template-seer') != -1) {
     document.getElementById('freememo').value = v + '\n' + template_seer(value);
   } else if (id.indexOf('template-medium') != -1) {
     document.getElementById('freememo').value = v + '\n' + template_medium(value);

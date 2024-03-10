@@ -2,6 +2,35 @@
 
 import { createDateArray } from './libs.js';
 
+export function template_initial(arg) {
+  // functional input  : JSON from Web Storage API
+  // functional output : String (as innerText of <div id="deduce-summary" />)
+  var ret = [];
+
+  // 役職＆人外推理記入欄出力
+  ret.push('【占い師 (' + arg.input.seer_count + ')】');
+  ret.push('【霊能者 (' + arg.input.medium_count + ')】');
+  ret.push('【共有者 (' + arg.input.freemason_count + ')】');
+  ret.push('【猫　又 (' + arg.input.werecat_count + ')】');
+  ret.push('【狩　人 (' + arg.input.bodyguard_count + ')】');
+  ret.push('【人　狼 (' + arg.input.werewolf_count + ')】');
+  ret.push('【狂　人 (' + arg.input.posessed_count + ')】');
+  ret.push('【妖　狐 (' + arg.input.werefox_count + ')】');
+  ret.push('【子　狐 (' + arg.input.minifox_count + ')】');
+
+  // 本日（最新日）の日付取得
+  var datearray = createDateArray(arg)[0];
+  var today = datearray[datearray.length - 1];
+
+  // 参加者一覧出力
+  var player_list = Object.keys(arg.log[today].players);
+  player_list.forEach(function (k) {
+    if (k !== '初日犠牲者') {
+      ret.push(k);
+    }
+  });
+  return ret.join('\n');
+}
 export function template_seer(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
