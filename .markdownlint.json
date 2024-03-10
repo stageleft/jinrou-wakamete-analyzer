@@ -1,0 +1,10 @@
+{
+    "line-length": {
+        "line_length": 240
+    },
+    "no-inline-html": {
+        "allowed_elements": [
+            "span"
+        ]
+    }
+}
