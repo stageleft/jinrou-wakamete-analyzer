@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Jinrou Wakamete Analyzer",
-  "version": "2.4.1",
+  "version": "2.5",
 
   "description": "Realtime Log Analyzer of Jinrou Wakamete Server.",
 
@@ -26,7 +26,7 @@
     }
   ],
 
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "jinrou-wakamete-analyzer@elder-alliance.org"
     }
