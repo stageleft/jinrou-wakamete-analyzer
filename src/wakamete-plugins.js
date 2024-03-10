@@ -132,7 +132,7 @@ log_document.onscroll = function () {
         JSON.stringify({
           from: 'end',
           pos: String(log_window.innerHeight + log_window.scrollMaxY - log_window.pageYOffset),
-        })
+        }),
       );
     } else {
       log_window.localStorage.setItem('page_ypos', JSON.stringify({ from: 'start', pos: String(log_window.pageYOffset) }));

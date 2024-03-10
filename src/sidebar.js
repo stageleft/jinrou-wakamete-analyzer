@@ -38,35 +38,35 @@ document.getElementById('deduce').addEventListener(
   function (e) {
     sidebar_proc.event_click_deduce(e);
   },
-  true
+  true,
 );
 document.getElementById('control').addEventListener(
   'click',
   function (e) {
     sidebar_proc.event_click_deduce(e);
   },
-  true
+  true,
 );
 document.getElementById('vote-summary').addEventListener(
   'click',
   function (e) {
     sidebar_proc.event_click_td_alt(e);
   },
-  true
+  true,
 );
 document.getElementById('comment-summary').addEventListener(
   'click',
   function (e) {
     sidebar_proc.event_click_comments(e);
   },
-  true
+  true,
 );
 document.getElementById('deduce-summary').addEventListener(
   'click',
   function (e) {
     sidebar_proc.event_click_td_alt(e);
   },
-  true
+  true,
 );
 
 document.getElementById('is_dead').addEventListener(
@@ -74,28 +74,28 @@ document.getElementById('is_dead').addEventListener(
   function () {
     sidebar_proc.checkbox_change();
   },
-  true
+  true,
 );
 document.getElementById('is_talented').addEventListener(
   'change',
   function () {
     sidebar_proc.checkbox_change();
   },
-  true
+  true,
 );
 document.getElementById('is_villager').addEventListener(
   'change',
   function () {
     sidebar_proc.checkbox_change();
   },
-  true
+  true,
 );
 document.getElementById('is_enemy').addEventListener(
   'change',
   function () {
     sidebar_proc.checkbox_change();
   },
-  true
+  true,
 );
 
 document.getElementById('villagers-template').addEventListener(
@@ -103,5 +103,5 @@ document.getElementById('villagers-template').addEventListener(
   function (e) {
     sidebar_proc.output_memo_template(e);
   },
-  true
+  true,
 );

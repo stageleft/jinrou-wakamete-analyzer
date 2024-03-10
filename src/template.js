@@ -25,9 +25,9 @@ export function template_initial(arg) {
   // 参加者一覧出力
   var player_list = Object.keys(arg.log[today].players);
   player_list.forEach(function (k) {
-      if (k !== '初日犠牲者') {
-        ret.push(k);
-      }
+    if (k !== '初日犠牲者') {
+      ret.push(k);
+    }
   });
   return ret.join('\n');
 }
