@@ -296,6 +296,15 @@ export function updateSummary(arg) {
       tmp.className = index_class;
       tmp.innerText = index_str.replace('(x)', '(' + max_count + ')');
       summary_text.insertAdjacentElement('beforeend', tmp);
+    } else if (index_str.indexOf('(x:吊り数y)') != -1) {
+      // index_str has "(x:吊り数y)"   letters : x -> max_count, y -> Math.trunc((max_count - 1) / 2)
+      if (max_count <= 0) {
+        return;
+      }
+      tmp = document.createElement('span');
+      tmp.className = index_class;
+      tmp.innerText = index_str.replace('(x:', '(' + max_count + ':').replace('吊り数y)', '吊り数' + Math.trunc((max_count - 1) / 2) + ')');
+      summary_text.insertAdjacentElement('beforeend', tmp);
     } else {
       tmp = document.createElement('span');
       tmp.className = index_class;
@@ -375,7 +384,7 @@ export function updateSummary(arg) {
   calcSubSummary(ret, '【猫　又 (x/y)】', 'werecat', arg.input.werecat_count, Object.entries(list.werecat_co), true);
   calcSubSummary(ret, '【狩　人 (x/y)】', 'bodyguard', arg.input.bodyguard_count, Object.entries(list.bodyguard_co), true);
   // 村状況まとめ
-  calcSubSummary(ret, '【生存者 (x)】', '', Object.entries(list.villager_live).length, Object.entries(list.villager_live), true);
+  calcSubSummary(ret, '【生存者 (x:吊り数y)】', '', Object.entries(list.villager_live).length, Object.entries(list.villager_live), true);
   calcSubSummary(ret, '【完グレ (x)】', '', Object.entries(list.villager_gray).length, Object.entries(list.villager_gray), true);
   calcSubSummary(ret, '【村人○ (x)】', '', Object.entries(list.villager_white).length, Object.entries(list.villager_white), true);
   calcSubSummary(ret, '【村人● (x)】', '', Object.entries(list.villager_black).length, Object.entries(list.villager_black), true);
