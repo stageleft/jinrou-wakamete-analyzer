@@ -8,15 +8,33 @@ export function template_initial(arg) {
   var ret = [];
 
   // 役職＆人外推理記入欄出力
-  ret.push('【占い師 (' + arg.input.seer_count + ')】');
-  ret.push('【霊能者 (' + arg.input.medium_count + ')】');
-  ret.push('【共有者 (' + arg.input.freemason_count + ')】');
-  ret.push('【猫　又 (' + arg.input.werecat_count + ')】');
-  ret.push('【狩　人 (' + arg.input.bodyguard_count + ')】');
-  ret.push('【人　狼 (' + arg.input.werewolf_count + ')】');
-  ret.push('【狂　人 (' + arg.input.posessed_count + ')】');
-  ret.push('【妖　狐 (' + arg.input.werefox_count + ')】');
-  ret.push('【子　狐 (' + arg.input.minifox_count + ')】');
+  if (arg.input.seer_count > 0) {
+    ret.push('【占い師 (' + arg.input.seer_count + ')】');
+  }
+  if (arg.input.medium_count > 0) {
+    ret.push('【霊能者 (' + arg.input.medium_count + ')】');
+  }
+  if (arg.input.freemason_count > 0) {
+    ret.push('【共有者 (' + arg.input.freemason_count + ')】');
+  }
+  if (arg.input.werecat_count > 0) {
+    ret.push('【猫　又 (' + arg.input.werecat_count + ')】');
+  }
+  if (arg.input.bodyguard_count > 0) {
+    ret.push('【狩　人 (' + arg.input.bodyguard_count + ')】');
+  }
+  if (arg.input.werewolf_count > 0) {
+    ret.push('【人　狼 (' + arg.input.werewolf_count + ')】');
+  }
+  if (arg.input.posessed_count > 0) {
+    ret.push('【狂　人 (' + arg.input.posessed_count + ')】');
+  }
+  if (arg.input.werefox_count > 0) {
+    ret.push('【妖　狐 (' + arg.input.werefox_count + ')】');
+  }
+  if (arg.input.minifox_count > 0) {
+    ret.push('【子　狐 (' + arg.input.minifox_count + ')】');
+  }
 
   // 本日（最新日）の日付取得
   var datearray = createDateArray(arg)[0];
