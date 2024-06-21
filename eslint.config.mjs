@@ -12,7 +12,7 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
-export default [...compat.extends("eslint:recommended", "plugin:node/recommended"), {
+export default [...compat.extends("eslint:recommended"), {
     languageOptions: {
         globals: {
             ...globals.browser,
@@ -22,10 +22,5 @@ export default [...compat.extends("eslint:recommended", "plugin:node/recommended
 
         ecmaVersion: "latest",
         sourceType: "module",
-    },
-
-    rules: {
-        "node/no-unsupported-features/es-syntax": "off",
-        "node/no-exports-assign": "off",
     },
 }];
