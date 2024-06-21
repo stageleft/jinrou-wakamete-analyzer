@@ -17,6 +17,12 @@ jobs:
     steps:
     - name: Checkout Node.js
       uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20  # See supported Node.js release schedule at https://github.com/actions/setup-node
+        cache: 'npm'
+    - run: npm ci
 
     # from https://github.com/marketplace/actions/lint-action
     - name: Run linters
