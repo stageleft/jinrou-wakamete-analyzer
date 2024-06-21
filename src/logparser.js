@@ -385,7 +385,7 @@ function html2log(arg) {
           type: v_comtype,
         });
       } catch (e) {
-        // nop : skip "◆狼の遠吠え"
+        console.log(`error ${e} occured. ignore to skip ◆狼の遠吠え.`);
       }
     } else {
       // vote
@@ -426,7 +426,7 @@ function html2log(arg) {
       try {
         ret[d].vote_log = ret[d].vote_log.reverse();
       } catch (e) {
-        // nop : d is other than msg_date;
+        console.log(`error ${e} occured. ignore to skip out-of-range date ${d}.`);
       }
     });
     // shift all list 1 day.

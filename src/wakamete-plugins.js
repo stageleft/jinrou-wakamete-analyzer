@@ -120,7 +120,7 @@ function onRefreshView() {
       form.submit();
     }
   } catch (e) {
-    console.log('Ignore refresh. No COMMAND,CMBPLAYER,TXTMSG is defined.');
+    console.log(`Ignore refresh. error ${e} means No COMMAND,CMBPLAYER,TXTMSG is defined.`);
     // ignore e.
   }
 }
@@ -139,7 +139,7 @@ log_document.onscroll = function () {
     }
   } catch (e) {
     localStorage.removeItem('page_ypos');
-    console.log('Ignore scroll_pos saving. No TXTMSG is defined.');
+    console.log(`Ignore scroll_pos saving. error ${e} means No TXTMSG is defined.`);
     // ignore e.
   }
 };

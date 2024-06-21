@@ -323,7 +323,8 @@ export function slice_string_by_visualLength(str, max_cell_size, isLarge) {
   let t_visualLength;
   let old_i = 0;
   let prev_i = 0;
-  for (let i = 0; i < str.length; i++) {
+  let i;
+  for (i = 0; i < str.length; i++) {
     // skip tag from '<' to '>'
     if (str[i] == '<') {
       i = str.indexOf('>', i);

@@ -83,9 +83,11 @@ export function recvLog_proc(request) {
     // refresh input field for recovery.
     try {
       refreshInputField(value[village_number]);
-    } catch (e) {
+    } catch (f) {
       // exception case
       //   (1) no log
+      console.log(f.name + ':' + f.message);
+      console.log(f.stack);
       console.log(e.name + ':' + e.message);
       console.log(e.stack);
     }
