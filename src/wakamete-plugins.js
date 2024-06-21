@@ -42,7 +42,7 @@ try {
 
 // setTextAreaAlertColor
 function setTextAreaAlertColor(text) {
-  var is_logBroken = false;
+  let is_logBroken = false;
   text.value.split(/\n/).forEach(function (l) {
     if (l.length > 40) {
       is_logBroken = true;
@@ -87,11 +87,11 @@ function handleError() {
   // nop.
 }
 function onLogLoad() {
-  var target = log_document.getElementsByTagName('form').item(0);
+  let target = log_document.getElementsByTagName('form').item(0);
 
-  var village_log_html = JSON.parse(JSON.stringify(target.innerHTML));
-  var village_msg = { html_log: village_log_html };
-  var send_object = browser.runtime.sendMessage(village_msg);
+  let village_log_html = JSON.parse(JSON.stringify(target.innerHTML));
+  let village_msg = { html_log: village_log_html };
+  let send_object = browser.runtime.sendMessage(village_msg);
   send_object.then(handleResponse, handleError);
 }
 
@@ -120,7 +120,7 @@ function onRefreshView() {
       form.submit();
     }
   } catch (e) {
-    console.log('Ignore refresh. No COMMAND,CMBPLAYER,TXTMSG is defined.');
+    console.log(`Ignore refresh. error ${e} means No COMMAND,CMBPLAYER,TXTMSG is defined.`);
     // ignore e.
   }
 }
@@ -139,14 +139,14 @@ log_document.onscroll = function () {
     }
   } catch (e) {
     localStorage.removeItem('page_ypos');
-    console.log('Ignore scroll_pos saving. No TXTMSG is defined.');
+    console.log(`Ignore scroll_pos saving. error ${e} means No TXTMSG is defined.`);
     // ignore e.
   }
 };
 try {
-  var y = JSON.parse(log_window.localStorage.getItem('page_ypos'));
-  var f = y != null ? y.from : '';
-  var s = y != null ? y.pos : '';
+  let y = JSON.parse(log_window.localStorage.getItem('page_ypos'));
+  let f = y != null ? y.from : '';
+  let s = y != null ? y.pos : '';
   if (f == 'end') {
     log_window.scrollTo(0, log_window.innerHeight + log_window.scrollMaxY - s);
   } else if (f == 'start') {

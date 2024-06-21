@@ -23,15 +23,7 @@ jobs:
         node-version: 20  # See supported Node.js release schedule at https://github.com/actions/setup-node
         cache: 'npm'
     - run: npm ci
-
-    # from https://github.com/marketplace/actions/lint-action
-    - name: Run linters
-      uses: wearerequired/lint-action@v1
-      with:
-        eslint: true
-        eslint_dir: src
-        prettier: true
-        prettier_dir: src
+    - run: npm run lint
 
   test:
 

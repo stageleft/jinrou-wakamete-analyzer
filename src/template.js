@@ -5,7 +5,7 @@ import { createDateArray } from './libs.js';
 export function template_initial(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
-  var ret = [];
+  let ret = [];
 
   // 役職＆人外推理記入欄出力
   if (arg.input.seer_count > 0) {
@@ -37,11 +37,11 @@ export function template_initial(arg) {
   }
 
   // 本日（最新日）の日付取得
-  var datearray = createDateArray(arg)[0];
-  var today = datearray[datearray.length - 1];
+  let datearray = createDateArray(arg)[0];
+  let today = datearray[datearray.length - 1];
 
   // 参加者一覧出力
-  var player_list = Object.keys(arg.log[today].players);
+  let player_list = Object.keys(arg.log[today].players);
   player_list.forEach(function (k) {
     if (k !== '初日犠牲者') {
       ret.push(k);
@@ -52,13 +52,13 @@ export function template_initial(arg) {
 export function template_seer(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
-  var ret = [];
+  let ret = [];
 
   // 本日（最新日）の日付
-  var datearray = createDateArray(arg)[0];
-  var today = datearray[datearray.length - 1];
+  let datearray = createDateArray(arg)[0];
+  let today = datearray[datearray.length - 1];
 
-  var player_list = Object.keys(arg.log[today].players);
+  let player_list = Object.keys(arg.log[today].players);
   player_list.forEach(function (k) {
     if (arg.log[today].players[k].stat == '（生存中）') {
       ret.push('占いCO ' + k + ' ○●');
@@ -69,10 +69,10 @@ export function template_seer(arg) {
 export function template_medium(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
-  var ret = [];
+  let ret = [];
 
   // 日付情報
-  var datearray = createDateArray(arg)[0];
+  let datearray = createDateArray(arg)[0];
 
   datearray.forEach(function (d) {
     arg.log[d].list_voted.forEach(function (k) {
@@ -85,10 +85,10 @@ export function template_medium(arg) {
 export function template_bodyguard(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
-  var ret = [];
+  let ret = [];
 
   // 日付情報
-  var datearray = createDateArray(arg)[0];
+  let datearray = createDateArray(arg)[0];
 
   datearray.forEach(function (d) {
     arg.log[d].list_bitten.forEach(function (k) {
@@ -101,12 +101,12 @@ export function template_bodyguard(arg) {
 export function template_freemason(arg) {
   // functional input  : JSON from Web Storage API
   // functional output : String (as innerText of <div id="deduce-summary" />)
-  var ret = [];
+  let ret = [];
 
   // 本日（最新日）の日付
-  var datearray = createDateArray(arg)[0];
-  var today = datearray[datearray.length - 1];
-  var player_list = Object.keys(arg.log[today].players);
+  let datearray = createDateArray(arg)[0];
+  let today = datearray[datearray.length - 1];
+  let player_list = Object.keys(arg.log[today].players);
 
   player_list.forEach(function (k) {
     if (arg.log[today].players[k].stat == '（生存中）') {

@@ -25,21 +25,21 @@ export function recvLog_proc(request) {
   if (recvLog_proc.stored_value == undefined || recvLog_proc.stored_value == {}) {
     recvLog_proc.stored_value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info'))) || {};
   }
-  var value = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
-  var stored_value_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
+  let value = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
+  let stored_value_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_value)); // deep copy
 
   if (recvLog_proc.stored_raw_log == undefined || recvLog_proc.stored_raw_log == {}) {
     recvLog_proc.stored_raw_log = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_raw_log'))) || {};
   }
-  var raw_log = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
-  var stored_raw_log_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
+  let raw_log = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
+  let stored_raw_log_prev = JSON.parse(JSON.stringify(recvLog_proc.stored_raw_log)); // deep copy
 
   // Parse and Update wakamete village log
-  var is_same_village = true;
+  let is_same_village = true;
   try {
-    var parser = new DOMParser();
-    var receivedLog = parser.parseFromString(request.html_log, 'text/html');
-    var parsedLog = html2json_village_log(receivedLog);
+    let parser = new DOMParser();
+    let receivedLog = parser.parseFromString(request.html_log, 'text/html');
+    let parsedLog = html2json_village_log(receivedLog);
     if (parsedLog != null) {
       if (village_number != parsedLog.village_number) {
         is_same_village = false;
@@ -83,9 +83,11 @@ export function recvLog_proc(request) {
     // refresh input field for recovery.
     try {
       refreshInputField(value[village_number]);
-    } catch (e) {
+    } catch (f) {
       // exception case
       //   (1) no log
+      console.log(f.name + ':' + f.message);
+      console.log(f.stack);
       console.log(e.name + ':' + e.message);
       console.log(e.stack);
     }
@@ -102,7 +104,7 @@ export function recvLog_proc(request) {
 
   // update
   try {
-    var update_summary_flag_data_now = JSON.stringify(value[village_number]);
+    let update_summary_flag_data_now = JSON.stringify(value[village_number]);
     if (recvLog_proc.update_summary_flag_data != update_summary_flag_data_now) {
       updateSummary(value[village_number]); // deduce-summary
       recvLog_proc.update_summary_flag_data = update_summary_flag_data_now;
@@ -120,7 +122,7 @@ export function recvLog_proc(request) {
   // save raw_log to Web Storaget API
   if (Object.keys(recvLog_proc.stored_raw_log).length > 8 || Object.keys(recvLog_proc.stored_value).length > 8) {
     // preserve log : newest 8 villages by Village ID
-    var minimum_key = null;
+    let minimum_key = null;
     Object.keys(recvLog_proc.stored_raw_log).forEach(function (v) {
       if (minimum_key == null || parseInt(v) < parseInt(minimum_key)) {
         minimum_key = v;
@@ -163,11 +165,11 @@ export function recvLog_proc(request) {
 
 // ref. https://developer.mozilla.org/ja/docs/Web/API/EventTarget/addEventListener
 export function event_click_deduce(arg) {
-  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info')))[village_number];
+  let value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info')))[village_number];
   if (arg != null) {
-    var o = arg.srcElement;
+    let o = arg.srcElement;
     if (o.tagName.toLowerCase() == 'a') {
-      var id = o.getAttribute('id');
+      let id = o.getAttribute('id');
 
       if (id.indexOf('log') != -1) {
         //// create comment-summary
@@ -206,14 +208,14 @@ export function event_click_deduce(arg) {
 }
 export function event_click_td_alt(arg) {
   if (arg != null) {
-    var o = arg.srcElement;
+    let o = arg.srcElement;
     while (o.tagName.toLowerCase() != 'td' && o.tagName.toLowerCase() != 'div') {
       o = o.parentElement;
     }
     if (o.tagName.toLowerCase() == 'td') {
       // <tr><td alt="Copy-message-to-freememo">....</td></tr>
       if (o.getAttribute('alt') != null) {
-        var v = document.getElementById('freememo').value;
+        let v = document.getElementById('freememo').value;
         v = v + '\n' + o.getAttribute('alt');
         document.getElementById('freememo').value = v;
       }
@@ -223,13 +225,13 @@ export function event_click_td_alt(arg) {
 }
 export function event_click_comments(arg) {
   if (arg != null) {
-    var o = arg.srcElement;
+    let o = arg.srcElement;
     while (o.tagName.toLowerCase() != 'tr' && o.tagName.toLowerCase() != 'div') {
       o = o.parentElement;
     }
     if (o.tagName.toLowerCase() == 'tr' && o.childElementCount == 3) {
       // copy original_character_and_comment if outerHTML is <tr><td>layouted_charecter</td><td>layouted_comment</td><td style="display:none">original_character_and_comment</td></tr>
-      var v = document.getElementById('freememo').value;
+      let v = document.getElementById('freememo').value;
       v = v + '\n' + o.childNodes[2].textContent;
       document.getElementById('freememo').value = v;
     }
@@ -243,9 +245,9 @@ export function checkbox_change() {
 
 import { template_initial, template_seer, template_medium, template_bodyguard, template_freemason } from './template.js';
 export function output_memo_template(arg) {
-  var value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info')))[village_number];
-  var id = arg.srcElement.getAttribute('id');
-  var v = document.getElementById('freememo').value;
+  let value = JSON.parse(decodeURIComponent(window.localStorage.getItem('wakamete_village_info')))[village_number];
+  let id = arg.srcElement.getAttribute('id');
+  let v = document.getElementById('freememo').value;
   if (id.indexOf('template-initial') != -1) {
     document.getElementById('freememo').value = v + '\n' + template_initial(value);
   } else if (id.indexOf('template-seer') != -1) {

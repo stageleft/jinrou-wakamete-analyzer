@@ -7,17 +7,17 @@ export function updateCommentLog(arg, param) {
   // functional input  : JSON from Web Storage API
   // functional output : -
   // Another output    : innerHtml of <div id="comment-summary" />
-  var ret = document.createElement('tbody');
+  let ret = document.createElement('tbody');
 
   function createLogTableSepalator(title) {
-    var tr_daytitle = document.createElement('tr');
+    let tr_daytitle = document.createElement('tr');
 
-    var td_daytitle = document.createElement('td');
+    let td_daytitle = document.createElement('td');
     td_daytitle.setAttribute('colspan', '3');
 
-    var td_daytitlespan1 = document.createElement('span');
-    var td_daytitleb = document.createElement('b');
-    var td_daytitlespan2 = document.createElement('span');
+    let td_daytitlespan1 = document.createElement('span');
+    let td_daytitleb = document.createElement('b');
+    let td_daytitlespan2 = document.createElement('span');
 
     td_daytitlespan1.innerText = '◆◆◆◆◆';
     td_daytitleb.innerText = title;
@@ -35,15 +35,15 @@ export function updateCommentLog(arg, param) {
   function createLogTableRow(l) {
     // 以下のログの形式（コピペ後）を再現できるように。
     // <tr><td valign="top" width="160"><font color="#ff9999">◆</font><b>五十嵐響子</b>さん</td><td>「えへへっ　PCS！いぇーい♪」</td></tr>
-    var p = new DOMParser();
-    var tr = document.createElement('tr');
+    let p = new DOMParser();
+    let tr = document.createElement('tr');
 
-    var td1 = document.createElement('td');
+    let td1 = document.createElement('td');
     td1.innerText = l.speaker.trim();
     td1.className = setColorClass(arg.input.each_player[l.speaker.trim()]);
     tr.insertAdjacentElement('beforeend', td1);
 
-    var td2 = document.createElement('td');
+    let td2 = document.createElement('td');
     td2.textContent = p.parseFromString('<html><body><span>' + l.comment.join('\n') + '</span></body></html>', 'text/html').body.textContent;
     if (l.type == 'Strong') {
       td2.setAttribute('style', 'font-size: large;');
@@ -52,7 +52,7 @@ export function updateCommentLog(arg, param) {
     }
     tr.insertAdjacentElement('beforeend', td2);
 
-    var td3 = document.createElement('td');
+    let td3 = document.createElement('td');
     td3.setAttribute('style', 'display:none;visibility:hidden;width:0px;');
     td3.textContent = p.parseFromString('◆' + l.speaker.trim() + 'さん' + '\t' + '「' + l.comment.join('\n') + '」</td></body></html>', 'text/html').body.textContent;
     tr.insertAdjacentElement('beforeend', td3);
@@ -61,10 +61,10 @@ export function updateCommentLog(arg, param) {
   }
 
   // 本日（最新日）の日付
-  var datearray = createDateArray(arg)[0];
-  var date_count = datearray.length;
-  var datestr;
-  var datestr_night;
+  let datearray = createDateArray(arg)[0];
+  let date_count = datearray.length;
+  let datestr;
+  let datestr_night;
 
   if (param.indexOf('date-log-') == 0) {
     // create day log by date
@@ -84,9 +84,9 @@ export function updateCommentLog(arg, param) {
       });
     }
   } else {
-    var villager_str = param.replace('all-day-log-', '');
+    let villager_str = param.replace('all-day-log-', '');
     // create log by villager
-    for (var i = date_count; i >= 1; i--) {
+    for (let i = date_count; i >= 1; i--) {
       datestr = datearray[i - 1];
       // create day log by date
       if (arg.log[datestr] != null) {
@@ -110,13 +110,13 @@ export function updateCommentLog(arg, param) {
     }
   }
 
-  var table = document.createElement('table');
+  let table = document.createElement('table');
   table.insertAdjacentElement('beforeend', ret);
   document.getElementById('comment-summary').textContent = '';
   document.getElementById('comment-summary').insertAdjacentElement('afterbegin', table);
 
-  var table_row_max_size = parseInt(document.getElementById('link').offsetWidth);
-  var table_name_cell_size = 0;
+  let table_row_max_size = parseInt(document.getElementById('link').offsetWidth);
+  let table_name_cell_size = 0;
   try {
     ret.childNodes.forEach((tr) => {
       if (tr.childNodes.length != 1) {
@@ -129,23 +129,23 @@ export function updateCommentLog(arg, param) {
       throw e;
     }
   }
-  var table_talk_cell_size = table_row_max_size - table_name_cell_size - 25; // size of scroll bar = 17
+  let table_talk_cell_size = table_row_max_size - table_name_cell_size - 25; // size of scroll bar = 17
   ret.childNodes.forEach((tr) => {
     if (tr.childNodes.length != 1) {
-      var talk_cell = tr.childNodes[1];
-      var text = talk_cell.innerHTML.split('\n');
+      let talk_cell = tr.childNodes[1];
+      let text = talk_cell.innerHTML.split('\n');
       talk_cell.innerHTML = '';
-      var fixed_text = [];
+      let fixed_text = [];
       text.forEach((t) => {
         fixed_text = fixed_text.concat(slice_string_by_visualLength(t, table_talk_cell_size, talk_cell.style.fontSize != ''));
       });
-      var p = new DOMParser();
+      let p = new DOMParser();
       fixed_text.forEach((t) => {
         if (talk_cell.innerHTML.length > 0) {
-          var br = document.createElement('br');
+          let br = document.createElement('br');
           talk_cell.appendChild(br);
         }
-        var span = document.createElement('span');
+        let span = document.createElement('span');
         span.textContent = p.parseFromString('<html><body><span>' + t + '</span></body></html>', 'text/html').body.textContent;
         talk_cell.appendChild(span);
       });
