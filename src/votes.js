@@ -4,8 +4,8 @@ import { createDateArray, setColorClass } from './libs.js';
 
 function proc_set_vote_date(vote_title, table_head) {
   // set 2nd..Nth td (vote to-person)
-  var tr = table_head.querySelector('#vote-day');
-  var td = document.createElement('td');
+  let tr = table_head.querySelector('#vote-day');
+  let td = document.createElement('td');
   td.innerText = vote_title;
   tr.insertAdjacentElement('beforeend', td);
   return tr;
@@ -13,9 +13,9 @@ function proc_set_vote_date(vote_title, table_head) {
 
 // 票数計算
 function proc_vote_count(list) {
-  var ret = {}; // { "to-person":getting-vote-count, "to":count, ..., "to":count, "is_gray_random":true/false, "voted_count_max":count}
+  let ret = {}; // { "to-person":getting-vote-count, "to":count, ..., "to":count, "is_gray_random":true/false, "voted_count_max":count}
   list.vote.forEach(function (f) {
-    var to_person = f.to_villager.trim();
+    let to_person = f.to_villager.trim();
     if (ret[to_person] == null) {
       ret[to_person] = 1;
     } else {
@@ -42,13 +42,13 @@ function proc_vote_count(list) {
 
 // 表示用セル作成
 function proc_set_vote_result(playerlist, f, vote_count, p, table_body) {
-  var from_person = f.from_villager.trim();
-  var to_person = f.to_villager.trim();
-  var tr = table_body.querySelector('#vote-from-' + from_person.replace(/([ -/:-@[-`{-~])/g, '\\$1'));
+  let from_person = f.from_villager.trim();
+  let to_person = f.to_villager.trim();
+  let tr = table_body.querySelector('#vote-from-' + from_person.replace(/([ -/:-@[-`{-~])/g, '\\$1'));
 
   // <td><b>ｽｺﾞｲｶﾀｲｱｲｽ</b>さん</td><td>0 票</td><td>投票先 → <b>結城蜜柑</b>さん</td>
   // ｽｺﾞｲｶﾀｲｱｲｽさん	0 票	投票先 → 結城蜜柑さん
-  var td = document.createElement('td');
+  let td = document.createElement('td');
   if (vote_count[from_person] == null) {
     vote_count[from_person] = 0;
   }
@@ -57,7 +57,7 @@ function proc_set_vote_result(playerlist, f, vote_count, p, table_body) {
   td.innerText = '(' + vote_count[from_person] + '票)→' + f.to_villager + '(' + vote_count[to_person] + '票)';
   td.className = setColorClass(playerlist[from_person]);
   if (vote_count.is_gray_random == true) {
-    var is_gray_person = false;
+    let is_gray_person = false;
     // グレランの場合に、セルに色をつける
     if (td.className === '' && vote_count[to_person] == vote_count['voted_count_max'] && vote_count[from_person] == 0) {
       // 役職CO者以外、かつ、吊られ者に投票した人、かつ、得票0票者
@@ -99,25 +99,25 @@ export function updateVotes(arg) {
   //     <tr id="vote-from-from"><td>from</td><td>...</td><td alt="dayX(1):from->to">  to   </td><td>...</td></tr>
   //     <tr                    ><td>....</td><td>...</td><td alt="dayX(1):....->..">.......</td><td>...</td></tr>
   //    </tbody>
-  var voted_title_list = [];
-  var head = document.createElement('thead');
-  var body = document.createElement('tbody');
+  let voted_title_list = [];
+  let head = document.createElement('thead');
+  let body = document.createElement('tbody');
 
-  var datearray;
-  var base_date; // unused
+  let datearray;
+  let base_date; // unused
   [datearray, base_date] = createDateArray(arg);
   for (var i = 0; i < datearray.length; i++) {
-    var datestr = datearray[i];
+    let datestr = datearray[i];
     if (arg.log[datestr] == null || arg.log[datestr].vote_log == null || arg.log[datestr].vote_log.length == 0) {
       continue;
     }
 
     // set tr and 1st td (vote from-person)
     if (head.querySelector('tr') == null) {
-      var tr = document.createElement('tr');
+      let tr = document.createElement('tr');
       tr.setAttribute('id', 'vote-day');
 
-      var td = document.createElement('td');
+      let td = document.createElement('td');
       tr.insertAdjacentElement('beforeend', td);
 
       head.insertAdjacentElement('beforeend', tr);
@@ -126,10 +126,10 @@ export function updateVotes(arg) {
       Object.keys(arg.log[base_date].players).forEach(function (f) {
         if (f == '初日犠牲者') return;
 
-        var tr = document.createElement('tr');
+        let tr = document.createElement('tr');
         tr.setAttribute('id', 'vote-from-' + f);
 
-        var td = document.createElement('td');
+        let td = document.createElement('td');
         td.innerText = f;
         td.className = setColorClass(arg.input.each_player[f]);
         tr.insertAdjacentElement('beforeend', td);
@@ -139,26 +139,26 @@ export function updateVotes(arg) {
     }
 
     arg.log[datestr].vote_log.forEach(function (l, j) {
-      var vote_title = arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）';
+      let vote_title = arg.log[datestr].vote_log[j].title + '（' + String(j + 1) + '回目）';
       if (voted_title_list.includes(vote_title) == true) {
         return; // contiune arg.log[datestr].vote_log.forEach()
       }
       voted_title_list.push(vote_title);
 
       head.insertAdjacentElement('beforeend', proc_set_vote_date(vote_title, head));
-      var vote_count = proc_vote_count(l);
+      let vote_count = proc_vote_count(l);
       l.vote.forEach(function (f, k) {
         if (j == 0) {
           body.insertAdjacentElement('beforeend', proc_set_vote_result(arg.input.each_player, f, vote_count, null, body));
         } else {
-          var p = arg.log[datestr].vote_log[j - 1].vote[k]; // f of previous vote
+          let p = arg.log[datestr].vote_log[j - 1].vote[k]; // f of previous vote
           body.insertAdjacentElement('beforeend', proc_set_vote_result(arg.input.each_player, f, vote_count, p, body));
         }
       });
     });
   }
 
-  var table = document.createElement('table');
+  let table = document.createElement('table');
   table.insertAdjacentElement('beforeend', head);
   table.insertAdjacentElement('beforeend', body);
   document.getElementById('vote-summary').textContent = '';

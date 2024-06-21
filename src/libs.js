@@ -7,15 +7,15 @@ export function createDateArray(arg) {
   //         datearray[N-1]: date-string of dayN
   // input  : JSON from Web Storage API
   // output : [Array ["date-string(day1)", "date-string(day2)", ..., "date-string(current day)"], "date-string(night1)"]
-  var ret = [];
-  var base_date;
+  let ret = [];
+  let base_date;
 
   // preprocess : check arg has log.
   if (arg.log == null) {
     return ret;
   }
 
-  var date_count = 0;
+  let date_count = 0;
   Object.keys(arg.log).forEach(function (d) {
     if (d.match('朝となりました。$')) {
       date_count = date_count + 1;
@@ -32,7 +32,7 @@ export function createDateArray(arg) {
     ret.push('１日目の夜となりました。');
   }
   // day 3..N
-  for (var i = 2; i < date_count + 1; i++) {
+  for (let i = 2; i < date_count + 1; i++) {
     if (arg.log[String(i + 1) + '日目の朝となりました。'] != null) {
       ret.push(String(i + 1) + '日目の朝となりました。');
     } else if (arg.log[String(i) + '日目の夜となりました。'] != null) {
@@ -56,7 +56,7 @@ export function createDateArray(arg) {
     }
   }
   // 過去ログ日数制限
-  var date_limit = document.getElementById('datelimit_passed_log').value;
+  let date_limit = document.getElementById('datelimit_passed_log').value;
   if (date_limit != 0 && date_count > date_limit) {
     date_count = date_limit;
     while (ret.length > date_count) {
@@ -77,7 +77,7 @@ export function createDateArray(arg) {
 export function logTag_d2n(key_day) {
   // input  : String "n日目の朝となりました。"(n>=2) or other
   // output : String "(n-1)日目の夜となりました。" or input
-  var d = parseInt(key_day);
+  let d = parseInt(key_day);
 
   // day 2..N -> night 1..(N-1)
   if (d >= 2) {
@@ -154,7 +154,7 @@ export function makeComingOutList(arg) {
   //             villager_co:   { ... },
   //          },
   // 村全体の情報 -> arg.input.<job>_count
-  var ret = {};
+  let ret = {};
   ret.seer_co = {};
   ret.medium_co = {};
   ret.bodyguard_co = {};
@@ -179,13 +179,13 @@ export function makeComingOutList(arg) {
     return ret;
   }
 
-  var datearray = createDateArray(arg)[0];
-  var datestr = datearray[datearray.length - 1];
+  let datearray = createDateArray(arg)[0];
+  let datestr = datearray[datearray.length - 1];
 
   Object.keys(arg.input.each_player).forEach(function (k) {
-    var stat = arg.log[datestr].players[k].stat;
-    var mrk = arg.input.each_player[k].enemymark;
-    var job = arg.input.each_player[k].comingout;
+    let stat = arg.log[datestr].players[k].stat;
+    let mrk = arg.input.each_player[k].enemymark;
+    let job = arg.input.each_player[k].comingout;
 
     if (stat == '（生存中）') {
       ret.villager_live[k] = arg.input.each_player[k];
@@ -245,7 +245,7 @@ export function makeGrayVillagerList(arg) {
   //             villager_live: { ... },
   //             villager_co:   { ... },
   //          },
-  var ret = makeComingOutList(arg);
+  let ret = makeComingOutList(arg);
   ret.villager_gray = {};
   ret.villager_white = {};
   ret.villager_panda = {};
@@ -260,7 +260,7 @@ export function makeGrayVillagerList(arg) {
     return ret;
   }
 
-  var datearray = createDateArray(arg)[0];
+  let datearray = createDateArray(arg)[0];
 
   Object.keys(ret.seer_co).forEach(function (k) {
     datearray.forEach(function (d) {
@@ -268,8 +268,8 @@ export function makeGrayVillagerList(arg) {
         return;
       }
 
-      var target = arg.input.each_player[k][d].target;
-      var result = arg.input.each_player[k][d].result;
+      let target = arg.input.each_player[k][d].target;
+      let result = arg.input.each_player[k][d].result;
 
       if (result == '○') {
         if (Object.keys(ret.villager_gray).indexOf(target) != -1) {
@@ -298,17 +298,17 @@ export function makeGrayVillagerList(arg) {
 }
 
 export function get_visualLength(str, isLarge) {
-  var p = new DOMParser();
-  var ret;
+  let p = new DOMParser();
+  let ret;
   if (isLarge == false) {
     // case if Normal font
-    var normal_talk_cell_ruler = document.getElementById('normal-ruler');
+    let normal_talk_cell_ruler = document.getElementById('normal-ruler');
     normal_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
     ret = normal_talk_cell_ruler.offsetWidth;
     normal_talk_cell_ruler.textContent = '';
   } else {
     // case if Large font
-    var large_talk_cell_ruler = document.getElementById('large-ruler');
+    let large_talk_cell_ruler = document.getElementById('large-ruler');
     large_talk_cell_ruler.textContent = p.parseFromString('<html><body><td>' + str + '</td></body></html>', 'text/html').body.textContent;
     ret = large_talk_cell_ruler.offsetWidth;
     large_talk_cell_ruler.textContent = '';
@@ -317,13 +317,13 @@ export function get_visualLength(str, isLarge) {
 }
 
 export function slice_string_by_visualLength(str, max_cell_size, isLarge) {
-  var ret = [];
+  let ret = [];
   // calcurate offsetWidth of each t
-  var t_visualLengthOld = 0;
-  var t_visualLength;
-  var old_i = 0;
-  var prev_i = 0;
-  for (var i = 0; i < str.length; i++) {
+  let t_visualLengthOld = 0;
+  let t_visualLength;
+  let old_i = 0;
+  let prev_i = 0;
+  for (let i = 0; i < str.length; i++) {
     // skip tag from '<' to '>'
     if (str[i] == '<') {
       i = str.indexOf('>', i);
