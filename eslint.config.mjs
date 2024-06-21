@@ -26,5 +26,6 @@ export default [...compat.extends("eslint:recommended", "plugin:node/recommended
 
     rules: {
         "node/no-unsupported-features/es-syntax": "off",
+        "node/no-exports-assign": "off",
     },
 }];
