@@ -23,12 +23,17 @@ export function template_initial(arg) {
   if (arg.input.bodyguard_count > 0) {
     ret.push('【狩　人 (' + arg.input.bodyguard_count + ')】');
   }
+  if (arg.input.villager_count > 0) {
+    ret.push('【村　人 (' + arg.input.villager_count + ')】');
+  }
+  ret.push('');
   if (arg.input.werewolf_count > 0) {
     ret.push('【人　狼 (' + arg.input.werewolf_count + ')】');
   }
   if (arg.input.posessed_count > 0) {
     ret.push('【狂　人 (' + arg.input.posessed_count + ')】');
   }
+  ret.push('');
   if (arg.input.werefox_count > 0) {
     ret.push('【妖　狐 (' + arg.input.werefox_count + ')】');
   }
